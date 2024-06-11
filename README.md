@@ -1,4 +1,4 @@
-# xlistings --- An extension to listings
+# xlistings &mdash; An extension to listings
 
 **Work in Progress**
 
