@@ -1,26 +1,50 @@
 \errorcontextlines 99999
-\documentclass{sopra-base}
+\documentclass{scrartcl}
 
-\usepackage[dummy,nolistings]{sopra-documentation}
-\usepackage{sopra-attachments}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
 
-\usepackage{sopra-listings}
-\solLoadLanguage{latex,bash,rubberduck,xml,json}
+\usepackage{xcolor}
+\usepackage{parskip}
 
-\title{Das 'sopra-listings'-Paket}
-\subtitle[Dokumentation für das 'sopra-listings'-Paket]{Dokumentation für das 'sopra-listings'-Paket | Version \thesolversion}
-\duedate{2020-10-1}
+\usepackage[sfdefault]{FiraSans}
+\usepackage{FiraMono}
 
-\keywords{Dokumentation,sopra-listings,sopra,uni ulm,uulm,Paket}
-\authors{Florian Sihler (florian.sihler@uni-ulm.de)}
+\usepackage[fakeminted]{xlistings}
+\LoadLanguages{latex,bash,rubberduck,xml,json}
 
-\group{Die Affenbande}
+\let\T\texttt
+
+\usepackage[colorlinks=true,breaklinks=true,allcolors=cyan!65!black]{hyperref}
+\usepackage{footnotebackref}
+
+
+\title{Das \T{xlistings}-Paket}
+\subtitle{Version \thexlstversion}
+\date{\today}
+\author{Florian Sihler}
+
 \begin{document}
+    \maketitle
+    
+\section{Introduction}
 
-    \maketitle%
-%
-    %\tableofcontents
-%
+This package extends on the \href{https://ctan.org/pkg/listings}{listings} package, providing an easier front-end to create code blocks of selected languages, support for number highlighting, highlighting, non-selectable line numbers,\footnote{If a number is truly non-selectable depends on the viewer used. To ensure that they can not be selected would require images, which we currently do not create/use.} and more.
+While it is not compatible with the \href{https://ctan.org/pkg/minted}{minted} package, it provides a similar interface for code highlighting that can be used as a partial drop-in replacement.
+
+To load the package, simply use:
+
+\begin{minted}{latex}
+\usepackage{xlistings}
+\end{minted}
+
+Throughout this document, we will use the \T{xlistings} package to highlight code.
+
+\subsection{Origin}
+
+Originally, this package was part of \href{https://github.com/EagleoutIce/LILLY}{\MakeUppercase{lilly}}, which I again ported to the \href{https://github.com/EagleoutIce/sopra-collection}{sopra-collection} during my studies. This package is the standalone and improved version of these packages. The process is currently work in progress.
+\end{document}
+\iffalse
 
 \section{Allgemeines}
 \subsection{Warum, wieso, weshalb?}
@@ -29,7 +53,7 @@
     Grundlage für die das Highlight von Codes
     des \imptext{Teams 20}. Diese Dokumentation wurde zusammen mit der
     \T{sopra-base.cls} sowie dem Paket \T{sopra-documentation.sty} kreiert.\par
-    Zum Visualisieren der einzelnen Code-Ausschnitte wird das Paket selbst verwendet, welches ebenfalls in hier eingebettet sein sollte: \attachTex{sopra-listings.sty}. \notetext{Dieses Paket benötigt weder \T{shell-escape} noch \T{minted} um zu funktionieren. Es baut auf \T{listings} auf!}
+    Zum Visualisieren der einzelnen Code-Ausschnitte wird das Paket selbst verwendet, welches ebenfalls in hier eingebettet sein sollte: \attachTex{xlistings.sty}. \notetext{Dieses Paket benötigt weder \T{shell-escape} noch \T{minted} um zu funktionieren. Es baut auf \T{listings} auf!}
 \subsection{Abhängigkeiten}
     Dieses Paket bindet die folgenden Paketen mit ein:
     \begin{multicols}{3}
@@ -59,13 +83,13 @@
         \item Das Paket kann in dasselbe Verzeichnis wie das Dokument
                 gesetzt werden. In diesem Fall lautet die Einbindungsanweisung:
 \begin{plainlatex}
-\usepackage{sopra-listings}
+\usepackage{xlistings}
 \end{plainlatex}
         \item Das Paket kann in ein Unterverzeichnis/in ein mit
                 dem Dokument ausgeliefertes Verzeichnis gelegt werden. In
                 diesem Fall erfolgt die Angabe durch den (relativen-) Pfad:
 \begin{plainlatex}
-\usepackage{./Mein/Pfad/zu/sopra-listings}
+\usepackage{./Mein/Pfad/zu/xlistings}
 \end{plainlatex}
         \item Man kann das Paket (mittels eines Symlinks oder ähnlichem)
               in einen eigenen \emph{texmf}-Baum ablegen.
@@ -75,7 +99,7 @@
               \bbash{texhash \~/texmf} aktualisiert werden. Nun kann
               das Paket wie jede andere installierte Paket verwendet werden:
 \begin{plainlatex}
-\usepackage{sopra-listings}
+\usepackage{xlistings}
 \end{plainlatex}
     \end{itemize}
 
@@ -111,11 +135,11 @@ Unterstützung für \cmdref{solblacklistlinenumbers}, \cmdref{solblacklistisghos
     Bei Argumenten mit einer \say{Counter}-Option wird das jeweils standardmäßig aktive zuerst und das andere in Klammern
     geschrieben. So wird implizit:
 \begin{plainlatex}
-\usepackage[noencoding,hlnumbers,loadlangs,guardspace]{sopra-listings}
+\usepackage[noencoding,hlnumbers,loadlangs,guardspace]{xlistings}
 \end{plainlatex}
     aufgerufen. Während mit:
 \begin{plainlatex}
-\usepackage[noloadlangs]{sopra-listings}
+\usepackage[noloadlangs]{xlistings}
 \end{plainlatex}
     das automatische Laden gewisser Sprachen verhindert wird.
 
@@ -150,7 +174,7 @@ Unterstützung für \cmdref{solblacklistlinenumbers}, \cmdref{solblacklistisghos
     \end{argument}
 
     \begin{argument}{nonuminpar}{numinpar}
-        Kurzform für \cmdref{solSetLeftMargin} mit dem Wert \glqq{}{\makeatletter\@@sol@numinpar@length}\grqq{}, kann also dazu verwendet
+        Kurzform für \cmdref{solSetLeftMargin} mit dem Wert \glqq{}{\makeatletter\@@xlst@numinpar@length}\grqq{}, kann also dazu verwendet
         werden um die Listings automatisch einzurücken und die Nummern so nicht über den Dokumentenrand hinausragen zu lassen.
     \end{argument}
 
@@ -178,7 +202,7 @@ public static void main(String[] args) { }
     \end{argument}
 \subsection{Farben}
 
-    Dieses Paket definiert einige Farben mittels \cmd{colorlet}. Wird \T{sopra-base} als geladen erkannt, wird versucht passende Farben zu setzen. \imptext{Alle folgenden Farben tragen das Präfix \T{sol@colors@}}: \T{border}, \T{background}, \T{lst@keywordA}, \T{lst@keywordB}, \T{lst@keywordC}, \T{lst@numbers}, \T{lst@literals}, \T{lst@comments}, \T{lst@highlight}, \T{lst@linenumbers} und zuletzt \T{lst@command}, wobei die Bedeutung der einzelnen Farben aufgrund ihres Namens hervorgehen sollte (jeder Sprache steht es frei die gleich zu besprechenden Stile, die
+    Dieses Paket definiert einige Farben mittels \cmd{colorlet}. Wird \T{sopra-base} als geladen erkannt, wird versucht passende Farben zu setzen. \imptext{Alle folgenden Farben tragen das Präfix \T{xlst@colors@}}: \T{border}, \T{background}, \T{lst@keywordA}, \T{lst@keywordB}, \T{lst@keywordC}, \T{lst@numbers}, \T{lst@literals}, \T{lst@comments}, \T{lst@highlight}, \T{lst@linenumbers} und zuletzt \T{lst@command}, wobei die Bedeutung der einzelnen Farben aufgrund ihres Namens hervorgehen sollte (jeder Sprache steht es frei die gleich zu besprechenden Stile, die
     auf diesen Farben aufbauen, (beliebig) zu verwenden). Beispielsweise kann man die Farbe
     von Kommentaren wie folgt ändern (\cmdref{lstcolorlet}):
 \begin{plainlatex}[morekeywords={[2]{\\lstcolorlet}}]
@@ -200,18 +224,18 @@ public static void main(...){ /* ... */ }
 
 \subsection{Stile}
     Zur Hervorhebung der einzelnen Segmente im Listing werden den Farben entlehnte Stile definiert, die ebenfalls frei verändert werden können. \notetext{Entwicklernotiz, die
-    Stile sollten bei einer kompletten Neudefintion mithilfe des Befehls \cmd{sol@list@define@styles}
+    Stile sollten bei einer kompletten Neudefintion mithilfe des Befehls \cmd{xlst@list@define@styles}
     definiert werden. Sonst ist das Präfix, das im Folgenden verwendet werden soll in
-    \cmd{sol@lst@style@prefix} abgespeichert.}\par{}
+    \cmd{xlst@lst@style@prefix} abgespeichert.}\par{}
     Alle im folgenden aufgeführten Befehle tragen (sofern nicht modifiziert) das Präfix
-    \T{sol@styles@lst@} und können (ohne dieses Präfix) mittels \cmdref{solGet} beziehungsweise \cmdref{solGetStyle} abgefragt werden. Einzelne Sprachen können
+    \T{xlst@styles@lst@} und können (ohne dieses Präfix) mittels \cmdref{solGet} beziehungsweise \cmdref{solGetStyle} abgefragt werden. Einzelne Sprachen können
     weitere Befehle und Stile fordern und hinzufügen, davon sollte aber nur im Notfall gebraucht gemacht werden (so fügt die Sprache \T{Latex} den Stil \T{command} hinzu. Für mehr Informationen, siehe: \jmark[Abschnitt \ref{sec:vordefinierteSprachen} (Vordefinierte Sprachen)]{sec:vordefinierteSprachen})\par{}
     Es gibt die folgenden Stile: \T{keywordA}, \T{keywordB}, \T{keywordC}, \T{keywordD}, \T{numbers}, \T{linenumbers}, \T{literals}, \T{comments}, \T{highlight}, \T{command} und \T{basic}, wobei letzterer jedem Stil vorangestellt wird. Die Neudefinition eines Stils sollte
     nicht leichtfertig getätigt werden und benötigt deswegen etwas mehr Aufwand. Hier ein Beispiel:
-\begin{plainlatex}[morekeywords={[5]{\\sol@list@define@styles,\\scshape}}]
+\begin{plainlatex}[morekeywords={[5]{\\xlst@list@define@styles,\\scshape}}]
 {\makeatletter
-    \sol@list@define@styles{%
-        {comments: \color{sol@colors@lst@comments}\scshape}%
+    \xlst@list@define@styles{%
+        {comments: \color{xlst@colors@lst@comments}\scshape}%
     }
 }
 \end{plainlatex}
@@ -222,8 +246,8 @@ Wir erhalten(exemplarisch in Java):
 public static void main(...){ /* ... */ }
 \end{java}
 {\makeatletter
-    \sol@list@define@styles{%
-        {comments: \color{sol@colors@lst@comments}\scshape}%
+    \xlst@list@define@styles{%
+        {comments: \color{xlst@colors@lst@comments}\scshape}%
     }
 }
 \begin{java}
@@ -233,8 +257,8 @@ public static void main(...){ /* ... */ }
     \endgroup
     \notetext{Mehrere Stile können durch Kommas voneinander abgetrennt in einem Zug definiert werden und überleben Gruppen.}
 {\makeatletter
-    \sol@list@define@styles{%
-        {comments: \color{sol@colors@lst@comments}}%
+    \xlst@list@define@styles{%
+        {comments: \color{xlst@colors@lst@comments}}%
     }
 }
 
@@ -456,7 +480,7 @@ public static int add(int a, int b){ return a + b; }
 
 \begin{command}{solguard}{\manArg{Zeilen}}
     Mit der Paketoption \argref{guardspace}{noguardspace} kann so angegeben werden, wie viele Zeilen geschützt werden müssen.
-    Der Standard ist: \glqq{}{\makeatletter\@sol@guard@default}\grqq. Hinweis: Dies betrifft nur die Zeilen für den Beginn. Die letzte Zeile wird aktuell immer mit \cmd{nobreak} gesichert.
+    Der Standard ist: \glqq{}{\makeatletter\@xlst@guard@default}\grqq. Hinweis: Dies betrifft nur die Zeilen für den Beginn. Die letzte Zeile wird aktuell immer mit \cmd{nobreak} gesichert.
 \end{command}
 
 \begin{command}{solblacklistlinenumbers}{\optStar\manArg{Zeilennummern}}
@@ -661,3 +685,4 @@ Einfach nur eine Verbatim-Ausgabe. 1234 Hallo42, Hallo 42, Hallo 42
 \end{void}
 
 \end{document}
+\fi 
