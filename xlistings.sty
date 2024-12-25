@@ -4,18 +4,16 @@
 \ProvidesPackage{xlistings}[2024/06/11 EagleoutIce - extended listings]
 \newcounter{xlstversion} \setcounter{xlstversion}{0100}
 
-\newdimen\xlst@length@lst@numsep \xlst@length@lst@numsep=9\p@
-\newdimen\xlst@length@lst@famerule \xlst@length@lst@famerule=.75\p@
-\newdimen\xlst@length@lst@xleftmargin \xlst@length@lst@xleftmargin=3\p@
+\newdimen\xlst@length@lst@numsep       \xlst@length@lst@numsep=9\p@
+\newdimen\xlst@length@lst@famerule     \xlst@length@lst@famerule=.75\p@
+\newdimen\xlst@length@lst@xleftmargin  \xlst@length@lst@xleftmargin=3\p@
 \newdimen\xlst@length@lst@xrightmargin \xlst@length@lst@xrightmargin=3\p@
 
 \newif\ifxlst@accuspp@available@ % remove line numbers from selection if possible
 
-\newif\ifxlst@printmode@% in print, ink will be reduced, adapted to grayscale
-\newif\ifxlst@defaultlang@% if enabled, listings will try to load some langs
-\newif\ifxlst@cpalette@% if enabled, listings will adapt their colors according to the color-palettes package
-\newif\ifxlst@guardspace@% if enabled (default) it will ensure lines
-\newif\ifxlst@numinpar@% if enabled numbers would be outside of leftmarg
+\newif\ifxlst@printmode@         % in print, ink will be reduced, adapted to grayscale
+\newif\ifxlst@guardspace@        % if enabled (default) it will ensure lines
+\newif\ifxlst@numinpar@          % if enabled numbers would be outside of leftmarg
 
 % number-highlighting
 \newif\ifxlst@highlight@numbers@ % should numbers be highlighted?
@@ -25,8 +23,6 @@
 \newif\ifxlst@lst@style@upshape@  % add upshape to basicstyle
 
 \newif\ifxlst@lst@style@highlights@ % add upshape to basicstyle
-\newif\ifxlst@lst@style@defaultfont@ % don't change font?
-\xlst@lst@style@defaultfont@true
 
 \newif\ifxlst@lst@style@inlinesize@ % don't change font?
 
@@ -41,12 +37,8 @@
 \DeclareOption{nohlnumbers}{\xlst@highlight@numbers@false} % auto - highlight
 \xlst@highlight@numbers@true
 % Printmodes
-\DeclareOption{defaultmode}{\xlst@printmode@false}% probably shouldn't be used
+\DeclareOption{digital}{\xlst@printmode@false}% probably shouldn't be used
 \DeclareOption{print}{\xlst@printmode@true}
-% Auto-Language
-\DeclareOption{loadlangs}{\xlst@defaultlang@true}
-\DeclareOption{noloadlangs}{\xlst@defaultlang@false}
-\xlst@defaultlang@true
 % upshape
 \DeclareOption{upshape}{\xlst@lst@style@upshape@true}
 \DeclareOption{noupshape}{\xlst@lst@style@upshape@false}
@@ -57,12 +49,10 @@
 % numinpar
 \DeclareOption{numinpar}{\xlst@numinpar@true}
 \DeclareOption{nonuminpar}{\xlst@numinpar@false}
-% numinpar
-\DeclareOption{defaultfont}{\xlst@lst@style@defaultfont@true}
-\DeclareOption{nodefaultfont}{\xlst@lst@style@defaultfont@false}
 % inlinesize
 \DeclareOption{inlinesize}{\xlst@lst@style@inlinesize@true}
 \DeclareOption{noinlinesize}{\xlst@lst@style@inlinesize@false}
+
 \xlst@lst@style@inlinesize@true
 \let\xlstadaptinline\xlst@lst@style@inlinesize@true
 \let\xlstlockinline\xlst@lst@style@inlinesize@false
@@ -87,11 +77,9 @@
 \RequirePackage{pgfkeys}
 
 % Listings-Base:
-\IfFileExists{listingsutf8.sty}{\RequirePackage{listingsutf8} }%
-  {\RequirePackage{listings}}
+\IfFileExists{listingsutf8.sty}{\RequirePackage{listingsutf8}}{\RequirePackage{listings}}
 
-\IfFileExists{accsupp.sty}{\RequirePackage{accsupp} \xlst@accuspp@available@true}%
-  {\xlst@accuspp@available@false}%
+\IfFileExists{accsupp.sty}{\RequirePackage{accsupp}\xlst@accuspp@available@true}{\xlst@accuspp@available@false}%
 
 
 \ifxlst@accuspp@available@
@@ -103,12 +91,6 @@
 
 \ifxlst@guardspace@\RequirePackage{needspace}\fi
 \ifxlst@lst@style@highlights@\RequirePackage{tikz}\fi
-
-% Font Definitions
-\ifxlst@lst@style@defaultfont@
-\AtEndPreamble{\RequirePackage{AnonymousPro}}%
-\def\ttdefault{AnonymousPro}\fi
-
 \let\xlst@ttfamily\ttfamily
 
 \def\xlst@font@fs@numbers{\footnotesize}
@@ -571,9 +553,6 @@ keepspaces=false}
 \let\LoadLanguage\xlst@LoadLanguage
 \let\LoadLanguages\LoadLanguage
 
-% we also want to make it possible to add a folder to the lang-path:
-\ifxlst@defaultlang@ \LoadLanguage{java}\fi
-
 % Change colors
 \let\xlst@registered@colors@keywordA\@empty  \let\xlst@registered@colors@keywordB\@empty
 \let\xlst@registered@colors@keywordC\@empty  \let\xlst@registered@colors@numbers\@empty
@@ -595,18 +574,6 @@ keepspaces=false}
 \PackageError{xlistings}{The color '#2' is undefined.}%
 {Choose one of 'keywordA,keywordB,keywordC,numbers,literals,comments,highlight,command'}%
 }{\definecolor{xlst@colors@lst@#2}{#1}{#3}}%
-}
-
-% TODO: update
-\def\xlst@cpalette@hook{%
-\lstcolorlet{keywordA}{paletteA!90!black}%
-\lstcolorlet{keywordB}{paletteB!90!black}%
-\lstcolorlet{keywordC}{paletteC!90!black}%
-\lstcolorlet{numbers}{paletteD!60!gray!90!black}%
-\lstcolorlet{literals}{paletteD!60!black}%
-\lstcolorlet{comments}{lightgray!65!darkgray!90!black}%
-\lstcolorlet{highlight}{paletteD!90!black}%
-\lstcolorlet{command}{paletteB!90!black}%
 }
 
 % Highlights support
@@ -646,6 +613,7 @@ keepspaces=false}
 \def\xlst@minted@language@mapping#1{\@ifundefined{xlst@@minted@#1}{#1}{\csname xlst@@minted@#1\endcsname}}
 \def\xlstmintedmap#1#2{\expandafter\def\csname xlst@@minted@#1\endcsname{#2}}
 
+% TODO: auto load a language if a requested one is not loaded
 \def\xlstsetmintedstyle#1{\def\xlst@minted@style{#1}}
 \xlstsetmintedstyle{default}
 \lstnewenvironment{minted}[2][]{\protected@edef\@tmp{\pgfkeysvalueof{/xlst@lst@family/\xlst@minted@style/listing style}}\protected@edef\@temp{\xlst@minted@language@mapping{#2}}\expandafter\expandafter\expandafter\xlst@minted@setup\expandafter\expandafter\expandafter{\expandafter\@tmp\expandafter}\expandafter{\@temp}{#1}}{}
