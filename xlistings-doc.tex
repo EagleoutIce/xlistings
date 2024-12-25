@@ -7,15 +7,20 @@
 \usepackage{xcolor}
 \usepackage{parskip}
 
-\usepackage[sfdefault]{FiraSans}
-\usepackage{FiraMono}
+\usepackage[sfdefault,scale=.9]{FiraSans}
+% fitting math font
+\usepackage{newtxsf}
 \usepackage{csquotes}
 
 \usepackage[fakeminted]{xlistings}
 \LoadLanguages{latex,bash,rubberduck,xml,json}
 
+\usepackage{microtype}
 \usepackage[colorlinks=true,breaklinks=true,allcolors=cyan!65!black]{hyperref}
 \usepackage{footnotebackref}
+
+% [5]
+\xlstaddkeyword[5]{lLatex}{y,x,\\xlstsetstyle}
 
 \let\T\texttt
 \def\argref#1#2{\hyperref[#1]{\T{#2}}}
@@ -27,7 +32,6 @@
 
 \begin{document}
     \maketitle
-    
 \section{Introduction}
 
 This package extends on the \href{https://ctan.org/pkg/listings}{listings} package, providing an easier front-end to create code blocks of selected languages, support for number highlighting, segment highlighting, non-selectable line numbers,\footnote{If a number is truly non-selectable depends on the viewer used. To ensure that they can not be selected would require images, a process we currently do not support.} and more.
@@ -40,18 +44,18 @@ To load the package, simply use:
 \end{minted}
 
 Throughout this document, we will use the \T{xlistings} package to highlight code.
-If you are no fan of the \enquote{bordered} look of the code blocks, you can use \blatex{\\xlstsetmintedstyle\{plain number\}} to switch the look and feel to:
+If you are no fan of the \enquote{bordered} look of the code blocks, you can use \blatex{\\xlstsetstyle\{plain number\}} to switch the look and feel, or use the \argref{style}{style} option of the package.
 
-\xlstsetmintedstyle{plain number}
+\xlstsetstyle{plain number}
 \begin{minted}{latex}
-\usepackage{xlistings}
+\usepackage[style=plain number]{xlistings} x
 \end{minted}
 
-Or, using \blatex{\\xlstsetmintedstyle\{plain\}}:
+Or, using \blatex{\\xlstsetstyle\{plain\}}:
 
-\xlstsetmintedstyle{plain}
+\xlstsetstyle{plain}
 \begin{minted}{latex}
-\usepackage{xlistings}
+\usepackage[style=plain]{xlistings}
 \end{minted}
 % TODO: provide a package option!
 
