@@ -1,5 +1,5 @@
 \errorcontextlines=99999
-\documentclass{scrartcl}
+\documentclass[10pt,DIV=12]{scrartcl}
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -9,18 +9,19 @@
 
 \usepackage[sfdefault]{FiraSans}
 \usepackage{FiraMono}
+\usepackage{csquotes}
 
 \usepackage[fakeminted]{xlistings}
 \LoadLanguages{latex,bash,rubberduck,xml,json}
 
-\let\T\texttt
-
 \usepackage[colorlinks=true,breaklinks=true,allcolors=cyan!65!black]{hyperref}
 \usepackage{footnotebackref}
 
+\let\T\texttt
+\def\argref#1#2{\hyperref[#1]{\T{#2}}}
 
-\title{Das \T{xlistings}-Paket}
-\subtitle{Version \thexlstversion}
+\title{\T{xlistings} v0.1.0}
+\subtitle{opinionated \T{listings} extensions}
 \date{\today}
 \author{Florian Sihler}
 
@@ -29,8 +30,8 @@
     
 \section{Introduction}
 
-This package extends on the \href{https://ctan.org/pkg/listings}{listings} package, providing an easier front-end to create code blocks of selected languages, support for number highlighting, highlighting, non-selectable line numbers,\footnote{If a number is truly non-selectable depends on the viewer used. To ensure that they can not be selected would require images, which we currently do not create/use.} and more.
-While it is not compatible with the \href{https://ctan.org/pkg/minted}{minted} package, it provides a similar interface for code highlighting that can be used as a partial drop-in replacement.
+This package extends on the \href{https://ctan.org/pkg/listings}{listings} package, providing an easier front-end to create code blocks of selected languages, support for number highlighting, segment highlighting, non-selectable line numbers,\footnote{If a number is truly non-selectable depends on the viewer used. To ensure that they can not be selected would require images, a process we currently do not support.} and more.
+While it is not compatible with the \href{https://ctan.org/pkg/minted}{minted} package, it provides a similar interface for code highlighting that can be used as a (currently partial) drop-in replacement using the \argref{nofakeminted}{fakeminted} option.
 
 To load the package, simply use:
 
@@ -39,6 +40,20 @@ To load the package, simply use:
 \end{minted}
 
 Throughout this document, we will use the \T{xlistings} package to highlight code.
+If you are no fan of the \enquote{bordered} look of the code blocks, you can use \blatex{\\xlstsetmintedstyle\{plain number\}} to switch the look and feel to:
+
+\xlstsetmintedstyle{plain number}
+\begin{minted}{latex}
+\usepackage{xlistings}
+\end{minted}
+
+Or, using \blatex{\\xlstsetmintedstyle\{plain\}}:
+
+\xlstsetmintedstyle{plain}
+\begin{minted}{latex}
+\usepackage{xlistings}
+\end{minted}
+% TODO: provide a package option!
 
 \subsection{Origin}
 
@@ -320,13 +335,13 @@ Dies ist ein Test für \cjava{public static void main} - hat er geklappt?
 \subsection{Sprachverwaltung}
 
 \begin{command}{solStyles}{}
-    Zeigt die Formatierung und Farbe der verschiedenen Stile an und ist wohl nur zu Testzwecken von nutzen. So ergibt \cmd{solStyles}: \solStyles
+    Zeigt die Formatierung und Farbe der verschiedenen Stile an und ist wohl nur zu Testzwecken von nutzen. So ergibt \cmd{solStyles}: \xlstStyles
 \end{command}
 
 \begin{command}{solLanguageSearchPath}{}
     Dieser Befehl enthält alle Pfade an denen \cmdref{solLoadLanguage} nach sprachen suchen soll. Dies ist überflüssig, wenn sich die Sprache im \T{texmf}-Baum des Systems befindet. Die Pfade können durch \cmd{renewcommand} aktualisiert werden. Beispiel:
 \begin{plainlatex}
-\renewcommand{\solLanguageSearchPath}{{OrdnerA/}{OrdnerB/UnterordnerA/}{/home/}}
+\renewcommand{\xlstLanguageSearchPath}{{OrdnerA/}{OrdnerB/UnterordnerA/}{/home/}}
 \end{plainlatex}
     \notetext{Im lokalen Verzeichnis in dem \bbash{pdflatex} aufgerufen wird, wird immer gesucht! Sollte es mehrere Dateien mit gleichem Namen geben, so hat die Datei im lokalen Verzeichnis die höchste Priorität und anschließend werden die Ordner in der Reihenfolge durchsucht, bis die Datei das erste mal gefunden wurde.}
 \end{command}
@@ -349,7 +364,7 @@ Dies ist ein Test für \cjava{public static void main} - hat er geklappt?
     Also eine Sprache, die Raute für Kommentare verwendet, die beiden Schlüsselbegriffe \T{Quack} und \T{new} besitzt sowie noch ein \say{keywordB} (\notetext{so Formal ist die Sprache jetzt ja auch nicht :)}): \T{Duck}
     Im Dokument laden wir die Sprache mit:
 \begin{latex}
-\solLoadLanguage{rubberduck}
+\xlstLoadLanguage{rubberduck}
 \end{latex}
     Nun können wir die Umgebungen wie \envref{<Sprache>} auch mit \T{rubberduck} verwenden:
 \begin{latex}[morekeywords={[3]{rubberduck}}]
@@ -386,15 +401,15 @@ Quack jens ::{
 \begin{command}{solSetLeftMargin}{\manArg{Länge}}
     Setzt den Abstand der linken Seite des Listings und kann so dafür sorgen, dass zum
     Beispiel auch die Zeilennummern nicht über den Dokumentrand hinausragen. Beispiel:
-\begin{latex}[morekeywords={[5]{\\solSetLeftMargin}}]
-\solSetLeftMargin{15pt}
+\begin{latex}[morekeywords={[5]{\\xlstSetLeftMargin}}]
+\xlstSetLeftMargin{15pt}
 \begin{java}
 // Ein Kommentar!!
 public static void main(...){ /* ... */ }
 \end{java}
 \end{latex}
 Ergibt: {
-\solSetLeftMargin{15pt}
+\xlstSetLeftMargin{15pt}
 \begin{java}
 // Ein Kommentar!!
 public static void main(...){ /* ... */ }
@@ -423,7 +438,7 @@ public static void main(...){ /* ... */ }
 \end{command}
 
 \begin{command}{solGet}{\manArg{StilName}\manArg{Text}}
-    Setzt \T{Text} im Stil von \T{StilName} wie ihn das Paket auch selbst verwendet. So zum Beispiel:\\*\bjava{\\solGet\{comments\}\{Hallo Welt\}} ergibt: \solGet{comments}{Hallo Welt}.
+    Setzt \T{Text} im Stil von \T{StilName} wie ihn das Paket auch selbst verwendet. So zum Beispiel:\\*\bjava{\\xlstGet\{comments\}\{Hallo Welt\}} ergibt: \xlstGet{comments}{Hallo Welt}.
 \end{command}
 
 \begin{command}{solNumFs}{\manArg{size}}
@@ -487,8 +502,8 @@ public static int add(int a, int b){ return a + b; }
     Eine kommaseparierte Liste an Zeilennummern, welche nicht angezeigt werden sollen. Die Sperre erfolgt lokal, mittels \TeX-Gruppen kann das blacklisting demnach kontrolliert werden.
     Mit \cmdref{solblacklistisghost} \cmdref{solblacklistispresent} kann kontrolliert werden, ob die ausgeblendeten Zeilennummern aus der Zählung entfernt werden sollen.
     Dies kann auch über den optionalen Stern geregelt werden (\cmdref{solblacklistisghost} ist standard, mit Stern wird \cmdref{solblacklistispresent} ausgeführt). Wiederholte Aufrufe fügen die zu versteckenden Zeilen den Bestehenden hinzu.
-\begin{latex}[morekeywords={[5]{\\solblacklistlinenumbers}}]
-\solblacklistlinenumbers{3}
+\begin{latex}[morekeywords={[5]{\\xlstblacklistlinenumbers}}]
+\xlstblacklistlinenumbers{3}
 \begin{java}
 public static void main(String[] args){
     System.out.println("Hello World");
@@ -497,7 +512,7 @@ public static void main(String[] args){
 \end{java}
 \end{latex}
 Ergibt: {
-\solblacklistlinenumbers{3}
+\xlstblacklistlinenumbers{3}
 \begin{java}
 public static void main(String[] args){
     System.out.println("Hello World");
@@ -506,8 +521,8 @@ public static void main(String[] args){
 \end{java}
 }
 Im Gegensatz dazu, mit Stern:
-\begin{latex}[morekeywords={[5]{\\solblacklistlinenumbers}}]
-\solblacklistlinenumbers!**!*{3}
+\begin{latex}[morekeywords={[5]{\\xlstblacklistlinenumbers}}]
+\xlstblacklistlinenumbers!**!*{3}
 \begin{java}
 public static void main(String[] args){
     System.out.println("Hello World");
@@ -516,7 +531,7 @@ public static void main(String[] args){
 \end{java}
 \end{latex}
 Ergibt: {
-\solblacklistlinenumbers*{2,3}
+\xlstblacklistlinenumbers*{2,3}
 \begin{java}
 public static void main(String[] args){
     System.out.println("Hello World");
