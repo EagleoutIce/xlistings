@@ -11,15 +11,15 @@
 
 \SetupKeyvalOptions{family=xlst,prefix=@xlst@}
 
-\DeclareBoolOption{print}                           % in print, ink will be reduced, adapted to grayscale
+\DeclareBoolOption{print}                           % in print, ink will be reduced, adapted to gray scale
 \DeclareComplementaryOption{digital}{print}
 \DeclareBoolOption[true]{guardspace}                % ensure that listings are not broken over pages
-\DeclareBoolOption{numinpar}                        % if enabled numbers would be outside of leftmarg
+\DeclareBoolOption{numinpar}                        % if enabled numbers would be outside of the left margin
 \DeclareBoolOption[true]{hlnumbers}                 % highlight numbers
-\DeclareBoolOption{upshape}                         % upshape for basicstyle
+\DeclareBoolOption{upshape}                         % upshape for basic style
 \DeclareBoolOption{inlinesize}                      % don't change font?
 \DeclareBoolOption{highlights}                      % special (tikz based) highlights
-\DeclareBoolOption{fakeminted}                      % use minted for output
+\DeclareBoolOption[true]{fakeminted}                % use minted for output
 \DeclareBoolOption{extendednums}                    % extended number support
 \DeclareBoolOption{debug}                           % debug output
 \DeclareStringOption[default]{style}                % the (default) style to use
@@ -48,6 +48,7 @@
 % Listings-Base:
 \IfFileExists{listingsutf8.sty}{\RequirePackage{listingsutf8}}{\RequirePackage{listings}}
 \IfFileExists{accsupp.sty}{\RequirePackage{accsupp}\@xlst@accuspp@available@true}{\@xlst@accuspp@available@false}%
+\RequirePackage{lstautogobble}
 
 % in the future we may want to use something like https://tex.stackexchange.com/a/728534
 % [* to overwrite + to append] #1 language, #2 overwrite
@@ -483,7 +484,7 @@ backgroundcolor = \@declaredcolor{xlst@colors@background},
 xleftmargin     = \xlst@length@lst@xleftmargin,
 xrightmargin    = \xlst@length@lst@xrightmargin,
 aboveskip       = \medskipamount,
-belowskip       = \z@,
+belowskip       = \medskipamount,
 % the 'key'-styles:
 stringstyle     = \xlst@styles@lst@basic\xlst@styles@lst@literals,
 commentstyle    = \xlst@styles@lst@basic\xlst@styles@lst@comments,

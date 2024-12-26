@@ -11,20 +11,25 @@
 \usepackage[sfdefault,scale=.9]{FiraSans}
 % fitting math font
 \usepackage{newtxsf}
+\usepackage{inconsolata}
 \usepackage{csquotes}
+\usepackage{multicol}
+\usepackage{pgffor}
 
-\usepackage[fakeminted,style={plain number}]{xlistings}
+\usepackage[style={plain number},extendednums]{xlistings}
 \LoadLanguages{latex,java,bash,rubberduck,xml,json}
 
 \usepackage{microtype}
 \usepackage[colorlinks=true,breaklinks=true,allcolors=cyan!65!black]{hyperref}
+\usepackage{cleveref}
 \usepackage{footnotebackref}
 
-\xlstlangoverride{latex}{morekeywords=[5]{\\xlstsetstyle,\\xlstlangoverride,\\LoadLanguages}}
+\xlstlangoverride{latex}{morekeywords=[5]{\\xlstsetstyle,\\xlstlangoverride,\\LoadLanguages,\\xlstblacklistlinenumbers,\\lstcolorlet,\\xlstDefineStyles}}
 % \xlstlangoverride*{latex}{morekeywords=[2]{xlistings}}
 
 \let\T\texttt
-\def\argref#1#2{\hyperref[#1]{\T{#2}}}
+\def\argref#1#2{\hyperref[arg:#1]{\T{#2}}}
+\def\cmdref#1{\hyperref[arg:#1]{\T{\xlstGetStyle{command}\textbackslash #1}}}
 
 \title{\T{xlistings} v0.1.0}
 \subtitle{opinionated \T{listings} extensions}
@@ -39,27 +44,28 @@
 This package extends on the \href{https://ctan.org/pkg/listings}{listings} package, providing an easier front-end to create code blocks of selected languages, support for number highlighting, segment highlighting, non-selectable line numbers,\footnote{If a number is truly non-selectable depends on the viewer used. To ensure that they can not be selected would require images, a process we currently do not support.} and more.
 This package is not compatible with the \href{https://ctan.org/pkg/minted}{minted} package.
 % , it provides a similar interface for code highlighting that can be used as a (currently partial) drop-in replacement using the  option.
-
 In summary this package provides the following improvements over the \T{listings} package:
 
-\begin{itemize}[nosep,itemsep=6pt,leftmargin=*]
-    \item Highlighting of numbers in code blocks: \bjava{1234 + x * 0x34}
+\begin{itemize}[nosep,itemsep=2pt,leftmargin=*]
+    \item Highlighting of numbers in code blocks: \bjava{10_234 + x1 * 0x34 - x2}\; (\argref{hlnumbers}{hlnumbers} and \argref{extendednums}{extendednums} options)
     \item Support for the \blatex{\\begin\{minted\}\{<lang>\} :ldots: \\end\{minted\}} environment (\argref{fakeminted}{fakeminted} option)
     \item Wrapper macros like \blatex{\\bjava\{int i\}} and \clatex{\\cjava\{int i\}} and environments \blatex{\\begin\{plainjava\}}
     \item Language sensitive override: \blatex{\\xlstlangoverride\{latex\}\{morekeywords=[5]\{\\xlstsetstyle\}\}}
     \item Support for (\href{https://ctan.org/pkg/accsupp}{accsupp} based) non-selectable line numbers and characters:
-\begin{minted}{java}
+\begin{minted}[xleftmargin=12pt]{java}
 System.out.println("Hello, World!");
 \end{minted}
+    \item Support for blacklisting line numbers with \cmdref{xlstblacklistlinenumbers}
     \item Support for umlauts and UTF-8 encoding (with the \href{https://ctan.org/pkg/listingsutf8
     }{listingsutf8} package)
+    \item Provides \texttt{autogobble} to remove leading spaces (with the \href{https://ctan.org/pkg/lstautogobble}{lstautogobble} package)
     \item Comfort key \blatex{add to literate} to add elements to the literate list
     \item \blatex{\\LoadLanguages\{<lang>\}} to load a language or multiple languages on demand
     \item Opinionated language overwrites (see the \T{langs/} folder)
     \item Opinionated default literates such as \T{:ldots:}~(\bjava{:ldots:}), \T{:lan:}~(\bjava{:lan:}), \T{:to:}~(\bjava{:to:}) and \T{:c:}~(\bjava{:c:}, \textit{breaks highlighting})
 \end{itemize}
 
-\subsection{Loading the Package}
+\subsection{Loading the Package}\label{sec:loading-pkg}
 
 To load the package, simply use:
 
@@ -86,164 +92,194 @@ Or, using \blatex{\\xlstsetstyle\{plain\}}:
 
 \subsection{Origin}
 
-Originally, this package was part of \href{https://github.com/EagleoutIce/LILLY}{\MakeUppercase{lilly}}, which I again ported to the \href{https://github.com/EagleoutIce/sopra-collection}{sopra-collection} during my studies. This package is the standalone and improved version of these packages. The process is currently work in progress.
+Originally, this package was part of \href{https://github.com/EagleoutIce/LILLY}{\MakeUppercase{lilly}}, which I again ported to the \href{https://github.com/EagleoutIce/sopra-collection}{sopra-collection} during my studies. This package is the standalone and improved version of these packages. The process is work in progress and I welcome any kind of feedback.
+
+\subsection{Dependencies}
+
+This package imports the following packages:\vspace*{-.5\baselineskip}
+\begin{multicols}{3}
+\begin{itemize}[nosep]
+    \def\pkgparse#1:#2\@nil{%
+        \T{#1}\ifx!#2!\else\textsuperscript{(\textit{#2})}\fi%
+    }
+    \foreach \pkg in {%
+        kvoptions:,
+        needspace:{\argref{guardspace}{guardspace}},%
+        etoolbox:,xcolor:,pgfkeys:,lstautogobble:,listingsutf8:try,listings:,accsupp:try,
+        tikz:{\argref{highlights}{highlights}}%
+    } {
+        \item \expandafter\pkgparse\pkg\@nil
+    }
+\end{itemize}
+\footnotesize\textit{\enquote{try} notes that the package is only loaded if present and may rely on a fallback if not. For example, \T{accsupp} allows to make line numbers \enquote{uncopyable} but is not critical so if it is not found we provide fallbacks.}
+\end{multicols}\vspace*{-.75\baselineskip}
+
+    All of those package should be part of usual \LaTeX{} distribution. 
+    
+\section{References}
+\subsection{Accepted Parameters}
+
+\newenvironment{argument}[2][]{\medskip\par\noindent\phantomsection\llap{\small\texttt{#2}~}\textit{#1package option}\label{arg:#2}\\*\noindent\ignorespaces}{}
+
+
+\begin{argument}{print}
+    This option tries to save ink by not highlighting the background of code blocks and by making certain keywords bold or italic to ensure readability even in monochrome prints.
+    See also \argref{digital}{digital} for the complementary option.
+\end{argument}
+
+\begin{argument}[default, ]{digital}
+    This is the complementary option to \argref{print}{print} and is the default.
+\end{argument}
+
+\begin{argument}[default, ]{guardspace}
+    This option allows you to configure a minimum number of lines that should be kept together, which you can define with the help of \cmdref{xlstguard}. If you have a border this can help avoid initial stripes. 
+    
+    If you explicitly want to disable this option, use \blatex{guardspace=false} when loading the package.
+\end{argument}
+
+\makeatletter
+\begin{argument}{numinpar}
+    This option is a shorthand for \cmdref{xlstSetLeftMargin} with the value \enquote{\@@xlst@numinpar@length}.
+    It can be used to automatically indent listings and prevent numbers from protruding beyond the document margin.
+\end{argument}
+
+\begin{argument}[default, ]{hlnumbers}
+    This option causes the indicative number highlighting in code blocks and is on by default, use \T{hlnumbers=false} to disable it.
+\end{argument}
+
+\begin{argument}{upshape}
+    By default, our inline commands adapt to the surrounding text and may be e.g., italic. This option disables this behavior enforcing an upshape style. For a similar behavior but with font size, see \argref{inlinesize}{inlinesize}
+\end{argument}
+
+\begin{argument}{inlinesize}
+    By default, our inline commands adapt to the surrounding fontsize, this option disables this behavior enforcing a fixed size. For a similar behavior but with font shape, see \argref{upshape}{upshape}. to configure the font size, see \cmdref{lstfs}.
+\end{argument}
+
+\begin{argument}{highlights}
+    This option uses the \href{https://ctan.org/pkg/tikz}{tikz} package to highlight code segments. This can be used to highlight code segments in a different color or with a background. This option is currently work in progress and not easily usable.
+\end{argument}
+
+\begin{argument}[default, ]{fakeminted}
+    This option causes \T{xlistings} to provide you with a replacement \blatex{minted} environment.
+    To disable this behavior, use \T{fakeminted=false}.
+\end{argument}
+
+\begin{argument}{extendednums}
+    This option causes numbers with underscores or the classic \T{0x}-, \T{0b}- or \T{0o}-prefixes to be highlighted as well.
+\end{argument}
+
+\begin{argument}{debug}
+    This option enables debug output and causes the package to print debug information to the console.
+\end{argument}
+
+\begin{argument}[string, ]{style}
+    This option selects the default style that can be set with \cmdref{xlstsetstyle}. The default is (surprise) \T{default}.
+\end{argument}
+
+\subsection{Most Important Commands}
+
+After loading the package as described in~\cref{sec:loading-pkg},
+you can load a language with \cmdref{LoadLanguages}:
+\begin{minted}{latex}
+\LoadLanguages{la:c:tex,ja:c:va,ba:c:sh,js:c:on}
+\end{minted}
+This uses the opinionated language definitions in the \T{langs/} folder and provides them to you in a set of environments and commands:
+\begin{itemize}[nosep]
+    \item As \blatex{\\begin\{<lang>\}}, \blatex{\\begin\{<lang>*\}}, and \blatex{\\begin\{plain<lang>\}} environments. For example, with the before loaded languages you have:
+\begin{minted}{latex}
+\begin{java}
+...
+\end{java}
+\end{minted}
+    \item As \blatex{\\c<lang>\{<code>\}} and \blatex{\\b<lang>\{<code>\}} commands, e.g., \clatex{\\cjava\{int i\}} and \blatex{\\bjava\{int i\}}.
+    \item As \blatex{\\i<lang>\{<file>\}} command to include a file.
+    \item As \blatex{\\begin\{minted\}\{<lang>\}} environment.
+\end{itemize}
+
+All inline commands (\blatex{\\c<lang>}, \blatex{\\b<lang>}, \blatex{\\i<lang>}) have an advantage in that they can be used as arguments to other macros, \textit{but} you have to escape things like backslashes or curly braces with an additional backslash.
+
+If you want to register special keywords or any other configuration for an existing, and loaded, language, you can use \cmdref{xlstlangoverride}:
+
+\xlstsetstyle{plain number}
+\begingroup
+\xlstblacklistlinenumbers{4}
+\begin{minted}[autogobble]{latex}
+        \xlstlangoverride{latex}{
+            morekeywords=[5]{\\commandA, \\commandB},
+            lineskip=42pt,
+            % ...
+        }
+\end{minted}
+\endgroup
+
+As you can see, the sample above skips a given line number, which we achieve by using the following command: \blatex{\\xlstblacklistlinenumbers\{4\}}.
+The effects of all of these commands are local, so you can use them in a group (e.g., with \blatex{\\begingroup} and \blatex{\\endgroup} or an opening and closing brace) to limit their effect.
+
+Additionally, if you look at the source of this documentation, the source of the example above is actually indented. We remove the leading spaces with the new \T{autogobble} option (provided by the \href{https://ctan.org/pkg/lstautogobble}{lstautogobble} package).
+If you want to add new literates for whatever reason, you can use the new listings key \T{add to literate}:
+
+\begin{minted}{latex}
+\lstset{
+    add to literate={sample}{\(\mathcolor{red}{\pi}\)}{1}
+}
+\end{minted}
+
+\begingroup
+\lstset{
+    add to literate={sample}{\(\mathcolor{red}{\pi}\)}{1}
+}
+
+With this active, writing \T{sample} will result in \bjava{sample} (you can combine this with \cmdref{xlstlangoverride} to add literates to a specific language).
+\endgroup
+
+If you want to change the colors of the keywords used, you can use \cmdref{lstcolorlet} with keys such as \T{keywordA}, \T{keywordB}, \T{keywordC}, \T{numbers}, \T{literals}, \T{comments}, \T{highlight}, and \T{command}:
+
+\begin{minted}{latex}
+\lstcolorlet{comments}{orange}
+\end{minted}
+\begingroup
+\lstcolorlet{comments}{orange}
+
+With this, the color of comments will be changed to orange:
+
+\begin{minted}{latex}
+% sample comment 
+\end{minted}
+\endgroup
+
+If you want to have complete control over the styling, you may use \cmdref{xlstDefineStyles} which works like the following:
+
+\begin{minted}{latex}
+\xlstDefineStyles{%
+    {comments: \color{green}\scshape},%
+}
+\end{minted}
+
+\begingroup
+\xlstDefineStyles{%
+    {comments: \color{green}\bfseries},%
+}
+
+Now, comments will be displayed in green and bold:
+\begin{minted}{latex}
+% sample comment 
+\end{minted}
+
+\textit{This command is currently rather rigid and subject to change!}
+
+
+If you are interested in a flexible highlighting and animation of these code snippets, have a look at the \href{https://github.com/EagleoutIce/code-animation}{code-animation} package, which we are currently working for to be compatible with \T{xlistings}.
+\endgroup
+
+
+
+\subsection{Full Reference}
+
+\textbf{TODO}
+
 \end{document}
 \iffalse
 
-\section{Allgemeines}
-\subsection{Warum, wieso, weshalb?}
-    Dieses \LaTeXe-Paket wurde im Rahmen des Sopras im
-    Wintersemester 2019 und Sommersemester 2020 verfasst und dient als
-    Grundlage für die das Highlight von Codes
-    des \imptext{Teams 20}. Diese Dokumentation wurde zusammen mit der
-    \T{sopra-base.cls} sowie dem Paket \T{sopra-documentation.sty} kreiert.\par
-    Zum Visualisieren der einzelnen Code-Ausschnitte wird das Paket selbst verwendet, welches ebenfalls in hier eingebettet sein sollte: \attachTex{xlistings.sty}. \notetext{Dieses Paket benötigt weder \T{shell-escape} noch \T{minted} um zu funktionieren. Es baut auf \T{listings} auf!}
-\subsection{Abhängigkeiten}
-    Dieses Paket bindet die folgenden Paketen mit ein:
-    \begin{multicols}{3}
-        \begin{itemize}
-            \def\pkgparse#1:#2\@nil{%
-                \T{#1}\ifx!#2!\else\textsuperscript{(#2)}\fi%
-            }
-            \foreach \pkg in {fontenc:{\T{T1}, \jmark[\T{encoding}]{mrk:encoding}},%
-                inputenc:{\T{utf8}, \jmark[\T{encoding}]{mrk:encoding}},%
-                needspace:{\jmark[\T{guardspace}]{mrk:guardspace}},%
-                etoolbox:,xcolor:,pgfkeys:,listingsutf8:$\ll$try$\gg$,listings:$\ll$fallback$\gg$,accsupp:$\ll$try$\gg$} {
-                \item \expandafter\pkgparse\pkg\@nil
-            }
-        \end{itemize}
-    \end{multicols}
-    All diese Pakete sollten Teil der gängigen \LaTeX-Distribution sein. \notetext{Hinweis: \say{$\ll$try$\gg$} notiert hierbei, dass das Paket nicht vorhanden sein muss, aber eventuell zusätzliche Möglichkeiten bietet. So gestattet es \T{accsupp} zum Beispiel,
-    die Zeilennummern \say{unkopierbar} zu machen und so besser mit den Listings zu arbeiten
-    und \T{listings} wird nur dann geladen, wenn \T{listingsutf8} nicht gefunden wird.}
-\begin{center}
-    Aktuell sind noch einige Dinge wie Optionen und weitere Umgebungen geplant.
-\end{center}
-
-\subsection{Die Installation}
-    Das Paket wird nicht als \T{.dtx} ausgeliefert, weswegen sich die
-    folgenden Möglichkeiten ergeben:
-    \begin{itemize}
-        \item Das Paket kann in dasselbe Verzeichnis wie das Dokument
-                gesetzt werden. In diesem Fall lautet die Einbindungsanweisung:
-\begin{plainlatex}
-\usepackage{xlistings}
-\end{plainlatex}
-        \item Das Paket kann in ein Unterverzeichnis/in ein mit
-                dem Dokument ausgeliefertes Verzeichnis gelegt werden. In
-                diesem Fall erfolgt die Angabe durch den (relativen-) Pfad:
-\begin{plainlatex}
-\usepackage{./Mein/Pfad/zu/xlistings}
-\end{plainlatex}
-        \item Man kann das Paket (mittels eines Symlinks oder ähnlichem)
-              in einen eigenen \emph{texmf}-Baum ablegen.
-              So kann zum Beispiel auf Linux unter der Verwendung von texlive
-              das Paket hier abgelegt werden: \bvoid{\~/texmf/tex/latex/}.
-              Das Verzeichnis kann erstellt und anschließend mittels
-              \bbash{texhash \~/texmf} aktualisiert werden. Nun kann
-              das Paket wie jede andere installierte Paket verwendet werden:
-\begin{plainlatex}
-\usepackage{xlistings}
-\end{plainlatex}
-    \end{itemize}
-
-    \imptext{Wichtiger Hinweis:} Dieses Paket kommt mit Sprachkonfigurationen, die sich im Unterordner \say{\T{Languages}} befinden. Die Sprachen stehen nur dann zur Verfügung,
-    wenn sie mit dem Paket platziert werden (nach einer der eben genannten Möglichkeiten) oder sie sich im gleichen Verzeichnis wie die \LaTeXe-Datei befinden. Sollte dies
-    nicht gewünscht oder möglich sein, so \emph{muss} \cmdref{solLanguageSearchPath} angepasst werden! Es steht jedem Frei, das Laden der Sprachen mittels \jmark[\T{noloadlangs}]{mrk:loadlangs} zu deaktivieren und seine eigenen Sprachdefinitionen
-    oder Sprachen zu verwenden. Damit dieses Paket allerdings Sinn macht, sollte das \cmdref{RegisterLanguage}-Makro verwendet werden.
-
-\subsection{Weitere Besonderheiten}
-\paragraph{Version v1.0.0:} Es wird \cmd{ttfamily} modifiziert, so dass die \say{Typewriter}-Schrift auch hier identisch zu der allgemein verwendeten ist.
-\paragraph{Version v1.0.10:} Der Befehl \cmdref{lstfs} wurde hinzugefügt um die
-Schriftgrößen von Listings anzupassen.
-\paragraph{Version v1.0.12:} Die Paketoption \texttt{cpalette} wurde samt Gegenoption hinzugefügt.
-\paragraph{Version v1.0.13:} Die Befehle \cmdref{lstcolorlet} und \cmdref{lstcolordef} wurden zur einfachen Farbmanipulation hinzugefügt.
-\paragraph{Version v1.0.14:} Abstände bei Literates korrigiert. Sollten nun auch beim Ersetzen von Ziffern in inline-Listings die korrekte Anzahl an Leerfeldern behalten
-\paragraph{Version v1.0.15:} Mit \argref{guardspace}{noguardspace} wurde eine (vertikale) Abstands-sicherungs-option hinzugefügt.
-\paragraph{Version v1.0.17:} Mit \T{autogobble} können nun anführende Leerfelder entfernt werden.
-\paragraph{Version v1.0.18:}
-Sichert nun auch die letzte Zeile eines Listings im Falle von \argref{guardspace}{noguardspace}.
-\paragraph{Version v1.0.19:}
-Kursive Schrift für Typewriter Schriftart wird nun sicherer angewendet. Ein paar ungenutzte Komfort-Funktionen wurden entfernt.
-\paragraph{Version v1.0.20:}
-Die Funktion \T{autogobble} wurde wieder entfernt, ebenso wurde die Paketstruktur intern überarbeitet.
-\paragraph{Version v1.0.21:}
-Es wurden einige Code-Interne Restrukturierungen durchgeführt.
-\paragraph{Version v1.0.22:}
-Unterstützung für \argref{nofakeminted}{fakeminted} und \argref{noextendednums}{extendednums}.
-\paragraph{Version v1.0.23:}
-Unterstützung für \cmdref{solblacklistlinenumbers}, \cmdref{solblacklistisghost} und \cmdref{solblacklistispresent}.
-
-\subsection{Akzeptierte Parameter}
-    Das Paket akzeptiert, so wie die meisten, Argumente.
-    Bei Argumenten mit einer \say{Counter}-Option wird das jeweils standardmäßig aktive zuerst und das andere in Klammern
-    geschrieben. So wird implizit:
-\begin{plainlatex}
-\usepackage[noencoding,hlnumbers,loadlangs,guardspace]{xlistings}
-\end{plainlatex}
-    aufgerufen. Während mit:
-\begin{plainlatex}
-\usepackage[noloadlangs]{xlistings}
-\end{plainlatex}
-    das automatische Laden gewisser Sprachen verhindert wird.
-
-    \begin{argument}{noencoding}{encoding}
-        \label{mrk:encoding}\T{encoding} lädt die für Umlaute nötigen Pakete. Diese Option kann dann benutzt werden wenn man sie nicht extra laden, oder einfach sicher gehen möchte.
-    \end{argument}
-
-    \begin{argument}{hlnumbers}{nohlnumbers}
-        Das Paket versucht automatisch Zahlen zu markieren und zwar nur da, wo es sich auch um eine Zahl handelt. Dieses Verfahren funktioniert gut, kann aber - sofern als störend empfunden, oder es sich doch als unartig herausstellen sollte - mittels \T{nohlnumbers} deaktiviert werden.
-    \end{argument}
-
-    \begin{argument}{defaultmode}{print}
-        Diese Funktionen arbeiten analog zu den gleichnamigen Vertretern in \T{sopra-base.cls}. Wird \T{print} gewählt, so wird versucht möglichst Tinte einzusparen (kein Hintegrund bei Codes, \ldots) und weiter werden gewisse
-        Schlüsselbegriffe fett/kursiv gedruckt um auch im einfarbigen Ausdruck eine
-        (möglichst gute) Unterscheidbarkeit zu erhalten.
-    \end{argument}
-
-    \begin{argument}{loadlangs}{noloadlangs}
-        Lädt mittels \cmdref{solLoadLanguage} die Sprache \T{java} (siehe \jmark[Abschnitt \ref{sec:vordefinierteSprachen} (Vordefinierte Sprachen)]{sec:vordefinierteSprachen} für mehr Informationen). Dies kann durch \T{noloadlangs} deaktiviert werden. \notetext{Hinweis: Die Sprachen werden nur geladen, wenn die Konfigurationsdateien gefunden werden. Siehe hierzu \cmdref{solLoadLanguage}.}
-    \end{argument}
-
-    \begin{argument}{nocpalette}{cpalette}
-        Bietet Unterstützung für \href{color-palettes}{https://github.com/EagleoutIce/color-palettes}. In diesem Fall wird das code-highlighting automatisch an die aktuelle Palette angepasst und auch mit dem Ändern der Palette von da an aktualisiert.
-    \end{argument}
-
-    \begin{argument}{noupshape}{upshape}
-        Fügt \cmd{upshape} zum Stil hinzu. Dies sorgt dafür, dass sich Listings nichtmehr an kursiv gesetzte Schrift anpassen.
-    \end{argument}
-
-    \begin{argument}{guardspace}{noguardspace}
-        Mit \T{guardspace} werden dem Listing jeweils auch zugesichert, dass es die nächste Zeile setzen darf. Dies kann dafür sorgen, dass ein Seitenumbruch erzeugt wird (wenn weniger als eine Zeile des Listings noch auf die Seite passt). Der Zweck dieser Option ist es, bei einer Hintergrundfarbe anfängliche Streifen zu vermeiden. Siehe \cmdref{solguard}.
-    \end{argument}
-
-    \begin{argument}{nonuminpar}{numinpar}
-        Kurzform für \cmdref{solSetLeftMargin} mit dem Wert \glqq{}{\makeatletter\@@xlst@numinpar@length}\grqq{}, kann also dazu verwendet
-        werden um die Listings automatisch einzurücken und die Nummern so nicht über den Dokumentenrand hinausragen zu lassen.
-    \end{argument}
-
-    \begin{argument}{defaultfont}{nodefaultfont}
-        Wenn die Option gesetzt ist, wird die Typewriter-Schriftart auf \say{AnonymousPro} geändert, sonst nicht.
-    \end{argument}
-
-    \begin{argument}{nofakeminted}{fakeminted}
-        Ist die Option gesetzt, so wird eine \env{minted} Umgebung erzeugt, welche es erlaubt dieses Paket wie \env{minted} zu verwenden. In diesem Fall heißt es:
-\begin{plainlatex}
-\begin{minted}{java}
-public static void main(String[] args) { }
-\end{minted}
-\end{plainlatex}
-        Mit \cmdref{solmintedmap} kann ein Sprach-Mapping erzeugt werden. So wird beispielsweise automatisch \T{java} auf die interne Sprache \T{lJava} abgebildet.
-        Durch \cmdref{solsetmintedstyle} kann gewählt werden, welcher der internen Stile für das Listing verwendet werden soll. Zur Verfügung stehen \T{default}, \T{nonumber}, \T{plain} und \T{plain number}.
-    \end{argument}
-
-    \begin{argument}{noextendednums}{extendednums}
-        Ist die Option gesetzt, so werden auch Zahlen gehighlighted, die intern Unterstriche verwenden oder die klassischen \T{0x}-, \T{0b}- oder \T{0o}-Präfixe verwenden.
-    \end{argument}
-
-    \begin{argument}{inlinesize}{noinlinesize}
-        Wenn die Option gesetzt ist, wird in den inline-Befehlen wie \cmd{bjava} die Schriftgröße nicht angepasst (siehe hierfür auch \cmdref{lstfs} mit Sternchen). Im Dokument kann diese Konfiguration jederzeit mit \cmd{soladaptinline} aktiviert und mit \cmd{sollockinline} deaktiviert werden.
-    \end{argument}
 \subsection{Farben}
 
     Dieses Paket definiert einige Farben mittels \cmd{colorlet}. Wird \T{sopra-base} als geladen erkannt, wird versucht passende Farben zu setzen. \imptext{Alle folgenden Farben tragen das Präfix \T{xlst@colors@}}: \T{border}, \T{background}, \T{lst@keywordA}, \T{lst@keywordB}, \T{lst@keywordC}, \T{lst@numbers}, \T{lst@literals}, \T{lst@comments}, \T{lst@highlight}, \T{lst@linenumbers} und zuletzt \T{lst@command}, wobei die Bedeutung der einzelnen Farben aufgrund ihres Namens hervorgehen sollte (jeder Sprache steht es frei die gleich zu besprechenden Stile, die
