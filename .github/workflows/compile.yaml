@@ -27,7 +27,7 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add -f "xlistings-doc.pdf" "preview-*.png"
+        git add -f "build/xlistings-doc.pdf" "preview-*.png"
         git commit -m "Newly compiled data"
     - name: Push changes
       uses: ad-m/github-push-action@master
