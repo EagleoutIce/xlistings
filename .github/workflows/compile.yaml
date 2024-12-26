@@ -1,0 +1,37 @@
+name: Compile the showcases
+'on':
+  push:
+    branches: [master, main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout git repository
+      uses: actions/checkout@v2
+      with:
+        lfs: true
+        submodules: true
+    - name: 📄 Compile Documentation
+      uses: xu-cheng/latex-action@v3
+      with:
+        root_file: |
+          xlistings-doc.tex
+    - name: Install PU for previews
+      run: sudo apt install poppler-utils
+    - name: 🖼️ Generate preview
+      run: |
+         pdftoppm -png -r 300 -f 35 -l 37 ./build/xlistings-doc.pdf preview
+    - name: Commit
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add -f "xlistings-doc.pdf" "preview-*.png"
+        git commit -m "Newly compiled data"
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        branch: gh-pages
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        force: true
