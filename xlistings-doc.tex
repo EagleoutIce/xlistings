@@ -6,21 +6,22 @@
 
 \usepackage{xcolor}
 \usepackage{parskip}
+\usepackage{enumitem}
 
 \usepackage[sfdefault,scale=.9]{FiraSans}
 % fitting math font
 \usepackage{newtxsf}
 \usepackage{csquotes}
 
-\usepackage[fakeminted]{xlistings}
-\LoadLanguages{latex,bash,rubberduck,xml,json}
+\usepackage[fakeminted,style={plain number}]{xlistings}
+\LoadLanguages{latex,java,bash,rubberduck,xml,json}
 
 \usepackage{microtype}
 \usepackage[colorlinks=true,breaklinks=true,allcolors=cyan!65!black]{hyperref}
 \usepackage{footnotebackref}
 
-% [5]
-\xlstaddkeyword[5]{lLatex}{y,x,\\xlstsetstyle}
+\xlstlangoverride{latex}{morekeywords=[5]{\\xlstsetstyle,\\xlstlangoverride,\\LoadLanguages}}
+% \xlstlangoverride*{latex}{morekeywords=[2]{xlistings}}
 
 \let\T\texttt
 \def\argref#1#2{\hyperref[#1]{\T{#2}}}
@@ -32,23 +33,47 @@
 
 \begin{document}
     \maketitle
+
 \section{Introduction}
 
 This package extends on the \href{https://ctan.org/pkg/listings}{listings} package, providing an easier front-end to create code blocks of selected languages, support for number highlighting, segment highlighting, non-selectable line numbers,\footnote{If a number is truly non-selectable depends on the viewer used. To ensure that they can not be selected would require images, a process we currently do not support.} and more.
-While it is not compatible with the \href{https://ctan.org/pkg/minted}{minted} package, it provides a similar interface for code highlighting that can be used as a (currently partial) drop-in replacement using the \argref{nofakeminted}{fakeminted} option.
+This package is not compatible with the \href{https://ctan.org/pkg/minted}{minted} package.
+% , it provides a similar interface for code highlighting that can be used as a (currently partial) drop-in replacement using the  option.
+
+In summary this package provides the following improvements over the \T{listings} package:
+
+\begin{itemize}[nosep,itemsep=6pt,leftmargin=*]
+    \item Highlighting of numbers in code blocks: \bjava{1234 + x * 0x34}
+    \item Support for the \blatex{\\begin\{minted\}\{<lang>\} :ldots: \\end\{minted\}} environment (\argref{fakeminted}{fakeminted} option)
+    \item Wrapper macros like \blatex{\\bjava\{int i\}} and \clatex{\\cjava\{int i\}} and environments \blatex{\\begin\{plainjava\}}
+    \item Language sensitive override: \blatex{\\xlstlangoverride\{latex\}\{morekeywords=[5]\{\\xlstsetstyle\}\}}
+    \item Support for (\href{https://ctan.org/pkg/accsupp}{accsupp} based) non-selectable line numbers and characters:
+\begin{minted}{java}
+System.out.println("Hello, World!");
+\end{minted}
+    \item Support for umlauts and UTF-8 encoding (with the \href{https://ctan.org/pkg/listingsutf8
+    }{listingsutf8} package)
+    \item Comfort key \blatex{add to literate} to add elements to the literate list
+    \item \blatex{\\LoadLanguages\{<lang>\}} to load a language or multiple languages on demand
+    \item Opinionated language overwrites (see the \T{langs/} folder)
+    \item Opinionated default literates such as \T{:ldots:}~(\bjava{:ldots:}), \T{:lan:}~(\bjava{:lan:}), \T{:to:}~(\bjava{:to:}) and \T{:c:}~(\bjava{:c:}, \textit{breaks highlighting})
+\end{itemize}
+
+\subsection{Loading the Package}
 
 To load the package, simply use:
 
+\xlstsetstyle{default}
 \begin{minted}{latex}
 \usepackage{xlistings}
 \end{minted}
 
 Throughout this document, we will use the \T{xlistings} package to highlight code.
-If you are no fan of the \enquote{bordered} look of the code blocks, you can use \blatex{\\xlstsetstyle\{plain number\}} to switch the look and feel, or use the \argref{style}{style} option of the package.
+If you are no fan of the \enquote{bordered} look of the code blocks, you can use \blatex{\\xlstsetstyle\{plain number\}} to switch the look and feel, or use the \argref{style}{style} option of the package:
 
 \xlstsetstyle{plain number}
 \begin{minted}{latex}
-\usepackage[style=plain number]{xlistings} x
+\usepackage[style={plain number}]{xlistings}
 \end{minted}
 
 Or, using \blatex{\\xlstsetstyle\{plain\}}:
@@ -358,12 +383,12 @@ Dies ist ein Test für \cjava{public static void main} - hat er geklappt?
     Registriert eine Sprache mit dem Namen \T{LanguageName} als \T{Sprache}. Dieser Aufruf muss von jeder Konfiguration selbst durchgeführt werden. \par{}
     Im folgenden Beispiel gilt es die Sprache \T{Rubberduck} zu definieren und zu laden. In die Konfigurationsdatei schreiben wir:
 \begin{latex}
-\lstdefinelanguage{lRubberduck}{
+\lstdefinelanguage{rubberduck}{
     comment=[l]{\#},
     morekeywords = {Quack, new},
     morekeywords = [2]{Duck}
 }
-\RegisterLanguage{rubberduck}{lRubberduck}
+\RegisterLanguage{rubberduck}{rubberduck}
 \end{latex}
     Also eine Sprache, die Raute für Kommentare verwendet, die beiden Schlüsselbegriffe \T{Quack} und \T{new} besitzt sowie noch ein \say{keywordB} (\notetext{so Formal ist die Sprache jetzt ja auch nicht :)}): \T{Duck}
     Im Dokument laden wir die Sprache mit:
