@@ -10,7 +10,7 @@ The following describes a list of improvements over the [listings][] package:
 - Highlighting of numbers in code blocks: 10_234 + x1 * 0x34 - x2
 - Support for the `\begin{minted}{<lang>} . . . \end{minted}` environment
 - Wrapper macros like `\bjava{int i}` and `\cjava{int i}` and environments like `\begin{plainjava}`
-- Language sensitive override: `\xlstlangoverride{latex}{morekeywords=[5]{\xlstsetstyle}}`
+- Language sensitive override: `\xlstlangoverride{latex}{morekeywords=[5]{\\xlstsetstyle}}`
 - Support for ([accsupp](https://ctan.org/pkg/accsupp) based) non-selectable line numbers and characters
 - Support for blacklisting line numbers with `\xlstblacklistlinenumbers`
 - Support for umlauts and UTF-8 encoding (with the [listingsutf8](https://ctan.org/pkg/listingsutf8) package)
