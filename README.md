@@ -15,7 +15,7 @@ The following describes a list of improvements over the [listings][] package:
 - Support for blacklisting line numbers with `\xlstblacklistlinenumbers`
 - Support for umlauts and UTF-8 encoding (with the [listingsutf8](https://ctan.org/pkg/listingsutf8) package)
 - Provides `autogobble` to remove leading spaces (with the [lstautogobble](https://ctan.org/pkg/lstautogobble) package)
-- Comfort key add to literate to add elements to the literate list
+- Comfort key `add to literate` to add elements to the literate list
 - `\LoadLanguages{<lang>}` to load a language or multiple languages on demand
 - Opinionated language overwrites (see the [langs/](langs/) folder)
 - Opinionated default literates such as `:ldots:`, `:lan:`, `:to:`, and `:c:`
