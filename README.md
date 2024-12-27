@@ -3,7 +3,7 @@
 [![made-with-latex](https://img.shields.io/badge/Made%20with-LaTeX-1f425f.svg)](https://www.latex-project.org/) [![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![PR's Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](http://makeapullrequest.com)
 
 This package extends on the [listings][] package, providing an easier front-end to create code blocks of selected languages, support for number highlighting, highlighting, non-selectable line numbers,[^1] and more.
-While it is not compatible with the [minted][] package, it provides a similar interface for code highlighting that can be used as a partial drop-in replacement (see the [documentation](https://media.githubusercontent.com/media/EagleoutIce/xlistings/gh-pages/build/xlistings-doc.pdf)).
+While it is not compatible with the [minted][] package, it provides a similar interface for code highlighting that can be used as a partial drop-in replacement (see the [documentation](https://github.com/EagleoutIce/xlistings/blob/gh-pages/build/xlistings-doc.pdf)).
 
 The following describes a list of improvements over the [listings][] package:
 
