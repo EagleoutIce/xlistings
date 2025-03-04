@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout git repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         lfs: true
         submodules: true
@@ -19,7 +19,10 @@ jobs:
         root_file: |
           xlistings-doc.tex
     - name: Install PU for previews
-      run: sudo apt install poppler-utils
+      uses: awalsh128/cache-apt-pkgs-action@latest
+      with:
+        packages: poppler-utils
+        version: 1.0
     - name: 🖼️ Generate preview
       run: |
          pdftoppm -png -r 300 -f 1 ./build/xlistings-doc.pdf preview
