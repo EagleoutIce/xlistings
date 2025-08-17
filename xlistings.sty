@@ -601,7 +601,25 @@ keepspaces      = false}
 % TODO: auto load a language if a requested one is not loaded
 \def\xlstsetmintedstyle#1{\def\xlst@minted@style{#1}}
 \xlstsetmintedstyle{\xlst@style@default}
-\lstnewenvironment{minted}[2][]{\protected@edef\@tmp{\pgfkeysvalueof{/xlst@lst@family/\xlst@minted@style/listing style}}\protected@edef\@temp{\xlst@minted@language@mapping{#2}}\expandafter\expandafter\expandafter\xlst@minted@setup\expandafter\expandafter\expandafter{\expandafter\@tmp\expandafter}\expandafter{\@temp}{#1}}{}
+\def\xlstlangbadgestyle#1{\raisebox{2.5pt}{\color{lightgray}\textsf{\footnotesize#1}}}
+\if@xlst@accuspp@available@
+\def\xlst@typesetlang#1{\BeginAccSupp{method=escape,ActualText={}}\xlstlangbadgestyle{#1}\EndAccSupp{}}
+\else
+\def\xlst@typesetlang#1{\xlstlangbadgestyle{#1}}
+\fi
+\def\xlst@shownextcodelang#1{%
+\DeclareCommandCopy\xlst@holdEveryPar\lsthk@EveryPar\relax%
+\appto\lsthk@EveryPar{\rlap{\smash{\hspace*{\linewidth}\llap{\xlst@typesetlang{#1}}}}\DeclareCommandCopy\lsthk@EveryPar\xlst@holdEveryPar
+}}
+\NewCommandCopy\BadgeNextListing\xlst@shownextcodelang
+
+\newif\if@xlistings@mintedlangbadge
+\let\xlstmintedwithlangbadge\@xlistings@mintedlangbadgetrue
+\let\xlstmintedwithoutlangbadge\@xlistings@mintedlangbadgetrue
+
+\lstnewenvironment{minted}[2][]{\protected@edef\@tmp{\pgfkeysvalueof{/xlst@lst@family/\xlst@minted@style/listing style}}\protected@edef\@temp{\xlst@minted@language@mapping{#2}}\expandafter\expandafter\expandafter\xlst@minted@setup\expandafter\expandafter\expandafter{\expandafter\@tmp\expandafter}\expandafter{\@temp}{#1}%
+\if@xlistings@mintedlangbadge\xlst@shownextcodelang{#2}\fi
+}{}
 \fi
 
 \endinput
