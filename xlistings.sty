@@ -609,7 +609,8 @@ keepspaces      = false}
 \fi
 \def\xlst@shownextcodelang#1{%
 \DeclareCommandCopy\xlst@holdEveryPar\lsthk@EveryPar\relax%
-\appto\lsthk@EveryPar{\rlap{\smash{\hspace*{\linewidth}\llap{\xlst@typesetlang{#1}}}}\DeclareCommandCopy\lsthk@EveryPar\xlst@holdEveryPar
+\protected@edef\xlst@currcodelang{#1}%
+\appto\lsthk@EveryPar{\rlap{\smash{\hspace*{\linewidth}\llap{\xlst@typesetlang{\xlst@currcodelang}}}}\DeclareCommandCopy\lsthk@EveryPar\xlst@holdEveryPar\xdef\xlst@currcodelang{}%
 }}
 \NewCommandCopy\BadgeNextListing\xlst@shownextcodelang
 
