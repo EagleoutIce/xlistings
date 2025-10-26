@@ -382,7 +382,7 @@ draw command/.initial={xlst@dlst@input}}
 \def\xlst@ensure#1{\needspace{#1\baselineskip}}
 \def\xlstguard#1{\gdef\@xlst@guard@default{#1}}
 \xlstguard{.8}
-\def\xlst@guardspace{\if@xlst@guardspace@\xlst@ensure{\@xlst@guard@default}\fi}
+\def\xlst@guardspace{\if@xlst@guardspace\xlst@ensure{\@xlst@guard@default}\fi}
 % on line:
 \lst@AddToHook{PreInit}{\if@lst@within@inline@\else\xlst@font@fs@normal\fi}
 
