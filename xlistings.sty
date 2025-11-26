@@ -601,7 +601,7 @@ keepspaces      = false}
 % TODO: auto load a language if a requested one is not loaded
 \def\xlstsetmintedstyle#1{\def\xlst@minted@style{#1}}
 \xlstsetmintedstyle{\xlst@style@default}
-\def\xlstlangbadgestyle#1{\raisebox{2.5pt}{\color{lightgray}\textsf{\footnotesize#1}}}
+\def\xlstlangbadgestyle#1{\raisebox{2.5pt}{\normalfont\color{lightgray}\textsf{\footnotesize#1}}}
 \if@xlst@accuspp@available@
 \def\xlst@typesetlang#1{\BeginAccSupp{method=escape,ActualText={}}\xlstlangbadgestyle{#1}\EndAccSupp{}}
 \else
