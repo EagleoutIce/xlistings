@@ -17,7 +17,7 @@
 \usepackage{pgffor}
 
 \usepackage[style={plain number},extendednums]{xlistings}
-\LoadLanguages{latex,java,bash,rubberduck,xml,json}
+\LoadLanguages{latex,java,bash,rubberduck,xml,json,yaml}
 
 \usepackage{microtype}
 \usepackage[colorlinks=true,breaklinks=true,allcolors=cyan!65!black]{hyperref}
@@ -274,7 +274,31 @@ Now, comments will be displayed in green and bold:
 If you are interested in a flexible highlighting and animation of these code snippets, have a look at the \href{https://github.com/EagleoutIce/code-animation}{code-animation} package, which we are currently working for to be compatible with \T{xlistings}.
 \endgroup
 
+\subsection{Language Samples}
 
+\begin{minted}{java}
+public static void main(String[] args){
+    // This is a comment
+    int number = 10_234 + 0x1A - 0b1010;
+    System.out.println("Hello, World!"); // Print greeting
+}
+\end{minted}
+
+\begin{minted}{latex}
+\documentclass{article}
+\begin{document}
+\ldots
+\end{document}
+\end{minted}
+
+\begin{minted}{yaml}
+# This is a comment
+key: value
+list:
+  - item1
+  - item2: subvalue
+number: 0x1A + 10_000 - 0b1010
+\end{minted}
 
 \subsection{Full Reference}
 
