@@ -7,9 +7,13 @@ While it is not compatible with the [minted][] package, it provides a similar in
 
 The following describes a list of improvements over the [listings][] package:
 
-- Highlighting of numbers in code blocks: `10_234 + x1 * 0x34 - x2`
+- Highlighting of numbers in code blocks: `10_234 + x1 * 0x34 - x2`, including
+  hexadecimal digits, exponents, and language sensitive type suffixes
+  (`0xdeadBEEF`, `1e10`, `10L` in Java, `3j` in Python, `10n` in TypeScript)
 - Support for the `\begin{minted}{<lang>} . . . \end{minted}` environment
 - Wrapper macros like `\bjava{int i}` and `\cjava{int i}` and environments like `\begin{plainjava}`
+- `\xlstb{<lang>}{<code>}` for languages whose name cannot be part of a command
+  name, e.g. `\xlstb{x86}{mov eax, 0x10}`
 - Language sensitive override: `\xlstlangoverride{latex}{morekeywords=[5]{\\xlstsetstyle}}`
 - Support for ([accsupp](https://ctan.org/pkg/accsupp) based) non-selectable line numbers and characters
 - Support for blacklisting line numbers with `\xlstblacklistlinenumbers`
@@ -19,6 +23,14 @@ The following describes a list of improvements over the [listings][] package:
 - `\LoadLanguages{<lang>}` to load a language or multiple languages on demand
 - Opinionated language overwrites (see the [langs/](langs/) folder)
 - Opinionated default literates such as `:ldots:`, `:lan:`, `:to:`, and `:c:`
+
+The package is set up for [l3build](https://ctan.org/pkg/l3build): `l3build check`
+runs the tests in `tests/` and fails if a highlight changes unexpectedly. Each
+test states the sequence of styles it expects, and the resulting
+`build/test/<name>.pdf` shows the verdict together with the typeset sample, so
+the highlighting can also be inspected visually. A colour that leaks past its
+segment is invisible to such a trace, so `tests/colorbleed.pvt` additionally
+compares the pdf, reduced to the colour every piece of text is drawn in.
 
 [^1]: If a number is truly non-selectable depends on the viewer used. To ensure that they can not be selected would require images, which we currently do not create/use.
 

@@ -1,0 +1,97 @@
+% A highlight must not leak its color into whatever follows it. That is
+% invisible to the style traces of the .lvt files, so it is checked on the pdf
+% itself: 'rewrite_pdf' in build.lua reduces the page to its color operators
+% and the position of the text.
+\input{regression-test}
+\documentclass{article}
+\usepackage[extendednums]{xlistings}
+\LoadLanguages{java,cpp,bash,mips,xml,regex,yaml,latex,markdown,
+  lambda_calculus,R,tac}
+\pagestyle{empty}
+
+% every sample is followed by a plain listing: a leaked color would show up as
+% a missing reset in front of its text (a listing environment cannot be hidden
+% in a macro, so they are spelled out)
+\begin{document}
+\START
+\begin{cpp}
+int i = 0xdeadBEEF + 10L + 1e10;
+\end{cpp}
+\begin{java}
+plain identifier
+\end{java}
+\begin{java}
+String s = "a\nb"; int i = 0x1A;
+\end{java}
+\begin{java}
+plain identifier
+\end{java}
+\begin{java}
+|num|numbers|num| |str|strings|str| |cmt|comments|cmt| |ihl|highlight|ihl|
+\end{java}
+\begin{java}
+plain identifier
+\end{java}
+\begin{bash}
+ls -la > out.txt
+\end{bash}
+\begin{java}
+plain identifier
+\end{java}
+\begin{mips}
+addi $t0, $zero, 10
+\end{mips}
+\begin{java}
+plain identifier
+\end{java}
+\begin{xml}
+<a b="1"/>
+\end{xml}
+\begin{java}
+plain identifier
+\end{java}
+\begin{regex}
+^a+[b-c]*$
+\end{regex}
+\begin{java}
+plain identifier
+\end{java}
+\begin{yaml}
+- key: 1
+\end{yaml}
+\begin{java}
+plain identifier
+\end{java}
+\begin{latex}
+\section{a} % c
+\end{latex}
+\begin{java}
+plain identifier
+\end{java}
+\begin{markdown}
+# Title with `code`
+\end{markdown}
+\begin{java}
+plain identifier
+\end{java}
+\begin{lc}
+(\x. x) true
+\end{lc}
+\begin{java}
+plain identifier
+\end{java}
+\begin{R}
+x <- c(1, 2, 3.45)
+\end{R}
+\begin{java}
+plain identifier
+\end{java}
+\begin{tac}
+if x:_1: goto L1
+\end{tac}
+\begin{java}
+plain identifier
+\end{java}
+\clearpage % the primitive \end of \END would drop the page
+\END
+\end{document}

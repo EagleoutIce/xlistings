@@ -1,0 +1,53 @@
+% The tikz based segment highlighting (option 'highlights').
+\input{regression-test}
+\documentclass{article}
+\usepackage[extendednums,highlights]{xlistings}
+\LoadLanguages{java,bash,git,haskell,lua,markdown,ts,x86,cpp,json,sql,latex,
+  lambda_calculus,regex,mips,sirl,tac,xml}
+\usepackage{xlisttest}
+\begin{document}
+\WarmUp{\bjava{x}\bbash{x}\bgit{x}\bhaskell{x}\blua{x}\bmarkdown{x}\bts{x}
+  \csname bx86\endcsname{x}\bcpp{x}\bjson{x}\bsql{x}\blatex{x}\blc{x}\bregex{x}
+  \bmips{x}\bsirl{x}\btac{x}\bxml{x}}
+\START
+\section*{Segment highlighting}
+
+\TestRuns{java-warn}{\bjava{|warn|int i|warn| = 1;}}
+\TestRuns{java-custom}{\bjava{|custom|int i|custom| = 1;}}
+\TestRuns{bash-warn}{\bbash{\&warn\&ls\&warn\& -la}}
+\TestRuns{json-warn}{\bjson{|warn|\{"a": 1\}|warn|}}
+\TestRuns{sql-warn}{\bsql{|warn|SELECT 1|warn|}}
+\TestRuns{cpp-warn}{\bcpp{|warn|int i|warn| = 1;}}
+\TestRuns{x86-warn}{\csname bx86\endcsname{|warn|mov eax, 1|warn|}}
+\TestRuns{latex-custom}{\blatex{|custom|\\section\{a\}|custom|}}
+\TestRuns{lc-brackets}{\blc{(\\x. x) true}}
+\TestRuns{regex-custom}{\bregex{\&custom\&a+\&custom\&}}
+\TestRuns{mips-custom}{\bmips{|custom|addi :hide\$:\$t0, 1|custom|}}
+\TestRuns{sirl-custom}{\bsirl{|custom|MOVE TEMP 1|custom|}}
+\TestRuns{tac-custom}{\btac{|custom|goto L1|custom|}}
+\TestRuns{xml-plain}{\bxml{|plain|<a/>|plain|}}
+
+\TestRuns{git-warn}{\bgit{|warn|git push|warn|}}
+\TestRuns{git-error}{\bgit{|err|git push|err|}}
+\TestRuns{git-info}{\bgit{|info|git push|info|}}
+\TestRuns{haskell-error}{\bhaskell{|err|f x|err|}}
+\TestRuns{lua-info}{\blua{|info|local x|info|}}
+\TestRuns{markdown-error}{\bmarkdown{|err|text|err|}}
+\TestRuns{ts-warn}{\bts{|warn|let a|warn|}}
+
+% these delimiters do map to a style
+\TestInline{java-ihl}{hl,}{\bjava{|ihl|text|ihl|}}
+\TestInline{java-num-delim}{num,}{\bjava{|num|text|num|}}
+\TestInline{java-str-delim}{lit,}{\bjava{|str|text|str|}}
+\TestInline{java-cmt-delim}{cmt,}{\bjava{|cmt|text|cmt|}}
+\TestInline{x86-num-delim}{num,}{\csname bx86\endcsname{|num|text|num|}}
+\TestInline{void-ihl}{hl,}{\bvoid{|ihl|text|ihl|}}
+
+\TestRuns{box-color}{\xlsthlbox{xlstwarning}text}
+\TestRuns{box-keys}{\xlsthlboxd{\xlstcustom}text}
+\TestRuns{box-warning}{\xlsthlwarning text}
+\TestRuns{box-error}{\xlsthlerror text}
+\TestRuns{box-info}{\xlsthlinfo text}
+\TestSummary
+\END
+\end{document}

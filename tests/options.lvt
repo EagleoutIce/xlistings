@@ -1,0 +1,24 @@
+% Number highlighting with the default options, i.e. without 'extendednums'.
+\input{regression-test}
+\documentclass{article}
+\usepackage{xlistings}
+\LoadLanguages{java}
+\usepackage{xlisttest}
+\begin{document}
+\WarmUp{\bjava{x}}
+\START
+\section*{Options}
+
+\TestInline{decimal}{kwB,num,num,}{\bjava{int i = 10;}}
+\TestInline{float}{kwB,num,num,}{\bjava{double d = 1.5;}}
+% without the option only the leading zero is a number
+\TestInline{no-radix}{kwB,num,}{\bjava{int i = 0x1A;}}
+% ... and letters never continue a number
+\TestInline{no-suffix}{kwB,num,num,}{\bjava{long l = 10L;}}
+\TestInline{identifier}{kwB,num,}{\bjava{int x1 = 2;}}
+
+\TestInline{disabled}{kwB,}{{\xlstdisablenumhl\bjava{int i = 10;}}}
+\TestInline{reenabled}{kwB,num,num,}{{\xlstdisablenumhl\xlstenablenumhl\bjava{int i = 10;}}}
+\TestSummary
+\END
+\end{document}

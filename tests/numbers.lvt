@@ -1,0 +1,43 @@
+% Number highlighting engine (with the 'extendednums' option).
+\input{regression-test}
+\documentclass{article}
+\usepackage[extendednums]{xlistings}
+\LoadLanguages{java,R,cpp,python}
+\usepackage{xlisttest}
+\begin{document}
+\WarmUp{\bjava{x}\bR{x}\bcpp{x}\bpython{x}}
+\START
+\section*{Number highlighting}
+
+\TestInline{decimal}{kwB,num,num,}{\bjava{int i = 10;}}
+\TestInline{float}{kwB,num,num,}{\bjava{double d = 1.5;}}
+\TestInline{float-long}{kwB,num,num,num,}{\bjava{double d = 1.25;}}
+\TestInline{many-numbers}{num,num,num,num,num,}{\bR{c(1,2,3.45)}}
+\TestInline{leading-dot}{kwB,num,}{\bjava{double d = .5;}}
+
+% numbers are no part of an identifier
+\TestInline{identifier}{kwB,num,}{\bjava{int x1 = 2;}}
+\TestInline{identifier-only}{kwB,}{\bjava{int data1 = fun2(a);}}
+\TestInline{identifier-hex}{kwB,num,}{\bjava{int x0xFF = 1;}}
+
+\TestInline{hex}{kwB,npx,num,num,}{\bjava{int i = 0x1A;}}
+\TestInline{hex-upper}{kwB,npx,num,num,}{\bjava{int i = 0X1a;}}
+\TestInline{hex-letters}{kwA,npx,num,num,num,num,num,num,num,num,}{\bcpp{int i = 0xdeadBEEF;}}
+\TestInline{binary}{kwB,npx,num,num,num,num,}{\bjava{int i = 0b1010;}}
+\TestInline{binary-upper}{kwB,npx,num,num,}{\bjava{int i = 0B10;}}
+\TestInline{octal}{kwB,npx,num,num,}{\bjava{int i = 0o17;}}
+\TestInline{octal-upper}{kwB,npx,num,}{\bjava{int i = 0O7;}}
+
+\TestInline{separator}{kwB,num,num,num,num,num,}{\bjava{int i = 10_234;}}
+\TestInline{exponent}{kwB,num,num,num,num,}{\bjava{double d = 1e10;}}
+\TestInline{exponent-signed}{num,num,num,num,}{\bR{y <- 1.5e-3}}
+\TestInline{suffix-long}{kwB,num,num,num,}{\bjava{long l = 10L;}}
+\TestInline{suffix-float}{kwB,num,num,num,}{\bjava{float f = 1.5f;}}
+\TestInline{suffix-hex}{npx,num,num,num,num,num,}{\bR{x <- 0xFF + 10L}}
+
+% no highlighting outside of code
+\TestInline{in-string}{kwB,lit,lit,lit,lit,lit,}{\bjava{String s = \"0x1A\";}}
+\TestInline{in-comment}{cmt,cmt,cmt,cmt,cmt,}{\bjava{// 0x1A}}
+\TestSummary
+\END
+\end{document}

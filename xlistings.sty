@@ -27,6 +27,8 @@
 % internals:
 \newif\ifxlst@lst@lastwas@character@ % last segment was from char-class
 \newif\ifxlst@lst@lastwas@charkeep@  % in char-mode (pass through)
+\newif\ifxlst@lst@innumber@          % last segment was a highlighted number
+\newif\ifxlst@lst@inhex@             % within a 0x-prefixed literal
 
 \ProcessKeyvalOptions*
 \newif\if@xlst@accuspp@available@ % remove line numbers from selection if possible
@@ -80,7 +82,9 @@
 \def\xlstNumFs#1{\gdef\xlst@font@fs@numbers{#1}}
 \def\xlst@font@fs@normal{}
 
-\newcommand*\lstfs[1][1]{\@ifstar{\@lstfs{#1}{\xlst@font@size}}{\@lstfs{#1}}}
+\newcommand*\lstfs[1][1]{\@ifstar{\@lstfs@star{#1}}{\@lstfs{#1}}}
+\def\@lstfs@star#1{\protected@edef\@tmp{\noexpand\@lstfs{#1}{\xlst@font@size}}\@tmp}
+% #1 linespread, #2 font size in pt
 \def\@lstfs#1#2{%
   \def\xlst@font@fs@normal{\fontsize{#2}{#2}\linespread{#1}\selectfont}%
   \ifnum#2>7\protected@edef\xlst@lst@@subfs{\the\numexpr #2-4}\def\xlst@font@fs@numbers{\fontsize\xlst@lst@@subfs\xlst@lst@@subfs\linespread{#1}\selectfont}%
@@ -101,7 +105,8 @@
 \colorlet{xlst@colors@lst@keywordB}{xlst@colors@lst@keywordA!75!white} % e.g.: int, double ...
 \colorlet{xlst@colors@lst@keywordC}{xlst@colors@lst@keywordA!90!black} % e.g.: class-names?
 \colorlet{xlst@colors@lst@numbers}{teal!80!white} % well, numbers
-\colorlet{xlst@colors@lst@literals}{orange!80!green!60!xlst@colors@lst@keywordA!80!white} % well, numbers
+\colorlet{xlst@colors@lst@numprefix}{gray} % the '0x' of '0x2a'
+\colorlet{xlst@colors@lst@literals}{orange!80!green!60!xlst@colors@lst@keywordA!80!white} % strings and friends
 \colorlet{xlst@colors@lst@comments}{lightgray!65!gray} % well, comments
 \colorlet{xlst@colors@lst@highlight}{lime} % sweetspots
 \colorlet{xlst@colors@lst@command}{xlst@colors@lst@keywordB} % sweetspots
@@ -132,6 +137,7 @@
  {keywordC: \@declaredcolor{xlst@colors@lst@keywordC}},%
  {keywordD: \itshape},%
  {numbers:  \@declaredcolor{xlst@colors@lst@numbers}\itshape},%
+ {numprefix: \@declaredcolor{xlst@colors@lst@numprefix}},%
  {literals: \@declaredcolor{xlst@colors@lst@literals}\itshape},%
  {comments: \@declaredcolor{xlst@colors@lst@comments}},% \scshape
  {basic: \xlst@ttfamily},%
@@ -146,6 +152,7 @@
  {keywordC: \@declaredcolor{xlst@colors@lst@keywordC}},%
  {keywordD: \itshape},%
  {numbers:  \@declaredcolor{xlst@colors@lst@numbers}},%
+ {numprefix: \@declaredcolor{xlst@colors@lst@numprefix}},%
  {literals: \@declaredcolor{xlst@colors@lst@literals}},%
  {comments: \@declaredcolor{xlst@colors@lst@comments}},%
  {basic:    \xlst@ttfamily},%
@@ -160,7 +167,7 @@
 \fi
 
 % Helper Functions
-\def\xlst@font@size{\dimexpr\f@size\p@\relax}
+\def\xlst@font@size{\the\numexpr\dimexpr\f@size\p@\relax/65536\relax}
 
 % We want language specific literate additions:
 \def\xlst@lst@addToLiterate#1{\protected@edef\lst@literate{\unexpanded\expandafter{\lst@literate}\unexpanded{#1}}}
@@ -214,26 +221,37 @@
 \if@xlst@numinpar\xlstSetLeftMargin{\@@xlst@numinpar@length}\fi
 
 % Handling of automated number-highlighting in listings;
-\def\xlst@@lst@hl@digit#1{\begingroup
+% #1 style, #2 code to run if the segment starts a number, #3 the segment
+\def\xlst@lst@hl@num#1#2#3{\begingroup
 \ifxlst@lst@lastwas@character@
-\global\xlst@lst@lastwas@charkeep@true#1\else\global\xlst@lst@lastwas@charkeep@false
+\global\xlst@lst@lastwas@charkeep@true\xlst@lst@nonum#3\else\global\xlst@lst@lastwas@charkeep@false
   \ifnum\lst@mode=\lst@Pmode\relax% PMode: Not in any special Mode
-  {\xlst@style@get{numbers}#1}% or if keywords are active:
-  \else\lst@ifkeywords{\xlst@style@get{numbers}#1}\else#1\fi\fi
+  \xlst@lst@hl@num@{#1}{#2}{#3}% or if keywords are active:
+  \else\lst@ifkeywords\xlst@lst@hl@num@{#1}{#2}{#3}\else\xlst@lst@nonum#3\fi\fi
 \fi
 \endgroup}
-\if@xlst@hlnumbers\let\xlst@dgt\xlst@@lst@hl@digit
-\else\def\xlst@dgt#1{#1}\fi
-% ^--- shorter and better to read
-\def\xlstdisablenumhl{\def\xlst@dgt##1{##1}}
-\def\xlstenablenumhl{\let\xlst@dgt\xlst@@lst@hl@digit}
+\def\xlst@lst@hl@num@#1#2#3{#2\global\xlst@lst@innumber@true{\xlst@style@get{#1}#3}}
+\def\xlst@@lst@hl@digit#1{\xlst@lst@hl@num{numbers}\@empty{#1}}
+% #1 marks the literal as hexadecimal
+\def\xlst@@lst@hl@prefix#1#2{\xlst@lst@hl@num{numprefix}{#1}{#2}}
+\def\xlst@lst@hex{\global\xlst@lst@inhex@true}
+\def\xlstdisablenumhl{\def\xlst@dgt##1{##1}\def\xlst@pfx##1##2{##2}}
+\def\xlstenablenumhl{\let\xlst@dgt\xlst@@lst@hl@digit\let\xlst@pfx\xlst@@lst@hl@prefix}
+\if@xlst@hlnumbers\xlstenablenumhl\else\xlstdisablenumhl\fi
+\def\xlst@lst@nonum{\ifxlst@lst@innumber@
+  \global\xlst@lst@innumber@false\global\xlst@lst@inhex@false\fi}
 % overwrite processor routines to adapt to number
+\def\xlst@lst@plainletter{%
+  \xlst@lst@nonum\xlst@lst@lastwas@character@true\lst@AppendLetter}
 \def\lst@ProcessLetter{%
-  \lst@whitespacefalse\xlst@lst@lastwas@character@true\lst@AppendLetter}
+  \lst@whitespacefalse
+  \ifxlst@lst@innumber@\expandafter\xlst@lst@numletter\else\expandafter\xlst@lst@plainletter\fi}
 \def\lst@ProcessOther{%
-  \lst@whitespacefalse\xlst@lst@lastwas@charkeep@false\xlst@lst@lastwas@character@false\lst@AppendOther}
-\def\lst@whitespacetrue{\ifxlst@lst@lastwas@charkeep@\xlst@lst@lastwas@charkeep@false\xlst@lst@lastwas@character@false\else\xlst@lst@lastwas@character@false\fi\global\let\lst@ifwhitespace\iftrue}
+  \lst@whitespacefalse\xlst@lst@nonum\xlst@lst@lastwas@charkeep@false\xlst@lst@lastwas@character@false\lst@AppendOther}
+\def\lst@whitespacetrue{\xlst@lst@nonum\xlst@lst@lastwas@charkeep@false\xlst@lst@lastwas@character@false\global\let\lst@ifwhitespace\iftrue}
 \def\lst@whitespacefalse{\global\let\lst@ifwhitespace\iffalse}
+\lst@AddToHook{PreInit}{\xlst@lst@nonum
+  \global\xlst@lst@lastwas@character@false\global\xlst@lst@lastwas@charkeep@false}
 
 \def\xlst@nc{\ifxlst@lst@lastwas@charkeep@\else\xlst@lst@lastwas@character@false\fi}
 
@@ -282,25 +300,45 @@
   {.4}{{\xlst@dgt{.4}}}2 {.5}{{\xlst@dgt{.5}}}2 {.6}{{\xlst@dgt{.6}}}2
   {.7}{{\xlst@dgt{.7}}}2 {.8}{{\xlst@dgt{.8}}}2 {.9}{{\xlst@dgt{.9}}}2
   {:lmath:}{{\textcolor{xlst@colors@lst@numbers}{\textbackslash(}}}2 {:rmath:}{{\textcolor{xlst@colors@lst@numbers}{\textbackslash)}}}2 {:ldmath:}{{\textcolor{xlst@colors@lst@numbers}{\textbackslash[}}}2 {:rdmath:}{{\textcolor{xlst@colors@lst@numbers}{\textbackslash]}}}2 {:ul:}{{\_}}1}
+\if@xlst@extendednums\xlst@lst@extendedliterates\fi
 }
 
-\if@xlst@extendednums
-\def\xlst@lst@Ox{\textcolor{gray}{0x}} \def\xlst@lst@Ob{\textcolor{gray}{0b}} \def\xlst@lst@Oo{\textcolor{gray}{0o}}
+% The digit separator and the radix prefixes have to be registered after the
+% plain digits, otherwise the single digit wins the (longer) match.
+\def\xlst@lst@extendedliterates{%
 \lstset{add to literate={_0}{{\xlst@dgt{\textunderscore0}}}2 {_1}{{\xlst@dgt{\textunderscore1}}}2 {_2}{{\xlst@dgt{\textunderscore2}}}2 {_3}{{\xlst@dgt{\textunderscore3}}}2
 {_4}{{\xlst@dgt{\textunderscore4}}}2 {_5}{{\xlst@dgt{\textunderscore5}}}2 {_6}{{\xlst@dgt{\textunderscore6}}}2
 {_7}{{\xlst@dgt{\textunderscore7}}}2 {_8}{{\xlst@dgt{\textunderscore8}}}2 {_9}{{\xlst@dgt{\textunderscore9}}}2
-% TODO: hexa toggle
-{0x0}{{\xlst@lst@Ox\xlst@dgt{0}}}3
-{0x1}{{\xlst@lst@Ox\xlst@dgt{1}}}3 {0x2}{{\xlst@lst@Ox\xlst@dgt{2}}}3 {0x3}{{\xlst@lst@Ox\xlst@dgt{3}}}3
-{0x4}{{\xlst@lst@Ox\xlst@dgt{4}}}3 {0x5}{{\xlst@lst@Ox\xlst@dgt{5}}}3 {0x6}{{\xlst@lst@Ox\xlst@dgt{6}}}3
-{0x6}{{\xlst@lst@Ox\xlst@dgt{7}}}3 {0x8}{{\xlst@lst@Ox\xlst@dgt{8}}}3 {0x9}{{\xlst@lst@Ox\xlst@dgt{9}}}3
-{0b0}{{\xlst@lst@Ob\xlst@dgt{0}}}3 {0b1}{{\xlst@lst@Ob\xlst@dgt{1}}}3
-{0o0}{{\xlst@lst@Oo\xlst@dgt{0}}}3
-{0o1}{{\xlst@lst@Oo\xlst@dgt{1}}}3 {0o2}{{\xlst@lst@Oo\xlst@dgt{2}}}3 {0o3}{{\xlst@lst@Oo\xlst@dgt{3}}}3
-{0o4}{{\xlst@lst@Oo\xlst@dgt{4}}}3 {0o5}{{\xlst@lst@Oo\xlst@dgt{5}}}3 {0o6}{{\xlst@lst@Oo\xlst@dgt{6}}}3
-{0o6}{{\xlst@lst@Oo\xlst@dgt{7}}}3
-}
-\fi
+{0x}{{\xlst@pfx\xlst@lst@hex{0x}}}2 {0X}{{\xlst@pfx\xlst@lst@hex{0X}}}2
+{0b}{{\xlst@pfx\@empty{0b}}}2 {0B}{{\xlst@pfx\@empty{0B}}}2
+{0o}{{\xlst@pfx\@empty{0o}}}2 {0O}{{\xlst@pfx\@empty{0O}}}2
+}}
+
+\def\xlst@lst@numletter{\futurelet\xlst@lst@nexttok\xlst@lst@numletter@}
+\def\xlst@lst@numletter@{%
+  \ifxlst@lst@inhex@\xlst@lst@scan\xlst@lst@hexletters
+  \else\xlst@lst@scan\xlst@lst@numsuffixes\fi
+  \ifxlst@lst@match@\expandafter\xlst@lst@numletter@@\else\expandafter\xlst@lst@plainletter\fi}
+\def\xlst@lst@numletter@@#1{%
+  \lst@XPrintToken\let\lst@scanmode\lst@scan@m
+  \lst@token{{\xlst@dgt{#1}}}\lst@length\@ne
+  \lst@XPrintToken}
+\newif\ifxlst@lst@match@
+\def\xlst@lst@scan#1{\xlst@lst@match@false\expandafter\xlst@lst@scan@#1\@nil}
+\def\xlst@lst@scan@#1{%
+  \ifx#1\@nil\let\xlst@lst@next\relax
+  \else\ifx#1\xlst@lst@nexttok
+    \xlst@lst@match@true\let\xlst@lst@next\xlst@lst@scan@@
+  \else\let\xlst@lst@next\xlst@lst@scan@\fi\fi\xlst@lst@next}
+\def\xlst@lst@scan@@#1\@nil{}
+% the characters of a listing are of category code 12, the lists have to match
+\begingroup
+\lccode`\0=`\a \lccode`\1=`\b \lccode`\2=`\c \lccode`\3=`\d \lccode`\4=`\e
+\lccode`\5=`\f \lccode`\6=`\A \lccode`\7=`\B \lccode`\8=`\C \lccode`\9=`\D
+\lccode`\!=`\E \lccode`\?=`\F
+\lowercase{\endgroup\gdef\xlst@lst@hexletters{0123456789!?}}% a-f, A-F
+\lst@Key{number suffixes}{eE}{\edef\xlst@lst@numsuffixes{\detokenize{#1}}}
+\if@xlst@extendednums\else\let\xlst@lst@numletter\xlst@lst@plainletter\fi
 
 \xlstSetLiterateTable
 % Basic and internal highlighting definitions
@@ -327,12 +365,9 @@ rulecolor={},backgroundcolor={}}}
 numbers=none,numbersep=\z@}
 
 % Basic - we-work-in-the-back-hey-bud-environments
-% note that '\xlst@lst@backcol' is optional and could be ignored by the
-% used style
 \lstnewenvironment{lstplain}[1][]
-  {\def\xlst@lst@backcol{white}\lstset{xleftmargin=\z@,xrightmargin=\z@,%
-  numbers=none,numbersep=\z@,frame=none,rulecolor={},backgroundcolor={},#1}}
-{\def\xlst@lst@backcol{MudWhite}}
+  {\lstset{xleftmargin=\z@,xrightmargin=\z@,%
+  numbers=none,numbersep=\z@,frame=none,rulecolor={},backgroundcolor={},#1}}{}
 
 \lstnewenvironment{lstnonum}[1][]{\lstset{style=xlst@nonum,#1}}{}
 
@@ -377,6 +412,21 @@ listing style/.initial = {\pgfkeysvalueof{/xlst@lst@family/globals/listing style
 command name prefix/.initial={i},command name suffix/.initial={},
 draw command/.initial={xlst@dlst@input}}
 
+% for names that cannot be part of a command name (\bx86 reads as \bx and '86')
+% #1 keys, #2 language, #3 code
+\newcommand*\xlstc[3][]{\xlst@inline@call{default}{#2}{#1}{#3}}
+\newcommand*\xlstb[3][]{\xlst@inline@call{blank}{#2}{#1}{#3}}
+\newcommand*\xlsti[3][]{\xlst@inline@call{input}{#2}{#1}{#3}}
+% #1 inline variant, #2 language, #3 keys, #4 code
+\def\xlst@inline@call#1#2#3#4{%
+\protected@edef\xlst@inline@name{%
+  \pgfkeysvalueof{/xlst@lst@family/inline #1/command name prefix}#2%
+  \pgfkeysvalueof{/xlst@lst@family/inline #1/command name suffix}}%
+\expandafter\ifx\csname\xlst@inline@name\endcsname\relax
+  \PackageError{xlistings}{The language '#2' is not loaded}%
+    {Load it with \string\LoadLanguages{#2} before you use it.}%
+\else\csname\xlst@inline@name\endcsname[#3]{#4}\fi}
+
 % Language-Registration-Helper
 % spacing control
 \def\xlst@ensure#1{\needspace{#1\baselineskip}}
@@ -410,19 +460,12 @@ draw command/.initial={xlst@dlst@input}}
 \lstnewenvironment{#1}[1][]{#3\lstset{##1}\xlst@guardspace}{#4}%
 }
 
-% #1 Name #2 Key #3 In Extra #4 Out Extra #5 Language
-% NOTE: currently no opt arg, as \@ifnextchar breaks scanning of lst@next
-\def\xlst@NewLstEnvPresent#1#2#3#4#5{%
-\expandafter\xdef\csname#1\endcsname{\noexpand\leavevmode\noexpand\presentlst{#5}}%
-\expandafter\gdef\csname end#1\endcsname{\endpresentlst}%
-}
-
-% #1 KeyName, #2 LanguageName, #3 EnvironName
-\def\xlst@@NewLstEnv#1#2#3{%
+% #1 KeyName, #2 LanguageName, #3 EnvironName, #4 OverrideKey
+\def\xlst@@NewLstEnv#1#2#3#4{%
 \begingroup
 \lst@allow@redefinition{#3}%
 \lst@allow@redefinition{#3@}% lstlistings wrap
-\protected@edef\xlst@xcurlst{\expandafter\noexpand\csname\pgfkeysvalueof{/xlst@lst@family/\environName/constructor command}\endcsname{#3}{#1}{\noexpand\lstset{style=\pgfkeysvalueof{/xlst@lst@family/\environName/listing style},language=#2,language addons=#2}}{}{#2}}%
+\protected@edef\xlst@xcurlst{\expandafter\noexpand\csname\pgfkeysvalueof{/xlst@lst@family/\environName/constructor command}\endcsname{#3}{#1}{\noexpand\lstset{style=\pgfkeysvalueof{/xlst@lst@family/\environName/listing style},language=#2,language addons=#4}}{}{#2}}%
 \global\xlst@xcurlst\endgroup
 }
 
@@ -431,11 +474,9 @@ draw command/.initial={xlst@dlst@input}}
 % #2: Name of the Language [java,latex]
 % #3: Name of the corresponding lst-Language [java, latex,...]
 \newcommand*\RegisterLanguage[3][]{\begingroup\makeatletter
-\if@xlst@fakeminted\protected@edef\@tmp{#1}\ifx\@tmp\@empty
-% register a mapping
+\if@xlst@fakeminted
 \expandafter\gdef\csname xlst@@minted@#2\endcsname{#3}%
-\else
-% register all aliases instead
+\protected@edef\@tmp{#1}\ifx\@tmp\@empty\else
 \@for\@alias:=\@tmp\do{\expandafter\gdef\csname xlst@@minted@\@alias\endcsname{#3}}%
 \fi\fi
 % Register the Environments
@@ -444,7 +485,7 @@ draw command/.initial={xlst@dlst@input}}
 \def\environName{##1}%
 \protected@edef\environCurName{\pgfkeysvalueof{/xlst@lst@family/\environName/command name prefix}#2\pgfkeysvalueof{/xlst@lst@family/\environName/command name suffix}}% assign
 \xlst@debug{> #2/#3 e '##1' (name: \environCurName, ctor: \pgfkeysvalueof{/xlst@lst@family/\environName/constructor command})}%
-\protected@edef\xlst@CreateAnLstEnviron{\noexpand\xlst@@NewLstEnv{\environName}{#3}{\environCurName}}% fully expand the Name, otherwise it would be undefined when the environment gets used
+\protected@edef\xlst@CreateAnLstEnviron{\noexpand\xlst@@NewLstEnv{\environName}{#3}{\environCurName}{#2}}% fully expand the Name, otherwise it would be undefined when the environment gets used
 \xlst@CreateAnLstEnviron
 \ifx!##2!\else\xlst@foreach@basic@env@iter##2,\@nil\fi
 \fi}
@@ -463,8 +504,8 @@ draw command/.initial={xlst@dlst@input}}
 % luckily we can construct the main Argument without any expansion problems :D
 \expandafter\xdef\csname\inlineCurName\endcsname{\noexpand\protect\noexpand\@ifnextchar[{\noexpand\protect\expandafter\noexpand\csname @@hasopt@@\inlineCurName\endcsname}{\noexpand\protect\expandafter\noexpand\csname @@noopt@@\inlineCurName\endcsname}}%
 % Variant without optionals :D
-\expandafter\xdef\csname @@noopt@@\inlineCurName\endcsname####1{\noexpand\protect\expandafter\noexpand\csname\pgfkeysvalueof{/xlst@lst@family/inline \inlineName/draw command}\endcsname[style=\pgfkeysvalueof{/xlst@lst@family/inline \inlineName/listing style},language=#3,language addons=#3]{####1}}%
-\expandafter\xdef\csname @@hasopt@@\inlineCurName\endcsname[####1]####2{\noexpand\protect\expandafter\noexpand\csname\pgfkeysvalueof{/xlst@lst@family/inline \inlineName/draw command}\endcsname[style=\pgfkeysvalueof{/xlst@lst@family/inline \inlineName/listing style},language=#3,language addons=#3,####1]{####2}}%
+\expandafter\xdef\csname @@noopt@@\inlineCurName\endcsname####1{\noexpand\protect\expandafter\noexpand\csname\pgfkeysvalueof{/xlst@lst@family/inline \inlineName/draw command}\endcsname[style=\pgfkeysvalueof{/xlst@lst@family/inline \inlineName/listing style},language=#3,language addons=#2]{####1}}%
+\expandafter\xdef\csname @@hasopt@@\inlineCurName\endcsname[####1]####2{\noexpand\protect\expandafter\noexpand\csname\pgfkeysvalueof{/xlst@lst@family/inline \inlineName/draw command}\endcsname[style=\pgfkeysvalueof{/xlst@lst@family/inline \inlineName/listing style},language=#3,language addons=#2,####1]{####2}}%
 \expandafter\robustify\csname\inlineCurName\endcsname% robustify
 \ifx!##2!\else\xlst@foreach@inline@env@iter##2,\@nil\fi
 \fi}%
@@ -492,7 +533,11 @@ keywordstyle    = \xlst@styles@lst@basic\xlst@styles@lst@keywordA,
 keywordstyle    = [2]{\xlst@styles@lst@basic\xlst@styles@lst@keywordB},
 keywordstyle    = [3]{\xlst@styles@lst@basic\xlst@styles@lst@keywordC},
 keywordstyle    = [4]{\xlst@styles@lst@basic\xlst@styles@lst@keywordD},
+keywordstyle    = [5]{\xlst@styles@lst@basic\xlst@styles@lst@literals},
+keywordstyle    = [6]{\xlst@styles@lst@basic\xlst@styles@lst@command},
 basicstyle      = \xlst@styles@lst@basic,
+% fixed columns would stretch narrow fonts and break math in a literate
+columns         = flexible,
 showstringspaces=false,
 % line numbers:
 numbers         = left, 
@@ -508,7 +553,7 @@ escapeinside    = {!*}{*!},
 keepspaces      = false}
 
 % Always present 'void'-Language
-\lstdefinelanguage{void}{columns=fixed,moredelim=[is][{}]{|plain|}{|plain|},moredelim=[is][\xlstGet{highlight}]{|ihl|}{|ihl|}}
+\lstdefinelanguage{void}{moredelim=[is][{}]{|plain|}{|plain|},moredelim=[is][\xlstGet{highlight}]{|ihl|}{|ihl|}}
 \RegisterLanguage{void}{void}
 
 % Now we will define some languages
@@ -516,25 +561,43 @@ keepspaces      = false}
 % a language will be loaded by the default latex-file mechanis
 % the file has to have the signature: '<Name>.cfg'
 
+\newif\if@xlst@lang@found@
 \def\xlst@LoadLanguage@searchPath@iter#1,#2\@nil{%
 \ifx!#1!\else
 \InputIfFileExists{#1\xlst@curlanginputfile.cfg}{%
+  \@xlst@lang@found@true
   \xlst@debug{Loaded '\xlst@curlanginputfile' from '#1\xlst@curlanginputfile.cfg'}
-}{\ifx!#2!\else\xlst@LoadLanguage@iter#2,\@nil\fi}\fi
+}{\ifx!#2!\else\xlst@LoadLanguage@searchPath@iter#2,\@nil\fi}\fi
 }
-\def\xlst@LoadLanguage@searchPath@rexlstve%
-{% empty-case
+\def\xlst@LoadLanguage@searchPath%
+{% the local directory always wins
 \InputIfFileExists{\xlst@curlanginputfile.cfg}{
+  \@xlst@lang@found@true
   \xlst@debug{Loaded '\xlst@curlanginputfile' (\xlst@curlanginputfile.cfg)}
 }{\expandafter\xlst@LoadLanguage@searchPath@iter\xlstLanguageSearchPath,\@nil}}
 
-\def\xlst@LoadLanguage@single#1\@nil{\def\xlst@curlanginputfile{#1}\xlst@LoadLanguage@searchPath@rexlstve{}}
+% a language is loaded at most once, so languages may require each other
+\def\xlst@LoadLanguage@single#1\@nil{%
+\ifcsname xlst@lang@loaded@#1\endcsname
+  \xlst@debug{Language '#1' is already loaded}%
+\else
+  \csgdef{xlst@lang@loaded@#1}{}%
+  \def\xlst@curlanginputfile{#1}%
+  \@xlst@lang@found@false
+  \xlst@LoadLanguage@searchPath{}%
+  \if@xlst@lang@found@\else
+    \PackageWarning{xlistings}{No definition found for the language '#1',
+      neither '#1.cfg' in the current directory nor in the search path}%
+  \fi
+\fi}
 \def\xlst@LoadLanguage@iter#1,#2\@nil{%
 \ifx!#1!\else\xlst@LoadLanguage@single#1\@nil
   \ifx!#2!\else\xlst@LoadLanguage@iter#2,\@nil
 \fi\fi
 }
-\def\xlst@LoadLanguage#1{\xlst@LoadLanguage@iter#1,\@nil}
+\def\xlst@LoadLanguage#1{%
+\protected@edef\xlst@@langlist{\zap@space#1 \@empty}%
+\expandafter\xlst@LoadLanguage@iter\xlst@@langlist,\@nil}
 \let\LoadLanguage\xlst@LoadLanguage
 \let\LoadLanguages\LoadLanguage
 
@@ -543,13 +606,13 @@ keepspaces      = false}
 \let\xlst@registered@colors@keywordC\@empty  \let\xlst@registered@colors@numbers\@empty
 \let\xlst@registered@colors@literals\@empty  \let\xlst@registered@colors@comments\@empty
 \let\xlst@registered@colors@highlight\@empty \let\xlst@registered@colors@command\@empty
-\let\xlst@registered@colors@linenumbers\@empty
+\let\xlst@registered@colors@linenumbers\@empty \let\xlst@registered@colors@numprefix\@empty
 
 % #1 color name #2 color
 \newcommand*\lstcolorlet[2]{%
 \@ifundefined{xlst@registered@colors@#1}{%
 \PackageError{xlistings}{The color '#1' is undefined.}%
-{Choose one of 'keywordA,keywordB,keywordC,numbers,literals,comments,highlight,command'}%
+{Choose one of 'keywordA,keywordB,keywordC,numbers,numprefix,literals,comments,highlight,command,linenumbers'}%
 }{\colorlet{xlst@colors@lst@#1}{#2}}%
 }
 
@@ -557,7 +620,7 @@ keepspaces      = false}
 \newcommand*\lstcolordef[3][RGB]{%
 \@ifundefined{xlst@registered@colors@#2}{%
 \PackageError{xlistings}{The color '#2' is undefined.}%
-{Choose one of 'keywordA,keywordB,keywordC,numbers,literals,comments,highlight,command'}%
+{Choose one of 'keywordA,keywordB,keywordC,numbers,numprefix,literals,comments,highlight,command,linenumbers'}%
 }{\definecolor{xlst@colors@lst@#2}{#1}{#3}}%
 }
 
@@ -580,9 +643,17 @@ keepspaces      = false}
 
 \def\xlsthlboxd#1{\protected@edef\@tmp{\noexpand\@xlstLstHL{#1}}\@tmp}
 \def\xlsthlbox#1{\@xlstLstHL{fill=#1!30,draw=#1}}
-\colorlet{xlstwarning}{yellow!90!red}
-\def\xlstcustom{fill=purple!30}
+\else % without tikz we can still color the segment
+\def\xlsthlboxd#1{\xlst@style@get{highlight}}
+\def\xlsthlbox#1{\@declaredcolor{#1}}
 \fi
+\colorlet{xlstwarning}{yellow!90!red}
+\colorlet{xlsterror}{red!80!black}
+\colorlet{xlstinfo}{cyan!70!black}
+\def\xlstcustom{fill=purple!30}
+\def\xlsthlwarning{\xlsthlbox{xlstwarning}}
+\def\xlsthlerror{\xlsthlbox{xlsterror}}
+\def\xlsthlinfo{\xlsthlbox{xlstinfo}}
 % only pmode
 % Comfort guards
 \def\xlstIfPmode#1#2{\ifnum\lst@mode=\lst@Pmode\relax#1\else#2\fi}
@@ -592,10 +663,23 @@ keepspaces      = false}
 \appto\lst@@discretionary{\normalcolor}
 
 \if@xlst@fakeminted
-\def\xlst@minted@setup#1#2#3{\lstset{style=#1,language=#2,language addons=#2,#3}}
+% #1 style, #2 lst-language, #3 name of the language, #4 further keys
+\def\xlst@minted@setup#1#2#3#4{\lstset{style=#1,language=#2,language addons=#3,#4}}
 % allows to map languages
 
 \def\xlst@minted@language@mapping#1{\@ifundefined{xlst@@minted@#1}{#1}{\csname xlst@@minted@#1\endcsname}}
+\def\xlst@minted@ensure#1{%
+\@ifundefined{xlst@@minted@#1}{%
+  \xlst@debug{Loading '#1' for the minted environment}%
+  % the environment already runs under the catcodes of a listing
+  \begingroup\catcode`\^^M=5\relax\endlinechar=13\relax\catcode`\ =10\relax
+  \makeatletter\xlst@LoadLanguage{#1}\endgroup
+  \@ifundefined{xlst@@minted@#1}{%
+    \PackageError{xlistings}{The language '#1' is not available}%
+      {Load it with \string\LoadLanguages{#1} or map an existing one onto it
+       with \string\xlstmintedmap.}%
+  }{}%
+}{}}
 \def\xlstmintedmap#1#2{\expandafter\def\csname xlst@@minted@#1\endcsname{#2}}
 
 % TODO: auto load a language if a requested one is not loaded
@@ -616,9 +700,9 @@ keepspaces      = false}
 
 \newif\if@xlistings@mintedlangbadge
 \let\xlstmintedwithlangbadge\@xlistings@mintedlangbadgetrue
-\let\xlstmintedwithoutlangbadge\@xlistings@mintedlangbadgetrue
+\let\xlstmintedwithoutlangbadge\@xlistings@mintedlangbadgefalse
 
-\lstnewenvironment{minted}[2][]{\protected@edef\@tmp{\pgfkeysvalueof{/xlst@lst@family/\xlst@minted@style/listing style}}\protected@edef\@temp{\xlst@minted@language@mapping{#2}}\expandafter\expandafter\expandafter\xlst@minted@setup\expandafter\expandafter\expandafter{\expandafter\@tmp\expandafter}\expandafter{\@temp}{#1}%
+\lstnewenvironment{minted}[2][]{\xlst@minted@ensure{#2}\protected@edef\@tmp{\pgfkeysvalueof{/xlst@lst@family/\xlst@minted@style/listing style}}\protected@edef\@temp{\xlst@minted@language@mapping{#2}}\expandafter\expandafter\expandafter\xlst@minted@setup\expandafter\expandafter\expandafter{\expandafter\@tmp\expandafter}\expandafter{\@temp}{#2}{#1}%
 \if@xlistings@mintedlangbadge\xlst@shownextcodelang{#2}\fi
 }{}
 \fi

@@ -1,0 +1,46 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line ....
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line ....
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line ....
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line ....
+[PASS] java-warn
+[PASS] java-custom
+[PASS] bash-warn
+[PASS] json-warn
+[PASS] sql-warn
+[PASS] cpp-warn
+[PASS] x86-warn
+[PASS] latex-custom
+[PASS] lc-brackets
+[PASS] regex-custom
+[PASS] mips-custom
+[PASS] sirl-custom
+[PASS] tac-custom
+[PASS] xml-plain
+[PASS] git-warn
+[PASS] git-error
+[PASS] git-info
+[PASS] haskell-error
+[PASS] lua-info
+[PASS] markdown-error
+[1
+]
+[PASS] ts-warn
+[PASS] java-ihl
+[PASS] java-num-delim
+[PASS] java-str-delim
+[PASS] java-cmt-delim
+[PASS] x86-num-delim
+[PASS] void-ihl
+[PASS] box-color
+[PASS] box-keys
+[PASS] box-warning
+[PASS] box-error
+[PASS] box-info
+===== xlistings tests: 32 passed, 0 failed =====
+[2]

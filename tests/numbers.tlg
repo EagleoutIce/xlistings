@@ -1,0 +1,37 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line ....
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line ....
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line ....
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line ....
+[PASS] decimal
+[PASS] float
+[PASS] float-long
+[PASS] many-numbers
+[PASS] leading-dot
+[PASS] identifier
+[PASS] identifier-only
+[PASS] identifier-hex
+[PASS] hex
+[PASS] hex-upper
+[PASS] hex-letters
+[PASS] binary
+[PASS] binary-upper
+[PASS] octal
+[PASS] octal-upper
+[PASS] separator
+[PASS] exponent
+[PASS] exponent-signed
+[PASS] suffix-long
+[1
+]
+[PASS] suffix-float
+[PASS] suffix-hex
+[PASS] in-string
+[PASS] in-comment
+===== xlistings tests: 23 passed, 0 failed =====
+[2]

@@ -1,0 +1,34 @@
+% The 'print' palette has to highlight exactly like the digital one.
+\input{regression-test}
+\documentclass{article}
+\usepackage[print,extendednums]{xlistings}
+\LoadLanguages{java,yaml}
+\usepackage{xlisttest}
+\begin{document}
+\WarmUp{\bjava{x}\byaml{x}}
+\START
+\section*{Print palette}
+
+\TestInline{decimal}{kwB,num,num,}{\bjava{int i = 10;}}
+\TestInline{hex}{kwB,npx,num,num,}{\bjava{int i = 0x1A;}}
+\TestInline{keywords}{kwA,kwA,kwB,}{\bjava{public static void}}
+\TestInline{string}{kwB,lit,lit,lit,}{\bjava{String s = \"a\";}}
+\TestInline{comment}{cmt,cmt,cmt,cmt,cmt,}{\bjava{// a comment}}
+\TestInline{literals}{lit,}{\bjava{true}}
+\TestInline{annotation}{cmt,}{\bjava{@Override}}
+
+\StartTest{environment}{kwB,num,num,}
+\begin{java}
+int i = 10;
+\end{java}
+\EndTest
+
+\StartTest{yaml}{kwA,kwC,num,cmt,cmt,cmt,cmt,cmt,}
+\begin{yaml}
+- key: 1
+# a comment
+\end{yaml}
+\EndTest
+\TestSummary
+\END
+\end{document}

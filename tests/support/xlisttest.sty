@@ -1,0 +1,104 @@
+% xlisttest.sty -- test harness for xlistings
+% Load *after* xlistings: every style additionally records its name, so a test
+% can compare the sequence of applied styles while the sample stays typeset as
+% it normally would be.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{xlisttest}[2026/08/16 xlistings test harness]
+
+\RequirePackage{etoolbox}
+
+\newcount\xlsttest@passed
+\newcount\xlsttest@failed
+\newbox\xlsttest@box
+
+\gdef\xlsttest@trace{}
+\def\xlsttest@rec#1{\gappto\xlsttest@trace{#1,}}
+
+% #1 style, #2 recorded name
+\def\xlsttest@instrument#1#2{%
+  \csletcs{xlsttest@style@#1}{xlst@styles@lst@#1}%
+  \csedef{xlst@styles@lst@#1}{\noexpand\xlsttest@rec{#2}%
+    \expandafter\noexpand\csname xlsttest@style@#1\endcsname}%
+}
+\xlsttest@instrument{keywordA}{kwA}
+\xlsttest@instrument{keywordB}{kwB}
+\xlsttest@instrument{keywordC}{kwC}
+\xlsttest@instrument{keywordD}{kwD}
+\xlsttest@instrument{numbers}{num}
+\xlsttest@instrument{numprefix}{npx}
+\xlsttest@instrument{literals}{lit}
+\xlsttest@instrument{comments}{cmt}
+\xlsttest@instrument{command}{cmd}
+\xlsttest@instrument{highlight}{hl}
+
+\def\xlsttest@verdict#1{\texttt{\footnotesize[#1]}}
+\def\xlsttest@name#1{\textsf{\footnotesize#1}}
+\def\xlsttest@show#1{\texttt{\footnotesize#1}}
+
+% #1 name, #2 expected trace
+\def\xlsttest@check#1#2{%
+  \edef\xlsttest@got{\detokenize\expandafter{\xlsttest@trace}}%
+  \edef\xlsttest@want{\detokenize{#2}}%
+  \par\medskip\noindent
+  \ifx\xlsttest@got\xlsttest@want
+    \advance\xlsttest@passed\@ne
+    \typeout{[PASS] #1}%
+    \xlsttest@verdict{PASS}~\xlsttest@name{#1}~\xlsttest@show{\xlsttest@got}%
+  \else
+    \advance\xlsttest@failed\@ne
+    \typeout{[FAIL] #1: expected `\xlsttest@want' but got `\xlsttest@got'}%
+    \xlsttest@verdict{FAIL}~\xlsttest@name{#1}~
+    \xlsttest@show{want \xlsttest@want{} got \xlsttest@got}%
+  \fi
+  \par\nobreak\noindent
+}
+
+% before \START, to trigger the lazy loading of the listings language files
+\newcommand*\WarmUp[1]{\setbox\xlsttest@box\vbox{\hsize=\linewidth #1}}
+
+% #1 name, #2 expected trace, #3 code (typically an inline macro like \bjava)
+\newcommand*\TestInline[3]{%
+  \gdef\xlsttest@trace{}%
+  \setbox\xlsttest@box\hbox{#3}%
+  \xlsttest@check{#1}{#2}%
+  \box\xlsttest@box\par
+}
+
+% lets a test record a marker of its own
+\let\TestRecord\xlsttest@rec
+
+% #1 name, #2 code -- a smoke test: it only has to typeset without an error
+\newcommand*\TestRuns[2]{%
+  \gdef\xlsttest@trace{}%
+  \setbox\xlsttest@box\hbox{#2}%
+  \advance\xlsttest@passed\@ne
+  \typeout{[PASS] #1}%
+  \par\medskip\noindent
+  \xlsttest@verdict{PASS}~\xlsttest@name{#1}~%
+  \xlsttest@show{\detokenize\expandafter{\xlsttest@trace}}%
+  \par\nobreak\noindent\box\xlsttest@box\par
+}
+
+%   \StartTest{name}{expected} <listing environment> \EndTest
+\def\StartTest#1#2{%
+  \gdef\xlsttest@curname{#1}\gdef\xlsttest@curwant{#2}%
+  \gdef\xlsttest@trace{}%
+  \setbox\xlsttest@box\vbox\bgroup\hsize=.8\linewidth
+}
+\def\EndTest{%
+  \egroup
+  \expandafter\expandafter\expandafter\xlsttest@check
+    \expandafter\expandafter\expandafter{\expandafter\xlsttest@curname\expandafter}%
+    \expandafter{\xlsttest@curwant}%
+  \box\xlsttest@box\par
+}
+
+% closes a test file
+\def\TestSummary{%
+  \typeout{===== xlistings tests: \the\xlsttest@passed\space passed,
+    \the\xlsttest@failed\space failed =====}%
+  \par\bigskip\noindent
+  \textbf{\the\xlsttest@passed\ passed, \the\xlsttest@failed\ failed}%
+  % \END ends the run with the primitive \end, which would drop the last page
+  \clearpage
+}

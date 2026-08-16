@@ -1,0 +1,187 @@
+% Package features around the highlighting itself.
+\input{regression-test}
+\documentclass{article}
+\usepackage[extendednums]{xlistings}
+\LoadLanguages{java,yaml,R,x86}
+\LoadLanguages{java}% a language is only loaded once
+\usepackage{xlisttest}
+
+\xlstlangoverride{java}{morekeywords=[3]{Duck}}
+
+\begin{document}
+\WarmUp{\bjava{x}\byaml{x}\bR{x}\bIndexR{x}\bvoid{x}\xlstb{x86}{x}}
+\START
+\section*{Features}
+
+% language overrides reach the environments and the inline commands
+\TestInline{langoverride}{kwC,kwB,}{\bjava{Duck int}}
+\TestInline{style-access}{cmt,}{\xlstGet{comments}{text}}
+\TestInline{style-get}{num,}{{\xlstGetStyle{numbers}text}}
+
+% colors may be redefined without touching the styles
+\lstcolorlet{numbers}{orange}
+\lstcolordef[HTML]{numprefix}{AABBCC}
+\TestInline{recolored}{kwB,npx,num,num,}{\bjava{int i = 0x1A;}}
+
+% inline variants
+\TestInline{inline-framed}{kwB,num,num,}{\cjava{int i = 10;}}
+
+\StartTest{environment}{kwB,num,num,}
+\begin{java}
+int i = 10;
+\end{java}
+\EndTest
+
+\StartTest{environment-nonum}{kwB,num,num,}
+\begin{java*}
+int i = 10;
+\end{java*}
+\EndTest
+
+\StartTest{environment-plain}{kwB,num,num,}
+\begin{plainjava}
+int i = 10;
+\end{plainjava}
+\EndTest
+
+\StartTest{minted}{kwB,num,num,}
+\begin{minted}{java}
+int i = 10;
+\end{minted}
+\EndTest
+
+\StartTest{minted-langoverride}{kwC,kwB,}
+\begin{minted}{java}
+Duck int
+\end{minted}
+\EndTest
+
+\StartTest{blacklisted-line-numbers}{kwB,num,num,kwB,num,num,}
+\xlstblacklistlinenumbers{2}
+\begin{java}
+int i = 10;
+int j = 11;
+\end{java}
+\EndTest
+
+\StartTest{badge}{kwB,num,num,}
+\BadgeNextListing{java}
+\begin{java}
+int i = 10;
+\end{java}
+\EndTest
+
+\StartTest{autogobble}{kwB,num,num,}
+\begin{java}[autogobble]
+    int i = 10;
+\end{java}
+\EndTest
+
+\TestInline{void}{num,num,}{\bvoid{int i = 10;}}
+\StartTest{void-environment}{num,num,}
+\begin{void}
+int i = 10;
+\end{void}
+\EndTest
+
+\TestRuns{input}{\ijava{xlstsample.java}}
+
+\TestInline{literate-ldots}{}{\bjava{a:ldots:b}}
+\TestInline{literate-spacing}{}{\bjava{a:ws:b:c:d}}
+\TestInline{literate-math}{}{\bjava{a:to:b:lan:c:ran:}}
+\TestInline{literate-added}{kwB,}{{\lstset{add to literate={pi}{{\ensuremath{\pi}}}2}%
+  \bjava{int pi}}}
+
+\TestRuns{lstfs}{{\lstfs{5}\bjava{int i = 10;}}}
+\TestRuns{lstfs-star}{{\lstfs*\bjava{int i = 10;}}}
+\TestRuns{numfs}{{\xlstNumFs{\tiny}\bjava{int i = 10;}}}
+
+\TestRuns{lengths}{{\xlstSetLeftMargin{15pt}\xlstSetRightMargin{15pt}%
+  \xlstSetNumSep{4pt}\xlstSetFrameRule{2pt}\xlstguard{2}\bjava{int i = 10;}}}
+\TestRuns{prebreak}{{\xlstInlinePreBreak{\ensuremath{\hookleftarrow}}%
+  \bjava{int i = 10;}}}
+
+\TestRuns{styles}{\xlstStyles}
+
+\StartTest{lstnonum}{}
+\begin{lstnonum}
+plain text
+\end{lstnonum}
+\EndTest
+\StartTest{lstplain}{}
+\begin{lstplain}
+plain text
+\end{lstplain}
+\EndTest
+
+\TestInline{indexed-R}{}{\bIndexR{x_1}}
+
+\xlstmintedmap{myjava}{lJava}
+\StartTest{minted-mapped}{kwB,num,num,}
+\begin{minted}{myjava}
+int i = 10;
+\end{minted}
+\EndTest
+
+\StartTest{blacklist-ghost}{kwB,num,num,kwB,num,num,}
+\xlstblacklistlinenumbers{1}
+\begin{java}
+int i = 10;
+int j = 11;
+\end{java}
+\EndTest
+\StartTest{blacklist-present}{kwB,num,num,kwB,num,num,}
+\xlstblacklistlinenumbers*{1}
+\begin{java}
+int i = 10;
+int j = 11;
+\end{java}
+\EndTest
+
+\TestRuns{style-plain}{{\xlstsetstyle{plain}\cjava{int i = 10;}}}
+\TestRuns{style-plain-number}{{\xlstsetstyle{plain number}\cjava{int i = 10;}}}
+
+% the language badge of the minted environment can be switched off
+\def\xlstlangbadgestyle#1{\TestRecord{badge}}
+\xlstmintedwithlangbadge
+\StartTest{badge-on}{badge,kwB,num,num,}
+\begin{minted}{java}
+int i = 10;
+\end{minted}
+\EndTest
+\xlstmintedwithoutlangbadge
+\StartTest{badge-off}{kwB,num,num,}
+\begin{minted}{java}
+int i = 10;
+\end{minted}
+\EndTest
+\xlstmintedwithlangbadge
+
+% switching the number highlighting off also drops the radix prefix
+\TestInline{disabled-radix}{kwB,}{{\xlstdisablenumhl\bjava{int i = 0x1A;}}}
+
+% the language as an argument, the only way for names such as 'x86'
+\TestInline{generic-inline}{kwB,num,num,}{\xlstb{java}{int i = 10;}}
+\TestInline{generic-inline-framed}{kwB,num,num,}{\xlstc{java}{int i = 10;}}
+\TestInline{generic-inline-keys}{kwB,num,num,}
+  {\xlstb[showspaces=false]{java}{int i = 10;}}
+\TestRuns{generic-inline-digits}{\xlstb{x86}{mov eax, 0x10}}
+\TestRuns{generic-input}{\xlsti{java}{xlstsample.java}}
+
+% an unloaded language is loaded when the minted environment asks for it
+\StartTest{minted-autoload}{badge,kwA,kwB,num,}
+\begin{minted}{sql}
+SELECT DOUBLE 1
+\end{minted}
+\EndTest
+
+% a language that cannot be found is reported
+\LoadLanguages{doesnotexist}
+\TestRuns{missing-language}{\bjava{int i = 10;}}
+
+% the starred override replaces the list instead of adding to it
+\xlstlangoverride*{java}{morekeywords=[4]{Duck}}
+\TestInline{langoverride-star}{kwD,kwB,}{\bjava{Duck int}}
+\TestSummary
+\END
+\end{document}

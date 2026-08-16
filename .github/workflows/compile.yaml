@@ -2,10 +2,31 @@ name: Compile the showcases
 'on':
   push:
     branches: [master, main]
+  pull_request:
   workflow_dispatch:
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    container: texlive/texlive:latest
+    steps:
+    - name: Checkout git repository
+      uses: actions/checkout@v4
+    - name: ✅ Run the test suite
+      run: l3build check
+    - name: 🔍 Upload the test output for inspection
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-output
+        path: |
+          build/test/*.pdf
+          build/test/*.diff
+        if-no-files-found: ignore
+
   build:
+    needs: test
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     steps:
     - name: Checkout git repository
@@ -18,6 +39,12 @@ jobs:
       with:
         root_file: |
           xlistings-doc.tex
+    - name: 🔍 Fetch the test output
+      continue-on-error: true
+      uses: actions/download-artifact@v4
+      with:
+        name: test-output
+        path: build/test
     - name: Install PU for previews
       uses: awalsh128/cache-apt-pkgs-action@latest
       with:
@@ -31,6 +58,7 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add -f "build/xlistings-doc.pdf" "preview-*.png"
+        git add -f build/test/*.pdf || true
         git commit -m "Newly compiled data"
     - name: Push changes
       uses: ad-m/github-push-action@master

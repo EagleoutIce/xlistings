@@ -1,0 +1,179 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line ....
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line ....
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line ....
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line ....
+[PASS] java-keywords
+[PASS] java-annotation
+[PASS] aspectj
+[PASS] cpp-case-sensitive
+[PASS] csharp
+[PASS] haskell-operators
+[PASS] javascript
+[PASS] typescript
+[PASS] python
+[PASS] python-string
+[PASS] R
+[PASS] lua
+[PASS] bash
+[PASS] git
+[PASS] sql
+[PASS] json
+[PASS] xml
+[PASS] latex
+[PASS] markdown-heading
+LaTeX Font Info:    Trying to load font information for OMS+cmtt on input line ....
+LaTeX Font Info:    No file OMScmtt.fd. on input line ....
+LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
+(Font)              using `OMS/cmsy/m/n' instead
+(Font)              for symbol `textbackslash' on input line ....
+[1
+]
+[PASS] regex
+[PASS] rubberduck
+[PASS] sirl
+[PASS] tac
+[PASS] mips
+[PASS] x86
+[PASS] lc
+[PASS] yaml
+[PASS] yaml-dash
+Overfull \hbox (111.44533pt too wide) in paragraph at lines ...
+\OT1/cmtt/m/n/8 [PASS] \OT1/cmss/m/n/8 yaml-dash \OT1/cmtt/m/n/8 kwA,kwC,num,num,num,num,num,num,num,cmt,cmt,cmt,cmt,cmt,cmt,cmt,cmt,cmt,lit,lit,lit,lit,lit, 
+\hbox(5.55556+1.55556)x345.0, glue set - 1.0
+.\OT1/cmtt/m/n/8 [
+.\OT1/cmtt/m/n/8 P
+.\OT1/cmtt/m/n/8 A
+.\OT1/cmtt/m/n/8 S
+.\OT1/cmtt/m/n/8 S
+.\OT1/cmtt/m/n/8 ]
+.\kern 0.0
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\OT1/cmss/m/n/8 y
+.\kern-0.23611
+.\OT1/cmss/m/n/8 a
+.\OT1/cmss/m/n/8 m
+.\OT1/cmss/m/n/8 l
+.\OT1/cmss/m/n/8 -
+.\discretionary
+.\OT1/cmss/m/n/8 d
+.\OT1/cmss/m/n/8 a
+.\OT1/cmss/m/n/8 s
+.\OT1/cmss/m/n/8 h
+.\kern 0.0
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\OT1/cmtt/m/n/8 k
+.\OT1/cmtt/m/n/8 w
+.\OT1/cmtt/m/n/8 A
+.\OT1/cmtt/m/n/8 ,
+.\OT1/cmtt/m/n/8 k
+.\OT1/cmtt/m/n/8 w
+.\OT1/cmtt/m/n/8 C
+.\OT1/cmtt/m/n/8 ,
+.\OT1/cmtt/m/n/8 n
+.\OT1/cmtt/m/n/8 u
+.\OT1/cmtt/m/n/8 m
+.\OT1/cmtt/m/n/8 ,
+.\OT1/cmtt/m/n/8 n
+.\OT1/cmtt/m/n/8 u
+.\OT1/cmtt/m/n/8 m
+.\OT1/cmtt/m/n/8 ,
+.\OT1/cmtt/m/n/8 n
+.\OT1/cmtt/m/n/8 u
+.\OT1/cmtt/m/n/8 m
+.\OT1/cmtt/m/n/8 ,
+.\OT1/cmtt/m/n/8 n
+.\OT1/cmtt/m/n/8 u
+.\OT1/cmtt/m/n/8 m
+.\OT1/cmtt/m/n/8 ,
+.\OT1/cmtt/m/n/8 n
+.\OT1/cmtt/m/n/8 u
+.\OT1/cmtt/m/n/8 m
+.\OT1/cmtt/m/n/8 ,
+.\OT1/cmtt/m/n/8 n
+.\OT1/cmtt/m/n/8 u
+.\OT1/cmtt/m/n/8 m
+.\OT1/cmtt/m/n/8 ,
+.\OT1/cmtt/m/n/8 n
+.\OT1/cmtt/m/n/8 u
+.\OT1/cmtt/m/n/8 m
+.\OT1/cmtt/m/n/8 ,
+.\OT1/cmtt/m/n/8 c
+.\OT1/cmtt/m/n/8 m
+.\OT1/cmtt/m/n/8 t
+.\OT1/cmtt/m/n/8 ,
+.\OT1/cmtt/m/n/8 c
+.\OT1/cmtt/m/n/8 m
+.\OT1/cmtt/m/n/8 t
+.\OT1/cmtt/m/n/8 ,
+.\OT1/cmtt/m/n/8 c
+.\OT1/cmtt/m/n/8 m
+.\OT1/cmtt/m/n/8 t
+.\OT1/cmtt/m/n/8 ,
+.\OT1/cmtt/m/n/8 c
+.\OT1/cmtt/m/n/8 m
+.\OT1/cmtt/m/n/8 t
+.\OT1/cmtt/m/n/8 ,
+.\OT1/cmtt/m/n/8 c
+.\OT1/cmtt/m/n/8 m
+.\OT1/cmtt/m/n/8 t
+.\OT1/cmtt/m/n/8 ,
+.\OT1/cmtt/m/n/8 c
+.\OT1/cmtt/m/n/8 m
+.\OT1/cmtt/m/n/8 t
+.\OT1/cmtt/m/n/8 ,
+.\OT1/cmtt/m/n/8 c
+.\OT1/cmtt/m/n/8 m
+.\OT1/cmtt/m/n/8 t
+.\OT1/cmtt/m/n/8 ,
+.\OT1/cmtt/m/n/8 c
+.\OT1/cmtt/m/n/8 m
+.\OT1/cmtt/m/n/8 t
+.\OT1/cmtt/m/n/8 ,
+.\OT1/cmtt/m/n/8 c
+.\OT1/cmtt/m/n/8 m
+.\OT1/cmtt/m/n/8 t
+.\OT1/cmtt/m/n/8 ,
+.\OT1/cmtt/m/n/8 l
+.\OT1/cmtt/m/n/8 i
+.\OT1/cmtt/m/n/8 t
+.\OT1/cmtt/m/n/8 ,
+.\OT1/cmtt/m/n/8 l
+.\OT1/cmtt/m/n/8 i
+.\OT1/cmtt/m/n/8 t
+.\OT1/cmtt/m/n/8 ,
+.\OT1/cmtt/m/n/8 l
+.\OT1/cmtt/m/n/8 i
+.\OT1/cmtt/m/n/8 t
+.\OT1/cmtt/m/n/8 ,
+.\OT1/cmtt/m/n/8 l
+.\OT1/cmtt/m/n/8 i
+.\OT1/cmtt/m/n/8 t
+.\OT1/cmtt/m/n/8 ,
+.\OT1/cmtt/m/n/8 l
+.\OT1/cmtt/m/n/8 i
+.\OT1/cmtt/m/n/8 t
+.\OT1/cmtt/m/n/8 ,
+.\kern 0.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0
+[PASS] suffix-java
+[PASS] suffix-python
+[PASS] suffix-typescript
+[PASS] suffix-R
+[PASS] suffix-prose
+[PASS] exponent-everywhere
+[2]
+[PASS] yaml-key-dash
+[PASS] markdown-inline
+[PASS] javascript-template
+===== xlistings tests: 37 passed, 0 failed =====
+[3]

@@ -17,7 +17,9 @@
 \usepackage{pgffor}
 
 \usepackage[style={plain number},extendednums]{xlistings}
-\LoadLanguages{latex,java,bash,rubberduck,xml,json,yaml}
+\LoadLanguages{latex,java,aspectj,bash,cpp,csharp,git,haskell,javascript,json,
+  lambda_calculus,lua,markdown,mips,python,R,regex,rubberduck,sirl,sql,tac,ts,
+  x86,xml,yaml}
 
 \usepackage{microtype}
 \usepackage[colorlinks=true,breaklinks=true,allcolors=cyan!65!black]{hyperref}
@@ -164,11 +166,35 @@ This package imports the following packages:\vspace*{-.5\baselineskip}
 
 \begin{argument}[default, ]{fakeminted}
     This option causes \T{xlistings} to provide you with a replacement \blatex{minted} environment.
+    A language that is not loaded yet is loaded on demand, so
+    \blatex{\\begin\{minted\}\{<lang>\}} works without a preceding
+    \cmdref{LoadLanguages}; if no definition can be found, you get an error
+    naming the language.
     To disable this behavior, use \T{fakeminted=false}.
 \end{argument}
 
 \begin{argument}{extendednums}
-    This option causes numbers with underscores or the classic \T{0x}-, \T{0b}- or \T{0o}-prefixes to be highlighted as well.
+    This option extends the number highlighting beyond plain decimals:
+
+    \begin{itemize}[nosep,itemsep=2pt,leftmargin=*]
+        \item digit separators: \bjava{10_234}
+        \item the classic \T{0x}-, \T{0b}- and \T{0o}-prefixes (upper case
+              variants included), where the prefix itself uses the
+              \T{numprefix} style: \bjava{0x1A}, \bjava{0b1010}, \bjava{0o17}
+        \item the letters of a hexadecimal literal: \bjava{0xdeadBEEF}
+        \item exponents and type suffixes: \bjava{1e10}, \bjava{1.5f},
+              \bjava{10L}
+    \end{itemize}
+
+    A letter is only ever taken as part of a number if it directly follows a
+    highlighted number, so \bjava{data1} and \bjava{x0xFF} stay untouched.
+
+    Which letters may end a number depends on the language and is configured
+    with the listings key \T{number suffixes}, which defaults to \T{eE}:
+    \T{10L} is a long in Java, \T{3j} a complex number in Python, \T{10n} a
+    BigInt in TypeScript, and in prose \T{3d} is just a \enquote{d} behind a
+    three. A language switches the letters off completely with
+    \blatex{number suffixes=\{\}}.
 \end{argument}
 
 \begin{argument}{debug}
@@ -196,6 +222,11 @@ This uses the opinionated language definitions in the \T{langs/} folder and prov
 \end{minted}
     \item As \blatex{\\c<lang>\{<code>\}} and \blatex{\\b<lang>\{<code>\}} commands, e.g., \clatex{\\cjava\{int i\}} and \blatex{\\bjava\{int i\}}.
     \item As \blatex{\\i<lang>\{<file>\}} command to include a file.
+    \item As \blatex{\\xlstc\{<lang>\}\{<code>\}}, \blatex{\\xlstb\{<lang>\}\{<code>\}},
+      and \blatex{\\xlsti\{<lang>\}\{<file>\}}, which take the language as an
+      argument. This is the only way to reach a language whose name cannot be
+      part of a command name, as \blatex{\\bx86\{<code>\}} would be read as
+      \blatex{\\bx} followed by \enquote{86}.
     \item As \blatex{\\begin\{minted\}\{<lang>\}} environment.
 \end{itemize}
 
@@ -235,7 +266,7 @@ If you want to add new literates for whatever reason, you can use the new listin
 With this active, writing \T{sample} will result in \bjava{sample} (you can combine this with \cmdref{xlstlangoverride} to add literates to a specific language).
 \endgroup
 
-If you want to change the colors of the keywords used, you can use \cmdref{lstcolorlet} with keys such as \T{keywordA}, \T{keywordB}, \T{keywordC}, \T{numbers}, \T{literals}, \T{comments}, \T{highlight}, and \T{command}:
+If you want to change the colors of the keywords used, you can use \cmdref{lstcolorlet} with the keys \T{keywordA}, \T{keywordB}, \T{keywordC}, \T{numbers}, \T{numprefix}, \T{literals}, \T{comments}, \T{highlight}, \T{command}, and \T{linenumbers}:
 
 \begin{minted}{latex}
 \lstcolorlet{comments}{orange}
@@ -274,7 +305,60 @@ Now, comments will be displayed in green and bold:
 If you are interested in a flexible highlighting and animation of these code snippets, have a look at the \href{https://github.com/EagleoutIce/code-animation}{code-animation} package, which we are currently working for to be compatible with \T{xlistings}.
 \endgroup
 
+\subsection{Writing a Language}
+
+A language lives in a file \T{<name>.cfg} which is picked up by
+\cmdref{LoadLanguages} and consists of an ordinary \blatex{\\lstdefinelanguage}
+followed by \cmdref{RegisterLanguage}:
+
+\begin{minted}{latex}
+\lstdefinelanguage{lRubberduck}{
+    comment=[l]{\#},
+    morekeywords = {Quack, new},
+    morekeywords = [2]{Duck}
+}
+\RegisterLanguage{rubberduck}{lRubberduck}
+\end{minted}
+
+There are three things worth knowing when you write such a file:
+
+\begin{itemize}[nosep,itemsep=2pt,leftmargin=*]
+    \item The name of the \T{listings} language starts with an \enquote{l}
+          followed by an upper case letter (\T{lRubberduck}) so that it never
+          collides with a language that \T{listings} ships itself. The name you
+          register (\T{rubberduck}) is the one used for the environments, the
+          inline commands, the \T{minted} environment, and
+          \cmdref{xlstlangoverride}.
+    \item Use only the public macros of this package. Language files are read
+          when \T{@} is not a letter, so \T{\textbackslash xlst@\ldots} macros
+          are not available; \cmdref{xlstGet} and \cmdref{xlstGetStyle} are.
+    \item All languages share one column model (\blatex{columns=flexible}),
+          set by the listing style. Only override it if the language really
+          needs something else.
+    \item The keyword classes \T{[1]} to \T{[6]} are styled as \T{keywordA},
+          \T{keywordB}, \T{keywordC}, \T{keywordD}, \T{literals}, and
+          \T{command}. A language may of course set its own
+          \blatex{keywordstyle}.
+\end{itemize}
+
+The behavior of a language is pinned down by the test suite in \T{tests/}:
+\blatex{l3build check} states, per sample, which styles are expected in which
+order, and \T{build/test/<name>.pdf} shows the verdict next to the typeset
+sample so the result can be inspected by eye. A color that leaks past its
+segment does not show up in such a trace, so the checks additionally compare
+the pdf, reduced to the color every piece of text is drawn in.
+
+For segment highlighting, the macros \blatex{\\xlsthlwarning},
+\blatex{\\xlsthlerror}, and \blatex{\\xlsthlinfo} are available as delimiter
+styles (they fall back to a plain color if the \argref{highlights}{highlights}
+option is not active), as are \blatex{\\xlsthlbox\{<color>\}} and
+\blatex{\\xlsthlboxd\{<tikz keys>\}}.
+
 \subsection{Language Samples}
+
+Every language shipped with this package is listed below, tagged with the name
+you pass to \cmdref{LoadLanguages}. They are opinionated: they favor the
+constructs the author needs and can be adapted with \cmdref{xlstlangoverride}.
 
 \begin{minted}{java}
 public static void main(String[] args){
@@ -284,11 +368,65 @@ public static void main(String[] args){
 }
 \end{minted}
 
-\begin{minted}{latex}
-\documentclass{article}
-\begin{document}
-\ldots
-\end{document}
+\begin{minted}{aspectj}
+aspect Logging {
+    pointcut trace(): execution(* *.*(..));
+}
+\end{minted}
+
+\begin{minted}{cpp}
+int main(void) {  /* a comment */
+    printf("%d\n", 0xdeadBEEF);
+}
+\end{minted}
+
+\begin{minted}{csharp}
+public static int Add(int a, int b) => a + b; // null, true, false
+\end{minted}
+
+\begin{minted}{python}
+def area(r): # a comment
+    return 3.14159 * r ** 2 if r > 0 else None
+\end{minted}
+
+\begin{minted}{R}
+squares <- sapply(c(1, 2, 3.45), function(x) x^2) # a comment
+\end{minted}
+
+\begin{minted}{javascript}
+const answer = async () => { return 0x2A; }; // a comment
+\end{minted}
+
+\begin{minted}{ts}
+function id<T>(value: T): T { return value; } // a comment
+\end{minted}
+
+\begin{minted}{haskell}
+double :: Int -> Int   -- a comment
+double x = 2 * x
+\end{minted}
+
+\begin{minted}{lua}
+local t = {1, 2, 3} -- a comment
+for i, v in ipairs(t) do print(i, v) end
+\end{minted}
+
+\begin{minted}{bash}
+ls -la /tmp | grep tex # a comment
+sudo apt-get install texlive
+\end{minted}
+
+\begin{minted}{git}
+git commit -m "message"
+git push origin master
+\end{minted}
+
+\begin{minted}{sql}
+SELECT name FROM users WHERE id > 10; -- a comment
+\end{minted}
+
+\begin{minted}{json}
+{ "name": "xlistings", "version": 1, "tags": [true, false, null] }
 \end{minted}
 
 \begin{minted}{yaml}
@@ -298,6 +436,55 @@ list:
   - item1
   - item2: subvalue
 number: 0x1A + 10_000 - 0b1010
+\end{minted}
+
+\begin{minted}{xml}
+<!-- a comment -->
+<book id="1"><title>Listings</title></book>
+\end{minted}
+
+\begin{minted}{markdown}
+# Heading
+A **bold** word and some `code`.
+\end{minted}
+
+\begin{minted}{latex}
+\documentclass{article}
+\begin{document}
+\ldots
+\end{document}
+\end{minted}
+
+\begin{minted}{regex}
+^(0x)?[0-9a-fA-F]+$
+\end{minted}
+
+\begin{minted}{x86}
+mov eax, 0x10 ; a comment
+add rax, rbx
+\end{minted}
+
+\begin{minted}{mips}
+addi $t0, $zero, 10   # a comment
+sw   $t0, 0($sp)
+\end{minted}
+
+\begin{minted}{tac}
+if x goto L1
+param a
+call f, 1
+\end{minted}
+
+\begin{minted}{sirl}
+MOVE TEMP CONST 1 // a comment
+\end{minted}
+
+\begin{minted}{lc}
+(\x. x y) (\y. y)
+\end{minted}
+
+\begin{minted}{rubberduck}
+Duck jens = new Duck(); # a comment
 \end{minted}
 
 \subsection{Full Reference}

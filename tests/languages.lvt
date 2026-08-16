@@ -1,0 +1,93 @@
+% Highlighting of the shipped languages.
+\input{regression-test}
+\documentclass{article}
+\usepackage[extendednums]{xlistings}
+\LoadLanguages{latex,java,aspectj,bash,cpp,csharp,git,haskell,javascript,json,
+  lambda_calculus,lua,markdown,mips,python,R,regex,rubberduck,sirl,sql,tac,ts,
+  x86,xml,yaml}
+\usepackage{xlisttest}
+\begin{document}
+\WarmUp{\blatex{x}\bjava{x}\baspectj{x}\bbash{x}\bcpp{x}\bcsharp{x}\bgit{x}\bhaskell{x}\bjavascript{x}\bjson{x}\blc{x}\blua{x}\bmarkdown{x}\bmips{x}\bpython{x}\bR{x}\bregex{x}\brubberduck{x}\bsirl{x}\bsql{x}\btac{x}\bts{x}\csname bx86\endcsname{x}\bxml{x}\byaml{x}}
+\START
+\section*{Languages}
+
+\TestInline{java-keywords}{kwA,kwA,kwB,kwB,cmt,cmt,cmt,}
+  {\bjava{public static void main(String[] a) \{\} // c}}
+\TestInline{java-annotation}{cmt,kwA,kwB,}{\bjava{@Override public int}}
+\TestInline{aspectj}{kwA,kwA,}{\baspectj{aspect A \{ pointcut p(); \}}}
+\TestInline{cpp-case-sensitive}{kwA,num,}{\bcpp{int Int = 1;}}
+\TestInline{csharp}{kwA,kwB,num,lit,}{\bcsharp{public int x = 1; null}}
+\TestInline{haskell-operators}{kwD,kwB,kwC,}{\bhaskell{:: -> Just}}
+\TestInline{javascript}{kwA,num,cmt,cmt,cmt,}{\bjavascript{const a_1 = 1; // c}}
+\TestInline{typescript}{kwA,kwB,num,}{\bts{let a: number = 1;}}
+\TestInline{python}{kwA,kwA,kwB,}{\bpython{def f(): return True}}
+\TestInline{python-string}{kwA,lit,lit,lit,}{\bpython{print(\"a\")}}
+\TestInline{R}{num,num,}{\bR{c(1,2)}}
+\TestInline{lua}{kwA,num,cmt,cmt,cmt,}{\blua{local x = 1 -- c}}
+\TestInline{bash}{kwA,cmt,cmt,cmt,}{\bbash{ls -la /tmp \# comment}}
+\TestInline{git}{lit,kwC,kwB,cmd,}{\bgit{git push origin master}}
+\TestInline{sql}{kwA,kwB,num,cmt,cmt,cmt,}{\bsql{SELECT DOUBLE 1 -- c}}
+\TestInline{json}{lit,lit,lit,num,kwB,kwB,}{\bjson{\{"a": [1, true, null]\}}}
+\TestInline{xml}{kwA,cmt,cmt,cmt,cmt,cmt,kwA,kwA,lit,lit,lit,kwA,kwA,}
+  {\bxml{<!-- c --><a b="1"/>}}
+\TestInline{latex}{cmd,cmt,cmt,cmt,}{\blatex{\\section\{a\} \% c}}
+\TestInline{markdown-heading}{num,num,num,}{\bmarkdown{\# Title}}
+\TestInline{regex}{kwA,kwB,kwB,kwB,lit,lit,lit,lit,lit,kwA,}{\bregex{^a+b*c?[d-e]\\.\$}}
+\TestInline{rubberduck}{kwB,kwA,kwB,cmt,cmt,cmt,}{\brubberduck{Duck d = new Duck(); \# c}}
+\TestInline{sirl}{kwA,cmt,cmt,num,}{\bsirl{MOVE TEMP CONST 1}}
+\TestInline{tac}{kwA,kwA,}{\btac{if x goto L1}}
+\TestInline{mips}{kwA,num,num,}{\bmips{addi :hide\$:\$t0, :hide\$:\$zero, 10}}
+\TestInline{x86}{kwA,kwC,npx,num,num,cmt,cmt,cmt,}{\csname bx86\endcsname{mov eax, 0x10 ; c}}
+\TestInline{lc}{kwD,}{\blc{(\\x. x) true}}
+
+\StartTest{yaml}{kwA,cmt,cmt,cmt,cmt,cmt,kwC,num,kwC,kwB,lit,lit,lit,}
+\begin{yaml}
+# a comment
+key: value
+nested:
+  - item: 1
+  - flag: true
+text: "quoted"
+\end{yaml}
+\EndTest
+
+% a dash only starts a list item, it is not an operator in a value
+\StartTest{yaml-dash}{kwA,kwC,num,num,num,num,num,num,num,cmt,cmt,cmt,cmt,cmt,cmt,cmt,cmt,cmt,lit,lit,lit,lit,lit,}
+\begin{yaml}
+- item: 1
+sum: 10_000 - 5
+# - not a bullet
+text: "- quoted"
+\end{yaml}
+\EndTest
+
+% which letters end a number is up to the language
+\TestInline{suffix-java}{kwB,num,num,num,}{\bjava{long l = 10L;}}
+\TestInline{suffix-python}{num,num,}{\bpython{z = 3j}}
+\TestInline{suffix-typescript}{kwB,num,num,num,}{\bts{const b = 10n;}}
+\TestInline{suffix-R}{num,num,}{\bR{i <- 2i}}
+\TestInline{suffix-prose}{num,}{\bmarkdown{3d printing}}
+\TestInline{exponent-everywhere}{num,num,num,num,}{\bjson{1e10}}
+
+% a dash within a word is not a list item either
+\StartTest{yaml-key-dash}{kwA,num,}
+\begin{yaml}
+my-key: 1
+\end{yaml}
+\EndTest
+
+\StartTest{markdown-inline}{num,num,num,kwA,}
+\begin{markdown}
+# Title
+use `code` here
+\end{markdown}
+\EndTest
+
+\StartTest{javascript-template}{kwA,lit,lit,lit,}
+\begin{javascript}
+const a = `tpl`;
+\end{javascript}
+\EndTest
+\TestSummary
+\END
+\end{document}
