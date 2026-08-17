@@ -33,10 +33,10 @@
 \def\argref#1#2{\hyperref[arg:#1]{\T{#2}}}
 \def\cmdref#1{\hyperref[arg:#1]{\T{\xlstGetStyle{command}\textbackslash #1}}}
 
-\title{\T{xlistings} v0.1.0}
+\title{\T{xlistings} v1.0.0}
 \subtitle{opinionated \T{listings} extensions}
 \date{\today}
-\author{Florian Sihler}
+\author{Florian Sihler\thanks{Released under the \href{https://www.latex-project.org/lppl.txt}{LaTeX Project Public License}, version 1.3c or later.}}
 
 \begin{document}
     \maketitle
@@ -307,7 +307,7 @@ If you are interested in a flexible highlighting and animation of these code sni
 
 \subsection{Writing a Language}
 
-A language lives in a file \T{<name>.cfg} which is picked up by
+A language lives in a file \T{xlistings-<name>.cfg} which is picked up by
 \cmdref{LoadLanguages} and consists of an ordinary \blatex{\\lstdefinelanguage}
 followed by \cmdref{RegisterLanguage}:
 

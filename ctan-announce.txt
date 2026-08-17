@@ -1,0 +1,20 @@
+xlistings v1.0.0
+
+xlistings is an opinionated extension to the listings package. It provides a
+simpler front-end for code blocks, language-sensitive highlighting of numbers
+(hexadecimal literals, exponents, and type suffixes such as 10L in Java or 3j
+in Python), a drop-in replacement for the minted environment, per-language
+wrapper macros and environments, non-selectable line numbers based on accsupp,
+language badges, and definitions for a set of common languages that are loaded
+on demand.
+
+This is the first release on CTAN.
+
+Language definitions are installed as xlistings-<language>.cfg. Both
+\LoadLanguages{<language>} and private, unprefixed <language>.cfg files
+continue to work unchanged.
+
+The package is licensed under the LaTeX Project Public License 1.3c.
+
+Sources, issue tracker, and documentation:
+https://github.com/EagleoutIce/xlistings

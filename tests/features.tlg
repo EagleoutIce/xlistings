@@ -169,11 +169,11 @@ Overfull \hbox (92.71376pt too wide) in paragraph at lines ...
 [PASS] generic-inline-digits
 (xlstsample.java)
 [PASS] generic-input
-(sql.cfg) (../lstlang1.sty
+(xlistings-sql.cfg) (../lstlang1.sty
 File: lstlang1.sty ....-..-.. 1.11b listings language file
 )
 [PASS] minted-autoload
-Package xlistings Warning: No definition found for the language 'doesnotexist', neither 'doesnotexist.cfg' in the current directory nor in the search path on input line ....
+Package xlistings Warning: No definition found for the language 'doesnotexist', neither 'xlistings-doesnotexist.cfg' nor 'doesnotexist.cfg' in the current directory or in the search path on input line ....
 [PASS] missing-language
 [3]
 [PASS] langoverride-star

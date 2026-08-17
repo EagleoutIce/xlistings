@@ -9,6 +9,7 @@ build/
 *.jpg
 *.bmp
 *.zip
+*.curlopt
 *.tar.gz
 *.rar
 

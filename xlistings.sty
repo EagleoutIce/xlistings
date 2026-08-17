@@ -1,7 +1,21 @@
 % xlistings.sty
 % This package is not intended to work with the 'minted'-Package
+%
+% Copyright (C) 2024-2026 Florian Sihler
+%
+% This work may be distributed and/or modified under the conditions of
+% the LaTeX Project Public License, either version 1.3c of this license
+% or (at your option) any later version. The latest version of this
+% license is in https://www.latex-project.org/lppl.txt and version 1.3c
+% or later is part of all distributions of LaTeX version 2008 or later.
+%
+% This work has the LPPL maintenance status 'maintained'.
+% The Current Maintainer of this work is Florian Sihler.
+%
+% This work consists of the file xlistings.sty, the language definitions
+% langs/xlistings-*.cfg, and the documentation xlistings-doc.tex.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{xlistings}[2024/12/25 EagleoutIce - extended listings]
+\ProvidesPackage{xlistings}[2026/08/17 v1.0.0 extended listings]
 
 % TODO: auto fallback to lstlistings
 % TODO: fail if language is not found!
@@ -559,22 +573,32 @@ keepspaces      = false}
 % Now we will define some languages
 \def\xlstLanguageSearchPath{{langs/}}
 % a language will be loaded by the default latex-file mechanis
-% the file has to have the signature: '<Name>.cfg'
+% the file has to have the signature 'xlistings-<Name>.cfg'; the prefix keeps
+% the shipped definitions out of the flat TDS namespace (a bare 'python.cfg'
+% would be visible to every document on the system). The unprefixed
+% '<Name>.cfg' is still honoured as a fallback so private language definitions
+% keep working.
+\def\xlstLanguageFilePrefix{xlistings-}
 
 \newif\if@xlst@lang@found@
+\def\xlst@LoadLanguage@try#1{% #1: file name without the '.cfg' extension
+\if@xlst@lang@found@\else
+  \InputIfFileExists{#1.cfg}{%
+    \@xlst@lang@found@true
+    \xlst@debug{Loaded '\xlst@curlanginputfile' from '#1.cfg'}%
+  }{}%
+\fi}
 \def\xlst@LoadLanguage@searchPath@iter#1,#2\@nil{%
 \ifx!#1!\else
-\InputIfFileExists{#1\xlst@curlanginputfile.cfg}{%
-  \@xlst@lang@found@true
-  \xlst@debug{Loaded '\xlst@curlanginputfile' from '#1\xlst@curlanginputfile.cfg'}
-}{\ifx!#2!\else\xlst@LoadLanguage@searchPath@iter#2,\@nil\fi}\fi
+\xlst@LoadLanguage@try{#1\xlstLanguageFilePrefix\xlst@curlanginputfile}%
+\xlst@LoadLanguage@try{#1\xlst@curlanginputfile}%
+\ifx!#2!\else\xlst@LoadLanguage@searchPath@iter#2,\@nil\fi\fi
 }
 \def\xlst@LoadLanguage@searchPath%
 {% the local directory always wins
-\InputIfFileExists{\xlst@curlanginputfile.cfg}{
-  \@xlst@lang@found@true
-  \xlst@debug{Loaded '\xlst@curlanginputfile' (\xlst@curlanginputfile.cfg)}
-}{\expandafter\xlst@LoadLanguage@searchPath@iter\xlstLanguageSearchPath,\@nil}}
+\xlst@LoadLanguage@try{\xlstLanguageFilePrefix\xlst@curlanginputfile}%
+\xlst@LoadLanguage@try{\xlst@curlanginputfile}%
+\expandafter\xlst@LoadLanguage@searchPath@iter\xlstLanguageSearchPath,\@nil}
 
 % a language is loaded at most once, so languages may require each other
 \def\xlst@LoadLanguage@single#1\@nil{%
@@ -587,7 +611,8 @@ keepspaces      = false}
   \xlst@LoadLanguage@searchPath{}%
   \if@xlst@lang@found@\else
     \PackageWarning{xlistings}{No definition found for the language '#1',
-      neither '#1.cfg' in the current directory nor in the search path}%
+      neither '\xlstLanguageFilePrefix#1.cfg' nor '#1.cfg' in the current
+      directory or in the search path}%
   \fi
 \fi}
 \def\xlst@LoadLanguage@iter#1,#2\@nil{%
