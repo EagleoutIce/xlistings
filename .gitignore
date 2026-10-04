@@ -264,6 +264,7 @@ TSWLatexianTemp*
 
 ## code-link benchmark leftovers (bench/run.sh)
 bench/measure.*
+!bench/measure.tex
 bench/sample.txt
 bench/bench-plain.tex
 bench/bench-row.tex

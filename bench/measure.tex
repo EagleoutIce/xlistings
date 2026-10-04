@@ -1,0 +1,147 @@
+% Times one case of bench/cases.txt from inside the document and writes its row.
+% bench/run.sh drives this file: two pdfTeX runs per case, because the strings
+% are only known to the listings after the .aux file has been read.
+%   pass 1: the strings are registered, but not yet active (the plain listing)
+%   pass 2: the strings come from the .aux file (the linked listing)
+\documentclass{article}
+\providecommand\cbbackend{listings}
+\providecommand\cbpass{1}
+\providecommand\cbruns{5}
+\providecommand\cbonly{1}
+\providecommand\cbcases{bench/cases.txt}
+
+\makeatletter
+\def\cb@lst{listings}\def\cb@min{minted}
+\ifx\cbbackend\cb@min
+   \usepackage{minted}
+   \def\cb@render{\inputminted{python}{bench/sample.txt}}
+\else
+   \ifx\cbbackend\cb@lst\else\usepackage{xlistings}\fi
+   \usepackage{listings}
+   \def\cb@render{\lstinputlisting{bench/sample.txt}}
+\fi
+\usepackage{hyperref}
+\usepackage{code-link}
+
+% the timer counts in units of 1/65536 s, the table shows tenths of a ms
+\newcount\cb@t \newcount\cb@total \newcount\cb@i \newcount\cb@j \newcount\cb@ms
+\newcount\cb@cnum \newcount\cb@n \newcount\cb@lines \newcount\cb@tokens
+\newcount\cb@pct \newcount\cb@reg \newcount\cb@asm \newcount\cb@plain \newcount\cb@linked
+\def\cb@tenths{\numexpr\pdfelapsedtime*625/4096\relax}
+% \divide truncates, while the division of \numexpr rounds and would break the decimal
+\def\cb@store#1#2{\cb@ms#2\relax \divide\cb@ms10
+   \edef#1{\the\cb@ms.\the\numexpr#2-10*\cb@ms\relax}}
+
+% runs #2 #1 times, leaves the average (tenths of a ms) in \cb@total
+\def\cb@repeat#1#2{%
+   \cb@total\z@ \cb@i\z@
+   \@whilenum\cb@i<#1\do{%
+      \pdfresettimer
+      #2%
+      \cb@t\cb@tenths
+      \advance\cb@total\cb@t
+      \advance\cb@i\@ne
+   }%
+   \divide\cb@total#1\relax}
+
+% xaaa, xaab, ...: names of a fixed width (letters only, as digits are numbers to xlistings)
+\newcount\cb@d \newcount\cb@e
+% \divide truncates, \numexpr would round; the result is in \cb@cur
+\def\cb@setname#1{%
+   \cb@d#1\relax \cb@e\cb@d \divide\cb@e676\relax
+   \edef\cb@cur{x\@alph{\numexpr\cb@e+1\relax}}%
+   \advance\cb@d-\numexpr676*\cb@e\relax \cb@e\cb@d \divide\cb@e26\relax
+   \edef\cb@cur{\cb@cur\@alph{\numexpr\cb@e+1\relax}}%
+   \advance\cb@d-\numexpr26*\cb@e\relax
+   \edef\cb@cur{\cb@cur\@alph{\numexpr\cb@d+1\relax}}}
+
+% the code that is listed: lines of tokens, half of them known to code-link
+\newwrite\cb@sample
+\def\cb@writesample{%
+   \immediate\openout\cb@sample=sample.txt
+   \cb@i\z@ \cb@j\z@
+   \@whilenum\cb@i<\cb@lines\do{%
+      \def\cb@line{}%
+      \@tempcnta\z@
+      \@whilenum\@tempcnta<\cb@tokens\do{%
+         \@tempcntb\cb@j \divide\@tempcntb\cb@span
+         \cb@setname{\numexpr\cb@j-\@tempcntb*\cb@span\relax}%
+         \edef\cb@line{\cb@line\cb@pre\cb@cur\space}%
+         \advance\cb@j\@ne \advance\@tempcnta\@ne}%
+      \immediate\write\cb@sample{\cb@line}%
+      \advance\cb@i\@ne}%
+   \immediate\closeout\cb@sample}
+\def\cb@span{1000}
+
+\def\cb@registerall{%
+   \cb@i\z@
+   \@whilenum\cb@i<\cb@n\do{%
+      \advance\cb@i\@ne
+      \cb@setname{\cb@i}%
+      \edef\cb@do{\noexpand\CodeLinkAnchor[\cb@opts]{\cb@cur}}\cb@do}}
+
+\newwrite\cb@out
+\def\cb@case#1|#2|#3|#4|#5\relax{%
+   \typeout{code-link-bench:~case~\the\cb@cnum:~#1~(#2~strings,~#3~lines)}%
+   \cb@n#2\relax \cb@lines#3\relax \cb@tokens#4\relax
+   \def\cb@kind{#5}%
+   \def\cb@cmd{command}%
+   \ifx\cb@kind\cb@cmd
+      \edef\cb@pre{\expandafter\@gobble\string\\}\def\cb@opts{command}%
+   \else \def\cb@pre{}\def\cb@opts{}\fi
+   \ifnum\cb@n>\z@ \edef\cb@span{\the\numexpr2*\cb@n\relax}\else\def\cb@span{1000}\fi
+   \cb@writesample
+   \pdfresettimer
+   \cb@registerall
+   \cb@reg\cb@tenths
+   % building the rules from the .aux file, otherwise done by the first listing
+   \pdfresettimer
+   \csname __codelink_assemble:\endcsname
+   \cb@asm\cb@tenths
+   \setbox\z@\vbox{\cb@render}% warm up, loads the language
+   \cb@repeat\cbruns{\setbox\z@\vbox{\cb@render}}%
+   \cb@plain\cb@total
+   \ifnum\cbpass=\@ne
+      \immediate\openout\cb@out=bench-plain.tex
+      \immediate\write\cb@out{\string\def\string\cbplain{\the\cb@plain}}%
+      \immediate\closeout\cb@out
+   \else
+      \input{bench/bench-plain.tex}%
+      \cb@linked\cb@plain \cb@plain\cbplain\relax
+      % raw numbers (tenths of a millisecond) for the summary of bench/run.sh
+      \immediate\openout\cb@out=bench-stat.txt
+      \immediate\write\cb@out{#1|\ifx\cb@kind\cb@cmd command\else word\fi|#2|\number\numexpr#3*#4\relax|\the\cb@plain|\the\cb@linked|\the\cb@reg|\the\cb@asm}%
+      \immediate\closeout\cb@out
+   \fi}
+
+\newread\cb@in
+\def\cb@all{%
+   \openin\cb@in=\cbcases\relax
+   \cb@next
+   \closein\cb@in}
+\def\cb@next{%
+   \ifeof\cb@in \let\cb@more\relax
+   \else
+      \endlinechar\m@ne % no space at the end of a line, which would end up in a value
+      \read\cb@in to \cb@line
+      \endlinechar`\^^M
+      \ifx\cb@line\@empty\else \expandafter\cb@skip\cb@line\relax \fi
+      \let\cb@more\cb@next
+   \fi
+   \cb@more}
+\def\cb@skip#1#2\relax{%
+   \def\cb@first{#1}%
+   \ifx\cb@first\cb@hash\else
+      \advance\cb@cnum\@ne
+      \ifnum\cb@cnum=\cbonly\relax \cb@case#1#2\relax \fi
+   \fi}
+\begingroup\catcode`\#=12 \gdef\cb@hash{#}\endgroup
+\makeatother
+
+\begin{document}
+\makeatletter
+\begingroup
+   \catcode`\#=12 \catcode`\|=12
+   \cb@all
+\endgroup
+\end{document}
