@@ -34,6 +34,12 @@ jobs:
       with:
         lfs: true
         submodules: true
+    - name: 🔍 Fetch the test output
+      continue-on-error: true
+      uses: actions/download-artifact@v4
+      with:
+        name: test-output
+        path: build
     - name: ⏱️ Benchmark of code-link
       uses: xu-cheng/latex-action@v3
       with:
@@ -50,12 +56,6 @@ jobs:
         root_file: |
           xlistings-doc.tex
           code-link-doc.tex
-    - name: 🔍 Fetch the test output
-      continue-on-error: true
-      uses: actions/download-artifact@v4
-      with:
-        name: test-output
-        path: build
     - name: Install PU for previews
       uses: awalsh128/cache-apt-pkgs-action@latest
       with:
