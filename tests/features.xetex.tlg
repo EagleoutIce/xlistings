@@ -1,0 +1,115 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line ....
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line ....
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line ....
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line ....
+[PASS] langoverride
+[PASS] style-access
+[PASS] style-get
+[PASS] recolored
+[PASS] inline-framed
+[PASS] environment
+[PASS] environment-nonum
+[PASS] environment-plain
+[PASS] minted
+[PASS] minted-langoverride
+[PASS] blacklisted-line-numbers
+[PASS] badge
+[PASS] autogobble
+[PASS] void
+[PASS] void-environment
+(xlstsample.java)
+[PASS] input
+[1
+]
+[PASS] literate-ldots
+[PASS] literate-spacing
+[PASS] literate-math
+[PASS] literate-added
+[PASS] lstfs
+[PASS] lstfs-star
+[PASS] numfs
+[PASS] lengths
+[PASS] prebreak
+[PASS] styles
+Overfull \hbox (92.72pt too wide) in paragraph at lines ...
+[] 
+\hbox(6.23+2.27998)x345.0
+.\hbox(6.23+2.27998)x437.72
+..\TU/lmtt/m/n/10 basic
+..\glue 5.25
+..\special{color push rgb 0.69412 0.18825 0.39609}
+..\TU/lmtt/m/n/10 keywordA
+..\glue 5.25
+..\special{color pop}
+..\special{color push rgb 0.75687 0.34511 0.4902}
+..\TU/lmtt/m/n/10 keywordB
+..\glue 5.25
+..\special{color pop}
+..\special{color push rgb 0.56078 0.12549 0.3098}
+..\TU/lmtt/m/n/10 keywordC
+..\glue 5.25
+..\special{color pop}
+..\TU/lmtt/m/it/10 keywordD
+..\glue 5.25
+..\special{color push rgb 1 0.5 0}
+..\TU/lmtt/m/n/10 numbers
+..\glue 5.25
+..\special{color pop}
+..\special{color push rgb 0.59608 0.63528 0.70197}
+..\TU/lmss/m/n/5 linenumbers
+..\glue 1.77 plus 0.885 minus 0.59
+..\special{color pop}
+..\special{color push rgb 0.67844 0.36078 0.08235}
+..\TU/lmtt/m/n/10 literals
+..\glue 5.25
+..\special{color pop}
+..\special{color push rgb 0.43922 0.47842 0.55685}
+..\TU/lmtt/m/n/10 comments
+..\glue 5.25
+..\special{color pop}
+..\special{color push rgb 0.14511 0.51373 0.26276}
+..\TU/lmtt/m/it/10 highlight
+..\glue 5.25
+..\special{color pop}
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0
+[PASS] lstnonum
+[PASS] lstplain
+[PASS] indexed-R
+[PASS] minted-mapped
+[2]
+[PASS] blacklist-ghost
+[PASS] blacklist-present
+[PASS] style-plain
+[PASS] style-plain-number
+[PASS] badge-on
+[PASS] badge-off
+[PASS] disabled-radix
+[PASS] generic-inline
+[PASS] generic-inline-framed
+[PASS] generic-inline-keys
+[PASS] generic-inline-digits
+(xlstsample.java)
+[PASS] generic-input
+(xlistings-sql.cfg) (../lstlang1.sty
+File: lstlang1.sty ....-..-.. 1.11b listings language file
+)
+[PASS] minted-autoload
+Package xlistings Warning: No definition found for the language 'doesnotexist', neither 'xlistings-doesnotexist.cfg' nor 'doesnotexist.cfg' in the current directory or in the search path on input line ....
+[PASS] missing-language
+[3]
+[PASS] langoverride-star
+[PASS] badge-twice
+[PASS] badge-consumed
+[PASS] style-unknown
+[PASS] style-known
+[PASS] accents
+===== xlistings tests: 48 passed, 0 failed =====
+[4]

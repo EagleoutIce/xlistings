@@ -1,28 +1,36 @@
--- l3build configuration for xlistings
+-- l3build configuration for xlistings, which ships code-link as well
 module = "xlistings"
 
 -- sources and documentation
-sourcefiles  = {"xlistings.sty", "langs/xlistings-*.cfg"}
-installfiles = {"xlistings.sty", "xlistings-*.cfg"} -- globbed in the unpack dir, hence flat
+sourcefiles  = {"xlistings.sty", "code-link.sty", "langs/xlistings-*.cfg"}
+installfiles = {"xlistings.sty", "code-link.sty", "xlistings-*.cfg"} -- globbed in the unpack dir, hence flat
 tdsroot      = "latex"
-packtdszip   = true -- ship a ready-made TDS tree alongside the flat archive
-docfiles     = {"xlistings-doc.tex"}
-typesetfiles = {"xlistings-doc.tex"}
+packtdszip   = false -- the CTAN archive holds the flat files only, no TDS zip
+docfiles     = {"xlistings-doc.tex", "code-link-doc.tex", "xlistings.ist"}
+-- the manual of code-link uses minted, which needs -shell-escape and Pygments
+typesetfiles = {"xlistings-doc.tex", "code-link-doc.tex"}
+typesetopts  = "-shell-escape -interaction=nonstopmode"
+-- the manual of code-link shows the tables of bench/run.sh
+supportdir       = "bench"
+typesetsuppfiles = {"bench-summary.tex", "bench-results-*.tex"}
+indexstyle   = "xlistings.ist"
 textfiles    = {"README.md", "LICENSE"}
 
 -- version bookkeeping: 'l3build tag <version>' rewrites the package
--- identification and the title of the documentation in one go
-tagfiles = {"xlistings.sty", "xlistings-doc.tex"}
+-- identification; the documentation reads version and date from the package
+tagfiles = {"xlistings.sty", "code-link.sty"}
 
 function update_tag(file, content, tagname, tagdate)
-  if string.match(file, "%.sty$") then
+  if file == "code-link.sty" then
+    return string.gsub(content,
+      "\\ProvidesExplPackage{code%-link}{%d%d%d%d/%d%d/%d%d}{v%S+}",
+      "\\ProvidesExplPackage{code-link}{" .. string.gsub(tagdate, "%-", "/")
+        .. "}{v" .. tagname .. "}", 1)
+  elseif string.match(file, "%.sty$") then
     return string.gsub(content,
       "\\ProvidesPackage{xlistings}%[%d%d%d%d/%d%d/%d%d v%S+",
       "\\ProvidesPackage{xlistings}[" .. string.gsub(tagdate, "%-", "/")
         .. " v" .. tagname, 1)
-  elseif string.match(file, "%-doc%.tex$") then
-    return string.gsub(content, "\\title{\\T{xlistings} v%S-}",
-      "\\title{\\T{xlistings} v" .. tagname .. "}", 1)
   end
   return content
 end
@@ -30,9 +38,13 @@ end
 -- \LoadLanguages looks into the current directory first, so it finds the flat
 -- copy of the language files; every check writes build/test/<name>.pdf as well
 testfiledir = "tests"
-checkengines = {"pdftex"}
+checkengines = {"pdftex", "xetex", "luatex"}
 stdengine    = "pdftex"
 checkformat  = "latex"
+
+-- xlistings and code-link are tested by the same 'l3build check', one configuration
+-- each (tests/config-*.lua); the minted tests of code-link need -shell-escape and Pygments
+checkconfigs = {"tests/config-xlistings", "tests/config-code-link", "tests/config-code-link-minted"}
 
 -- A leaked color is invisible to the style traces of the .lvt files, so the pdf
 -- checks keep the color every piece of text is drawn in and nothing else.
@@ -44,10 +56,22 @@ local function xlst_pdf_colors(content)
     if stream then
       if string.match(line, "endstream") then
         stream = false
-      elseif string.match(line, "^[%d%.]+ [%d%. ]*[a-zA-Z]*[gk] ") then
-        color = string.match(line, "^([%d%. ]*[a-zA-Z]*[gk]) ")
-      elseif string.match(line, "T[Jj]") then
-        result = result .. color .. " [TEXT]\n"
+      else
+        -- pdfTeX writes one operator per line, xdvipdfmx puts a whole line
+        -- of operators on one line, so walk the tokens
+        local operands = {}
+        for token in string.gmatch(line, "%S+") do
+          if string.match(token, "^[%d%.]+$") then
+            operands[#operands + 1] = token
+          else
+            if string.match(token, "^[rg]*[gk]$") then
+              color = table.concat(operands, " ") .. " " .. token
+            elseif string.match(token, "T[Jj]$") then
+              result = result .. color .. " [TEXT]\n"
+            end
+            operands = {}
+          end
+        end
       end
     elseif string.match(line, "^stream$") then
       stream = true
@@ -107,9 +131,9 @@ uploadconfig = {
   version           = "1.0.0", -- 'l3build upload 1.0.0' overrides this
   author            = "Florian Sihler",
   uploader          = "Florian Sihler",
-  email             = "vogeldeseises@gmail.com",
+  email             = "florian.sihler@uni-ulm.de",
   license           = "lppl1.3c",
-  summary           = "Opinionated extensions to the listings package",
+  summary           = "Opinionated extensions to the listings package, and links in listings",
   ctanPath          = "/macros/latex/contrib/xlistings",
   repository        = "https://github.com/EagleoutIce/xlistings",
   bugtracker        = "https://github.com/EagleoutIce/xlistings/issues",
@@ -124,5 +148,9 @@ blocks: language-sensitive highlighting of numbers (including hexadecimal
 literals, exponents and type suffixes), a drop-in minted environment,
 per-language wrapper macros and environments, non-selectable line numbers
 based on accsupp, language badges, and opinionated definitions for a set of
-common languages that are loaded on demand.]],
+common languages that are loaded on demand.
+
+The bundle also contains code-link, which collects definitions while a
+document is typeset and links every occurrence of them in listings, xlistings
+and minted blocks. It works without xlistings as well.]],
 }

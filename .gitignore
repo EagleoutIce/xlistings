@@ -155,6 +155,7 @@ acs-*.bib
 *.ilg
 *.ind
 *.ist
+!xlistings.ist
 
 # minitoc
 *.maf
@@ -260,3 +261,14 @@ TSWLatexianTemp*
 
 # generated if using elsarticle.cls
 *.spl
+
+## code-link benchmark leftovers (bench/run.sh)
+bench/measure.*
+bench/sample.txt
+bench/bench-plain.tex
+bench/bench-row.tex
+bench/bench-stat.txt
+bench/raw.tmp
+bench/cases.run
+bench/summary.tmp
+bench/_minted*

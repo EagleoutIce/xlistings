@@ -1,0 +1,15 @@
+% makeindex style of the xlistings documentation
+% one compact list of the \command and option entries
+preamble "\\begin{theindex}\n\\raggedright\n"
+postamble "\n\\end{theindex}\n"
+group_skip "\n"
+headings_flag 0
+symhead_positive "Commands"
+numhead_positive "Numbers"
+delim_0 ",\\space "
+delim_1 ",\\space "
+delim_2 ",\\space "
+delim_r "--"
+item_0 "\n \\item "
+item_1 "\n \\subitem "
+item_2 "\n \\subsubitem "

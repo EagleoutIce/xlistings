@@ -1,0 +1,9 @@
+# label|strings|lines|tokens per line|kind   (half of the tokens are known to code-link)
+no strings|0|50|10|word
+10 words|10|50|10|word
+100 words|100|50|10|word
+1000 words|1000|50|10|word
+1000 words, long listing|1000|250|10|word
+10 commands|10|50|10|command
+100 commands|100|50|10|command
+1000 commands|1000|50|10|command

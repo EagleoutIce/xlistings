@@ -182,6 +182,33 @@ SELECT DOUBLE 1
 % the starred override replaces the list instead of adding to it
 \xlstlangoverride*{java}{morekeywords=[4]{Duck}}
 \TestInline{langoverride-star}{kwD,kwB,}{\bjava{Duck int}}
+% of several badge requests only the last one is shown, and only once
+\def\xlstlangbadgestyle#1{\edef\xlsttestbadge{badge-#1}%
+  \expandafter\TestRecord\expandafter{\xlsttestbadge}}
+\BadgeNextListing{a}\BadgeNextListing{b}
+\StartTest{badge-twice}{badge-b,kwB,num,num,}
+\begin{java}
+int i = 10;
+\end{java}
+\EndTest
+\StartTest{badge-consumed}{kwB,num,num,}
+\begin{java}
+int i = 10;
+\end{java}
+\EndTest
+
+% an unknown style is reported and leaves the current one untouched
+\makeatletter
+{\def\PackageError#1#2#3{\TestRecord{error}}%
+\TestInline{style-unknown}{error,plain,}{\xlstsetstyle{plain}\xlstsetstyle{bogus}%
+  \expandafter\TestRecord\expandafter{\xlst@style@default}}
+\TestInline{style-known}{nonumber,plain number,}{\xlstsetstyle{nonumber}%
+  \expandafter\TestRecord\expandafter{\xlst@style@default}%
+  \xlstsetstyle{plain number}\expandafter\TestRecord\expandafter{\xlst@style@default}}}
+\makeatother
+
+% accented letters have a literate each; the acute accents and the tilde were missing once
+\TestRuns{accents}{\bjava{x ä é É è È ñ Ñ ç å œ € £ ¿ ¡}}
 \TestSummary
 \END
 \end{document}

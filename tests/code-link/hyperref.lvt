@@ -1,0 +1,17 @@
+% with hyperref the default format has to create real links without errors
+\input{regression-test}
+\documentclass{article}
+\usepackage[T1]{fontenc}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{code-link}
+\begin{document}
+\OMIT
+{\ttfamily x}
+\TIMO
+\START
+\CodeLinkAnchor{foo}
+\lstinline|foo bar|
+\CodeLinkRef{foo}
+\TYPE{\CodeLinkLabel{foo}}
+\end{document}

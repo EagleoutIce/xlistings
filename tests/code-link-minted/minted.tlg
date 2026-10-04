@@ -1,0 +1,27 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+\pydata@fh@0=\write...
+runsystem(latexminted config  --timestamp 20160520090000Z 4B2C4DCFC01CAC9A960EFD78DCDD3194)...executed.
+(_4B2C4DCFC01CAC9A960EFD78DCDD3194.config.minted)
+runsystem(latexminted cleanconfig  --timestamp 20160520090000Z 4B2C4DCFC01CAC9A960EFD78DCDD3194)...executed.
+runsystem(latexminted styledef  --timestamp 20160520090000Z 4B2C4DCFC01CAC9A960EFD78DCDD3194)...executed.
+(_4B2C4DCFC01CAC9A960EFD78DCDD3194.style.minted)
+runsystem(latexminted highlight  --timestamp 20160520090000Z 4B2C4DCFC01CAC9A960EFD78DCDD3194)...executed.
+(_4B2C4DCFC01CAC9A960EFD78DCDD3194.highlight.minted
+LINK cl:foo_bar [none]
+LINK p:only_py [none]
+LINK cl::dq:a-b:dq: [none]
+)
+runsystem(latexminted highlight  --timestamp 20160520090000Z 4B2C4DCFC01CAC9A960EFD78DCDD3194)...executed.
+(_4B2C4DCFC01CAC9A960EFD78DCDD3194.highlight.minted
+LINK cl::bs:node [none]
+LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <10> not available
+(Font)              Font shape `T1/cmtt/m/n' tried instead on input line ....
+)
+runsystem(latexminted highlight  --timestamp 20160520090000Z 4B2C4DCFC01CAC9A960EFD78DCDD3194)...executed.
+(_4B2C4DCFC01CAC9A960EFD78DCDD3194.highlight.minted
+LINK cl:out [none]
+) [1
+]
+runsystem(latexminted cleantemp  --timestamp 20160520090000Z 4B2C4DCFC01CAC9A960EFD78DCDD3194)...executed.
+(minted.aux)

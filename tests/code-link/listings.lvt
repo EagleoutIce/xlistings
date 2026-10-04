@@ -1,0 +1,50 @@
+% listings backend: which rules fire, longest rule first, language scopes
+\input{regression-test}
+\documentclass{article}
+\usepackage[T1]{fontenc}
+\usepackage{listings}
+\usepackage{code-link}
+\RenewDocumentCommand\CodeLinkFormat{mmm}{\TYPE{LINK #1 [#2]}#3}
+\CodeLinkStyle{kw}{\bfseries}
+\CodeLinkGroup{tex}{prefix=t:, style=kw, language=TeX, highlight=true}
+\begin{document}
+\OMIT
+\lstinline[language=TeX]|x|\lstinline[language=TeX]|\x|
+\TIMO
+\START
+\CodeLinkAnchor[command]{node}
+\CodeLinkAnchor[command]{nodes}
+\CodeLinkAnchor{a b}
+\CodeLinkAnchor{x_y}
+\CodeLinkAnchor[group=tex]{only-tex}
+\CodeLinkBlock{keep}
+\CodeLinkAnchor[boundary=false]{open_end}
+\CodeLinkStyle{red}{\bfseries}
+\CodeLinkGroup{off}{prefix=off:,links=false}
+\CodeLinkGroup{keep}{prefix=keep:,style=red,highlight=false}
+\CodeLinkAnchor[group=off]{hidden}
+\CodeLinkAnchor[group=keep]{kept}
+\CodeLinkAnchor{foo}
+\lstset{language={}}
+\TYPE{--- longest wins}
+\lstinline|\nodes \node|
+\TYPE{--- spaces, specials}
+\lstinline|a b x_y|
+\TYPE{--- block}
+\lstinline|keep|
+\TYPE{--- whole words only}
+\lstinline|foo foobar xfoo foo2 foo|
+\TYPE{--- group without links, group without highlight}
+\lstinline|hidden kept|
+\TYPE{--- listing without codelink}
+\lstinline[codelink=false]|foo kept|
+\TYPE{--- boundary of a rule, command words}
+\lstinline|x_yz x_y open_endz \nodex|
+\TYPE{--- language scope: none}
+\lstinline|only-tex|
+\TYPE{--- language scope: tex}
+\lstinline[language=TeX]|only-tex|
+\begin{lstlisting}
+\node x_y
+\end{lstlisting}
+\end{document}

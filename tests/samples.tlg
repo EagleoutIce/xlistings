@@ -1,0 +1,61 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line ....
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line ....
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line ....
+(../lstlang1.sty
+File: lstlang1.sty ....-..-.. 1.11b listings language file
+) (../lstlang1.sty
+File: lstlang1.sty ....-..-.. 1.11b listings language file
+) (../lstmisc.sty
+File: lstmisc.sty ....-..-.. 1.11b (Carsten Heinz)
+)
+LaTeX Font Info:    Trying to load font information for OMS+cmtt on input line ....
+LaTeX Font Info:    No file OMScmtt.fd. on input line ....
+LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
+(Font)              using `OMS/cmsy/m/n' instead
+(Font)              for symbol `textbackslash' on input line ....
+(../lstlang1.sty
+File: lstlang1.sty ....-..-.. 1.11b listings language file
+) (../lstlang1.sty
+File: lstlang1.sty ....-..-.. 1.11b listings language file
+) (../lstlang1.sty
+File: lstlang1.sty ....-..-.. 1.11b listings language file
+) (../lstlang2.sty
+File: lstlang2.sty ....-..-.. 1.11b listings language file
+) (../lstlang3.sty
+File: lstlang3.sty ....-..-.. 1.11b listings language file
+) (../lstlang1.sty
+File: lstlang1.sty ....-..-.. 1.11b listings language file
+) (../lstlang2.sty
+File: lstlang2.sty ....-..-.. 1.11b listings language file
+) (../lstlang1.sty
+File: lstlang1.sty ....-..-.. 1.11b listings language file
+) (../lstlang2.sty
+File: lstlang2.sty ....-..-.. 1.11b listings language file
+) (../lstlang1.sty
+File: lstlang1.sty ....-..-.. 1.11b listings language file
+) (../lstlang2.sty
+File: lstlang2.sty ....-..-.. 1.11b listings language file
+) (../lstlang1.sty
+File: lstlang1.sty ....-..-.. 1.11b listings language file
+) (../lstlang2.sty
+File: lstlang2.sty ....-..-.. 1.11b listings language file
+) (../lstlang1.sty
+File: lstlang1.sty ....-..-.. 1.11b listings language file
+) (../lstlang1.sty
+File: lstlang1.sty ....-..-.. 1.11b listings language file
+) (../lstlang1.sty
+File: lstlang1.sty ....-..-.. 1.11b listings language file
+) [1
+]
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line ....
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <8> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line ....
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line ....
+[PASS] samples

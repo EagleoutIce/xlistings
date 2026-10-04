@@ -13,6 +13,8 @@
 % a missing reset in front of its text (a listing environment cannot be hidden
 % in a macro, so they are spelled out)
 \begin{document}
+% xdvipdfmx compresses the content streams, which rewrite_pdf cannot read
+\ifx\XeTeXversion\undefined\else\special{dvipdfmx:config z 0}\fi
 \START
 \begin{cpp}
 int i = 0xdeadBEEF + 10L + 1e10;

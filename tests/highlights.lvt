@@ -48,6 +48,25 @@
 \TestRuns{box-warning}{\xlsthlwarning text}
 \TestRuns{box-error}{\xlsthlerror text}
 \TestRuns{box-info}{\xlsthlinfo text}
+% a highlight that spans several lines keeps its line breaks and is boxed per line
+\makeatletter
+\setbox\xlsttest@box\vbox{\hsize=\linewidth\begin{java*}
+|warn|int a;
+int b;|warn|
+int c;
+\end{java*}}
+\dimen@=\ht\xlsttest@box \advance\dimen@\dp\xlsttest@box
+\setbox\xlsttest@box\vbox{\hsize=\linewidth\begin{java*}
+int a;
+int b;
+int c;
+\end{java*}}
+\advance\dimen@-\ht\xlsttest@box \advance\dimen@-\dp\xlsttest@box
+\gdef\xlsttest@trace{}
+\ifdim\dimen@=\z@\TestRecord{three-lines}\else\TestRecord{lines-lost}\fi
+\xlsttest@check{hl-multiline}{three-lines,}
+\makeatother
+
 \TestSummary
 \END
 \end{document}

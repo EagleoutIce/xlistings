@@ -1,0 +1,12 @@
+% written by bench/run.sh, do not edit
+\begin{tabular}{@{}lrrrrrrrrr@{}}
+   \toprule
+   \textbf{Case} & \textbf{Strings} & \textbf{Tokens} & \textbf{Plain} & \textbf{Linked} & \textbf{Extra} & \textbf{Register} & \textbf{Assemble} & \textbf{Overhead} & \textbf{Run} \\
+   \midrule
+   no strings & 0 & 500 & \qty{7.1}{\milli\second} & \qty{7.3}{\milli\second} & \qty{0.1}{\milli\second} & \qty{0.0}{\milli\second} & \qty{0.0}{\milli\second} & \qty{0.1}{\milli\second} (\qty{0}{\percent}) & \qty{1085.4}{\milli\second} \\
+   10 words & 10 & 500 & \qty{6.6}{\milli\second} & \qty{9.5}{\milli\second} & \qty{2.9}{\milli\second} & \qty{1.1}{\milli\second} & \qty{0.1}{\milli\second} & \qty{4.1}{\milli\second} (\qty{0}{\percent}) & \qty{853.7}{\milli\second} \\
+   100 words & 100 & 500 & \qty{6.6}{\milli\second} & \qty{11.0}{\milli\second} & \qty{4.5}{\milli\second} & \qty{8.6}{\milli\second} & \qty{1.1}{\milli\second} & \qty{14.1}{\milli\second} (\qty{1}{\percent}) & \qty{945.6}{\milli\second} \\
+   1000 words & 1000 & 500 & \qty{7.3}{\milli\second} & \qty{14.4}{\milli\second} & \qty{7.2}{\milli\second} & \qty{95.7}{\milli\second} & \qty{11.2}{\milli\second} & \qty{114.1}{\milli\second} (\qty{8}{\percent}) & \qty{1446.9}{\milli\second} \\
+   1000 words, long listing & 1000 & 2500 & \qty{22.0}{\milli\second} & \qty{39.6}{\milli\second} & \qty{17.7}{\milli\second} & \qty{79.1}{\milli\second} & \qty{9.2}{\milli\second} & \qty{105.9}{\milli\second} (\qty{8}{\percent}) & \qty{1290.5}{\milli\second} \\
+   \bottomrule
+\end{tabular}

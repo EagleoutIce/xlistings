@@ -1,0 +1,24 @@
+% Registering, labels and the .aux round trip (no backend needed)
+\input{regression-test}
+\documentclass{article}
+\usepackage[T1]{fontenc}
+\usepackage{code-link}
+\CodeLinkGroup{k}{prefix=k:, style=emph}
+\CodeLinkStyle{emph}{\itshape}
+\begin{document}
+\OMIT
+{\ttfamily x}
+\TIMO
+\START
+\CodeLinkAnchor{plain}
+\CodeLinkAnchor[command]{node}
+\CodeLinkAnchor[group=k]{key=value}
+\CodeLinkAnchor[label=mine]{custom}
+\CodeLinkAnchor{50\% {x} \# _a^b~c}
+\CodeLinkRegister{plain} % duplicates are written once
+\TYPE{\CodeLinkLabel{plain}}
+\TYPE{\CodeLinkLabel*{node}}
+\TYPE{\CodeLinkLabel[k]{key=value}}
+\TYPE{\CodeLinkLabel{50\% {x} \# _a^b~c}}
+\CodeLinkRef{plain} \CodeLinkRef[command]{node}
+\end{document}

@@ -1,0 +1,20 @@
+% xlistings: the rules have to survive its literate additions (numbers, ...)
+\input{regression-test}
+\documentclass{article}
+\usepackage[T1]{fontenc}
+\usepackage{xlistings}
+\LoadLanguages{latex}
+\usepackage{code-link}
+\RenewDocumentCommand\CodeLinkFormat{mmm}{\TYPE{LINK #1 [#2]}#3}
+\begin{document}
+\OMIT
+\lstinline[language=TeX]|x|\lstinline[language=TeX]|\x|
+\TIMO
+\START
+\CodeLinkAnchor{foo12}
+\CodeLinkAnchor[command]{node}
+\lstinline|foo12 \node 12|
+% the LaTeX language of xlistings makes the backslash a letter
+\CodeLinkAnchor[command]{xlstsetstyle}
+\blatex{\\xlstsetstyle\{plain\} \\node}
+\end{document}

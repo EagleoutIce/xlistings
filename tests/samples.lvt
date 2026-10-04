@@ -1,0 +1,146 @@
+% One sample of every shipped language, typeset with the minted replacement.
+% The document is a visual check (build/test/samples.pdf); the log only has to
+% be free of errors.
+\input{regression-test}
+\documentclass{article}
+\usepackage[extendednums,highlights]{xlistings}
+\LoadLanguages{latex,java,aspectj,bash,cpp,csharp,git,haskell,javascript,json,
+  lambda_calculus,lua,markdown,mips,python,R,regex,rubberduck,sirl,sql,tac,ts,
+  x86,xml,yaml}
+\usepackage{xlisttest}
+\begin{document}
+\START
+\section*{Language samples}
+
+\begin{minted}{java}
+public static void main(String[] args){
+    // This is a comment
+    int number = 10_234 + 0x1A - 0b1010;
+    System.out.println("Hello, World!"); // Print greeting
+}
+\end{minted}
+
+\begin{minted}{aspectj}
+aspect Logging {
+    pointcut trace(): execution(* *.*(..));
+}
+\end{minted}
+
+\begin{minted}{cpp}
+int main(void) {  /* a comment */
+    printf("%d\n", 0xdeadBEEF);
+}
+\end{minted}
+
+\begin{minted}{csharp}
+public static int Add(int a, int b) => a + b; // null, true, false
+\end{minted}
+
+\begin{minted}{python}
+def area(r): # a comment
+    return 3.14159 * r ** 2 if r > 0 else None
+\end{minted}
+
+\begin{minted}{R}
+squares <- sapply(c(1, 2, 3.45), function(x) x^2) # a comment
+\end{minted}
+
+\begin{minted}{javascript}
+const answer = async () => { return 0x2A; }; // a comment
+\end{minted}
+
+\begin{minted}{ts}
+function id<T>(value: T): T { return value; } // a comment
+\end{minted}
+
+\begin{minted}{haskell}
+double :: Int -> Int   -- a comment
+double x = 2 * x
+\end{minted}
+
+\begin{minted}{lua}
+local t = {1, 2, 3} -- a comment
+for i, v in ipairs(t) do print(i, v) end
+\end{minted}
+
+\begin{minted}{bash}
+ls -la /tmp | grep tex # a comment
+sudo apt-get install texlive
+\end{minted}
+
+\begin{minted}{git}
+git commit -m "message"
+git push origin master
+\end{minted}
+
+\begin{minted}{sql}
+SELECT name FROM users WHERE id > 10; -- a comment
+\end{minted}
+
+\begin{minted}{json}
+{ "name": "xlistings", "version": 1, "tags": [true, false, null] }
+\end{minted}
+
+\begin{minted}{yaml}
+# This is a comment
+key: value
+list:
+  - item1
+  - item2: subvalue
+number: 0x1A + 10_000 - 0b1010
+\end{minted}
+
+\begin{minted}{xml}
+<!-- a comment -->
+<book id="1"><title>Listings</title></book>
+\end{minted}
+
+\begin{minted}{markdown}
+# Heading
+A **bold** word and some `code`.
+\end{minted}
+
+\begin{minted}{latex}
+\documentclass{article}
+\begin{document}
+\ldots
+\printindex
+
+\end{document}
+\end{minted}
+
+\begin{minted}{regex}
+^(0x)?[0-9a-fA-F]+$
+\end{minted}
+
+\begin{minted}{x86}
+mov eax, 0x10 ; a comment
+add rax, rbx
+\end{minted}
+
+\begin{minted}{mips}
+addi $t0, $zero, 10   # a comment
+sw   $t0, 0($sp)
+\end{minted}
+
+\begin{minted}{tac}
+if x goto L1
+param a
+call f, 1
+\end{minted}
+
+\begin{minted}{sirl}
+MOVE TEMP CONST 1 // a comment
+\end{minted}
+
+\begin{minted}{lc}
+(\x. x y) (\y. y)
+\end{minted}
+
+\begin{minted}{rubberduck}
+Duck jens = new Duck(); # a comment
+\end{minted}
+
+\typeout{[PASS] samples}
+\END
+\end{document}

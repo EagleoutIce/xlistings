@@ -1,0 +1,27 @@
+% minted backend: whole Pygments tokens are linked
+\input{regression-test}
+\documentclass{article}
+\usepackage[T1]{fontenc}
+\usepackage[cache=false]{minted}% the cache adds log lines that depend on its state
+\usepackage{code-link}
+\RenewDocumentCommand\CodeLinkFormat{mmm}{\TYPE{LINK #1 [#2]}#3}
+\CodeLinkGroup{py}{prefix=p:, language=python}
+\begin{document}
+\START
+\CodeLinkAnchor{foo_bar}
+\CodeLinkAnchor{"a b"}
+\CodeLinkAnchor[group=py]{only_py}
+\CodeLinkAnchor[command]{node}
+\begin{minted}{python}
+foo_bar(only_py, "a b", foo)
+\end{minted}
+\begin{minted}{tex}
+\node only_py
+\end{minted}
+% a block of several tokens: only the last out is a link
+\CodeLinkAnchor{out}
+\CodeLinkBlock{System.out}
+\begin{minted}{java}
+System.out.println(out);
+\end{minted}
+\end{document}

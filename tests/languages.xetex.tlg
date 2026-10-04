@@ -1,0 +1,68 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line ....
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line ....
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line ....
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line ....
+[PASS] java-keywords
+[PASS] java-annotation
+[PASS] aspectj
+[PASS] cpp-case-sensitive
+[PASS] csharp
+[PASS] haskell-operators
+[PASS] javascript
+[PASS] typescript
+[PASS] python
+[PASS] python-string
+[PASS] R
+[PASS] lua
+[PASS] bash
+[PASS] git
+[PASS] sql
+[PASS] json
+[PASS] xml
+[PASS] latex
+[PASS] markdown-heading
+[1
+]
+[PASS] regex
+[PASS] rubberduck
+[PASS] sirl
+[PASS] tac
+[PASS] mips
+[PASS] x86
+[PASS] lc
+[PASS] yaml
+[PASS] yaml-dash
+Overfull \hbox (111.23203pt too wide) in paragraph at lines ...
+\TU/lmtt/m/n/8 [PASS] \TU/lmss/m/n/8 yaml-dash \TU/lmtt/m/n/8 kwA,kwC,num,num,num,num,num,num,num,cmt,cmt,cmt,cmt,cmt,cmt,cmt,cmt,cmt,lit,lit,lit,lit,lit, 
+\hbox(5.552+1.63199)x345.0, glue set - 1.0
+.\TU/lmtt/m/n/8 [PASS]
+.\kern 0.0
+.\penalty 10000
+.\glue 3.33 plus 1.665 minus 1.11
+.\TU/lmss/m/n/8 yaml-dash
+.\kern 0.0
+.\penalty 10000
+.\glue 3.33 plus 1.665 minus 1.11
+.\TU/lmtt/m/n/8 kwA,kwC,num,num,num,num,num,num,num,cmt,cmt,cmt,cmt,cmt,cmt,cmt,cmt,cmt,lit,lit,lit,lit,lit,
+.\kern 0.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0
+[PASS] suffix-java
+[PASS] suffix-python
+[PASS] suffix-typescript
+[PASS] suffix-R
+[PASS] suffix-prose
+[PASS] exponent-everywhere
+[2]
+[PASS] yaml-key-dash
+[PASS] markdown-inline
+[PASS] javascript-template
+===== xlistings tests: 37 passed, 0 failed =====
+[3]

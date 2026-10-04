@@ -42,5 +42,6 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 [PASS] box-warning
 [PASS] box-error
 [PASS] box-info
-===== xlistings tests: 32 passed, 0 failed =====
+[PASS] hl-multiline
+===== xlistings tests: 33 passed, 0 failed =====
 [2]

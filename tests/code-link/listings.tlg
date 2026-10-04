@@ -1,0 +1,26 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+--- longest wins
+LINK cl::bs:nodes [none]
+LINK cl::bs:node [none]
+--- spaces, specials
+LINK cl:a-b [none]
+LINK cl:x_y [none]
+--- block
+LINK  [none]
+--- whole words only
+LINK cl:foo [none]
+LINK cl:foo [none]
+--- group without links, group without highlight
+LINK keep:kept [none]
+--- listing without codelink
+--- boundary of a rule, command words
+LINK cl:x_y [none]
+LINK cl:open_end [none]
+--- language scope: none
+--- language scope: tex
+LINK t:only-tex [kw]
+LINK cl::bs:node [none]
+LINK cl:x_y [none]
+[1
+] (listings.aux)

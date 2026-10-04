@@ -1,0 +1,14 @@
+% A tiny document that only shows the benchmark tables, so they can be
+% compiled on their own (after sh bench/run.sh).
+\documentclass{article}
+\usepackage[group-separator={\,},group-minimum-digits=4]{siunitx}
+\usepackage{booktabs}
+\begin{document}
+\section*{code-link benchmark}
+\subsection*{listings}
+\input{bench-results-listings.tex}
+\subsection*{xlistings}
+\input{bench-results-xlistings.tex}
+\subsection*{minted}
+\input{bench-results-minted.tex}
+\end{document}

@@ -1,0 +1,496 @@
+% Florian Sihler, 2026
+% Documentation of code-link, licensed under the LPPL 1.3c
+% https://github.com/EagleoutIce/xlistings
+\documentclass[10pt,DIV=12,parskip=half,english,numbers=noenddot,footnotes=nomultiple,oneside]{scrartcl}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{babel}
+\usepackage{newpxtext,newpxmath}
+\usepackage[varqu,varl,scaled=.96]{inconsolata}
+\usepackage{enumitem}
+\usepackage{needspace}
+\usepackage{booktabs}
+\usepackage[margin=2cm,includefoot]{geometry}
+\usepackage[group-separator={\,},group-minimum-digits=4]{siunitx}
+\usepackage{microtype}
+\raggedbottom
+\widowpenalty=10000 \clubpenalty=10000
+\usepackage[prefix=]{xcolor-material}
+\usepackage[hlnumbers=false,fakeminted=false]{xlistings}
+\LoadLanguages{latex,java,python,haskell}
+\usepackage{minted}
+\usepackage{tcolorbox}
+\tcbuselibrary{listings,skins,breakable}
+\usepackage{hyperref}
+\usepackage[underline]{code-link}
+\usepackage{imakeidx}
+\makeindex[title={Index of commands, keys and names},name=\jobname,columns=2,columnsep=.75cm,noautomatic=true,intoc]
+\hypersetup{colorlinks=true,linkcolor=Indigo!70!black,urlcolor=Indigo!70!black,citecolor=Indigo!70!black}
+
+\definecolor{clcmd}{HTML}{283593}
+\colorlet{xlst@colors@lst@command}{Indigo}
+
+% the layout of the other tutorials: sections, lists, header and footer
+\setkomafont{disposition}{\rmfamily\bfseries}
+\setkomafont{subtitle}{\rmfamily\itshape}
+\setkomafont{descriptionlabel}{\normalfont}
+\setlist{nosep,itemsep=2pt,leftmargin=*}
+% the entries of descriptions (options, commands): a bullet in the margin and
+% the text in the same line
+\newcommand\descbullet[1]{\llap{\textbullet\enspace}#1}
+\setlist[description]{format=\descbullet,labelindent=0pt,leftmargin=1.5em,itemsep=\medskipamount}
+\setlength\emergencystretch{3em}
+\usepackage[headsepline]{scrlayer-scrpage}
+\clearpairofpagestyles
+\ihead{\texttt{xlistings} \textbar{} \texttt{code-link}}
+\ohead{\hypersetup{urlcolor=.}\clrepo}
+\cfoot*{\pagemark}
+\setkomafont{pageheadfoot}{\normalfont\small\color{gray}}
+\RedeclareSectionCommand[tocbeforeskip=2pt]{section}
+
+% ---------------------------------------------------------------- listings
+\newif\ifclnextcs
+\newcommand\csidstyle{\ifclnextcs\global\clnextcsfalse\color{Indigo}\fi}
+\newcommand\cstext[1]{\textcolor{Indigo}{\textbackslash#1}}
+\newcommand\csplain[1]{\textbackslash#1}
+\makeatletter\lst@AddToHook{Init}{\global\clnextcsfalse}\lst@AddToHook{OutputOther}{\global\clnextcsfalse}\makeatother
+% the source of the examples: the commands of the package link to their documentation
+\lstdefinestyle{cl}{language=lLatex,basicstyle=\ttfamily\small,columns=fullflexible,keepspaces,
+   breaklines=true,breakatwhitespace=true,breakindent=0pt,postbreak=\mbox{\tiny$\hookrightarrow$},
+   keywordstyle=[3]{},alsoother={\\},identifierstyle=\csidstyle,
+   add to literate={(}{{(}}1 {)}{{)}}1 {\\\\}{{\cstext{\textbackslash}}}2 {\\(}{{\cstext{(}}}2 {\\)}{{\cstext{)}}}2
+      {\\.}{{\cstext{.}}}2 {\\}{{\csplain{}\global\clnextcstrue\CodeLinkMarkBackslash\nobreak}}1}
+% the code which is the result of an example: linked
+\lstdefinestyle{prog}{basicstyle=\ttfamily\small,columns=fullflexible,keepspaces,showstringspaces=false,
+   breaklines=true,breakatwhitespace=true,breakindent=0pt,postbreak=\mbox{\tiny$\hookrightarrow$}}
+\lstset{style=prog}
+\lstMakeShortInline[style=cl,breaklines=false]|
+\tcbset{clbox/.style={colback=white,colframe=black!15,boxrule=.4pt,arc=2pt,left=4pt,right=4pt,top=2pt,bottom=2pt,
+   segmentation style={black!15},listing options={style=cl,basicstyle=\ttfamily\footnotesize}}}
+\newtcblisting{example}{clbox,listing side text,righthand ratio=.5}
+\newtcblisting{code}{clbox,listing only}
+\newtcblisting{wideexample}{clbox,listing and text,breakable}
+
+% ------------------------------------------------------------ code-link setup
+% each macro is documented in a group of its own and links to its definition
+\CodeLinkStyle{def}{\bfseries}
+\CodeLinkStyle{api}{\color{clcmd}}
+\CodeLinkGroup{api}{prefix=api:,style=api}
+% one group per language: the same name may be defined in each of them
+\CodeLinkGroup{java}{prefix=java:,language=java}
+\CodeLinkGroup{py}{prefix=py:,language=python}
+\CodeLinkGroup{hs}{prefix=hs:,language=haskell}
+\CodeLinkGroup{tex}{prefix=tex:,language=tex}
+
+\let\T\texttt
+% which backends understand a key or command (without a badge: all of them)
+% the same strut in every badge, so all have the same height and the text sits on the line of the text
+\newcommand\badge[2][Indigo]{\tcbox[on line,boxsep=0pt,left=3pt,right=3pt,top=1.2pt,bottom=1.2pt,arc=3.5pt,boxrule=0pt,
+   colback=#1100,fontupper=\sffamily\bfseries\fontsize{6.5}{7}\selectfont\color{#1900}]{\vphantom{Xg}#2}}
+\newcommand\onlist{\,\badge{listings}\,\badge[Teal]{xlistings}}
+\newcommand\onminted{\,\badge[DeepOrange]{minted}}
+\NewDocumentCommand\idxkind{m}{\textcolor{gray}{\small(#1)}}% robust: \small would write @ into the index
+\newcommand\cmd[1]{\CodeLinkRef[group=api,command]{#1}}
+\newcommand\api[1]{\CodeLinkAnchor[group=api,command]{#1}\T{\color{clcmd}\textbackslash#1}%
+   \index{#1@\texttt{\color{clcmd}\textbackslash #1}\string|hyperpage}}
+\newcommand\meta[1]{\ensuremath{\langle}\textit{#1}\ensuremath{\rangle}}
+\newcommand\marg[1]{\T{\{}\meta{#1}\T{\}}}
+\newcommand\oarg[1]{\T{[}\meta{#1}\T{]}}
+\newcommand\opt[2]{\T{\bfseries\color{clcmd}#1}\index{#1@\texttt{\bfseries\color{clcmd}#1} \idxkind{key}\string|hyperpage}%
+   \ifx\relax#2\relax\else\T{=}#2\fi}
+\newcommand\option[3]{\opt{#1}{#2}\,\textcolor{gray}{\small(\ifx\relax#3\relax no default\else default \T{#3}\fi)}}
+% a package, linked to CTAN
+\newcommand\pkg[1]{\href{\ifcsname pkgurl@#1\endcsname\csname pkgurl@#1\endcsname\else https://ctan.org/pkg/#1\fi}{\T{#1}}%
+   \index{#1@\texttt{#1} \idxkind{package}\string|hyperpage}}
+\newcommand\extcmd[2]{\href{https://ctan.org/pkg/#2}{\T{\color{clcmd}\textbackslash#1}}}
+\expandafter\def\csname pkgurl@xlistings\endcsname{https://github.com/EagleoutIce/xlistings}
+
+\newcommand\clrepo{\href{https://github.com/EagleoutIce/xlistings}{\T{github.com/EagleoutIce/xlistings}}}
+\title{\T{code-link}}
+\subtitle{\small part of \pkg{xlistings}, \clrepo}
+\author{Florian Sihler\thanks{Released under the \href{https://www.latex-project.org/lppl.txt}{LaTeX Project Public License}, version 1.3c or later.}}
+\makeatletter
+\long\def\cl@parsever#1 v#2 #3\relax{\def\cldocdate{#1}\def\cldocversion{v#2}}
+\expandafter\expandafter\expandafter\cl@parsever\csname ver@code-link.sty\endcsname\relax
+\makeatother
+\date{Version \cldocversion{} \textendash{} \cldocdate}
+% what linking costs, measured by bench/run.sh (the numbers of the benchmark section)
+\providecommand\cbwordExtra{?}\providecommand\cbwordFixed{?}
+\providecommand\cbcommandExtra{?}\providecommand\cbcommandFixed{?}
+\providecommand\cbmintedExtra{?}\providecommand\cbmintedFixed{?}
+\providecommand\cbwordPct{?}\providecommand\cbcommandPct{?}\providecommand\cbmintedPct{?}
+% found in bench/ by latexmk and next to the manual by l3build
+\IfFileExists{bench-summary.tex}{\input{bench-summary.tex}}{}
+
+% the table of contents needs no heading
+\deftocheading{toc}{}
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\noindent\T{code-link} turns the code of your listings into hyperlinks. You register a string where it is defined, and every occurrence of this string in a \pkg{listings}, \pkg{xlistings} or \pkg{minted} block links to that place. It works for every language these packages can typeset, and for the text between the listings as well.
+\begin{example}
+\CodeLinkAnchor[group=java]{Greeter}
+The class \CodeLinkRef[group=java]{Greeter} greets:
+\begin{lstlisting}[language=java]
+Greeter g = new Greeter("world");
+g.greet(); // a Greeter, again
+\end{lstlisting}
+\end{example}
+The package is written in \T{expl3} and needs only \pkg{l3keys2e}. Links are made by \pkg{hyperref}, by any package that provides \extcmd{hyperref}{hyperref}, or by a command of your own (Section~\ref{sec:provider}). Links come from the \T{.aux} file, like references, so they need no run beyond the second one that \pkg{hyperref} needs anyway. With \num{1000} strings, a run takes \qty{\cbwordFixed}{\milli\second} longer, and each listing of \num{500} tokens another \qty{\cbwordExtra}{\milli\second}: about \qty{\cbwordPct}{\percent} of a run of the benchmark document, where a further run would cost \qty{100}{\percent} (Section~\ref{sec:bench}).
+
+A key or command with a badge works only with the backends named by it. Without a badge it works with all of them.
+The badges \badge{listings} and \badge[Teal]{xlistings} mark keys that only these two understand, and \badge[DeepOrange]{minted} marks keys that only \pkg{minted} understands.
+
+\setcounter{tocdepth}{1}
+\tableofcontents
+
+\noindent\T{code-link} is part of the \pkg{xlistings} bundle and is shipped and tested with it, because the two are most useful combined. It does not need \pkg{xlistings} and works with \pkg{listings} or \pkg{minted} alone. The manual of \pkg{xlistings} is a \href{https://github.com/EagleoutIce/xlistings/blob/gh-pages/build/xlistings-doc.pdf}{document of its own}. The package was extracted from \href{https://github.com/EagleoutIce/tikzpingus}{\T{tikzpingus}}.
+
+\section{Quick start}
+Load a listings backend, \pkg{hyperref} and the package. Mark the place where something is defined with \cmd{CodeLinkAnchor}, and every listing and every \cmd{CodeLinkRef} that contains the string links there.
+\begin{code}
+\usepackage{listings}   % or xlistings, or minted
+\usepackage{hyperref}   % or any package which provides \hyperref
+\usepackage[underline]{code-link}
+...
+\CodeLinkAnchor[command]{mymacro}   % defines the target
+\CodeLinkRef[command]{mymacro}      % links in the text
+\end{code}
+Strings are stored in the \T{.aux} file while the document is typeset. Like references, a link appears from the second run on, and it also points forward.
+\begin{example}
+\CodeLinkAnchor[group=py]{fibonacci}
+Calling \CodeLinkRef[group=py]{fibonacci}:
+\begin{lstlisting}[language=python]
+def fibonacci(n):
+    if n < 2: return n
+    return fibonacci(n - 1) + fibonacci(n - 2)
+\end{lstlisting}
+\end{example}
+Without the key \opt{language}{\meta{name}} (Section~\ref{sec:groups}), a string is linked in the listings of every language.
+
+\section{Commands}\label{sec:commands}
+All of these take \oarg{options}: the keys of Section~\ref{sec:options}, for example \opt{group}{\meta{name}} or \opt{command}{}.
+
+\begin{description}
+\item[\api{CodeLinkAnchor}\oarg{options}\marg{string}] places a target here (a \pkg{hyperref} anchor and a |\label|) and registers the string. Only the first registration of a string counts per language.
+\item[\api{CodeLinkRegister}\oarg{options}\marg{string}] registers the string for a target that exists elsewhere, for example a heading or a theorem. Give the target with \opt{label}{\meta{label}}.
+\item[\api{CodeLinkBlock}\oarg{options}\marg{string}] registers a string that is no link but is matched as one unit. The \T{out} inside \T{System.out} is not linked here, although \T{out} is registered:
+\begin{example}
+\CodeLinkAnchor[group=java]{out}
+\CodeLinkBlock[group=java]{System.out}
+\begin{lstlisting}[language=java]
+System.out.println(out); // only the last out
+\end{lstlisting}
+\end{example}
+\item[\api{CodeLinkRef}\oarg{options}\marg{string}] typesets the string as a link in running text, in the font \api{CodeLinkTextFont} (default |\ttfamily|).
+\item[\api{CodeLinkLabel}\oarg{group}\marg{string}] expands to the label of a string, so |\ref{\CodeLinkLabel{foo}}| works. The star form is for commands. A label is the prefix of the group and the string, where special characters are replaced (|\| by \T{:bs:}, space by \T{-}):
+\begin{example}
+\CodeLinkAnchor[group=py]{answer}
+Page \pageref{\CodeLinkLabel[py]{answer}},
+label \T{\CodeLinkLabel[py]{answer}}
+\end{example}
+\end{description}
+
+\section{Options}\label{sec:options}
+These are the options of \cmd{CodeLinkAnchor}, \cmd{CodeLinkRegister}, \cmd{CodeLinkBlock} and \cmd{CodeLinkRef}. A group (Section~\ref{sec:groups}) sets the defaults of \opt{prefix}{\meta{text}}, \opt{style}{\meta{name}}, \opt{language}{\meta{name}}, \opt{links}{\T{true\textbar false}}, \opt{highlight}{\T{true\textbar false}} and \opt{boundary}{\T{true\textbar false}}.
+\begin{description}
+\item[\option{group}{\meta{name}}{default}] the group of the string.
+\item[\option{command}{}{off}] the string is a control sequence. The backslash is added, so |[command]{node}| registers |\node|.
+\item[\option{label}{\meta{label}}{generated}] the label of the target.
+\item[\option{display}{\meta{text}}{the string}\onlist] the text shown instead of the string. It is typeset literally.
+\item[\option{style}{\meta{name}}{of the group}] a style defined with \cmd{CodeLinkStyle}.
+\item[\option{language}{\meta{name}}{of the group}] link only in listings of this language (listings: the key \T{language}, minted: the lexer). Empty means all.
+\item[\option{links}{\T{true\textbar false}}{of the group}] \T{false}: the string is registered but never linked. It stays plain text.
+\item[\option{highlight}{\T{true\textbar false}}{of the group, false}] \T{false}: a listing keeps its syntax highlighting, so the style of the string is used in the text only and the underline marks the link. \T{true}: the style is used in listings as well (Section~\ref{sec:highlight}).
+\item[\option{boundary}{\T{true\textbar false}}{of the group}\onlist] \T{false}: a string that is no word may also be found at the start of a longer word (Section~\ref{sec:tokens}).
+\end{description}
+
+\section{Groups and styles}\label{sec:groups}
+\begin{description}
+\item[\api{CodeLinkGroup}\marg{name}\marg{keys}] defines the defaults of a group. The keys are \opt{prefix}{\meta{text}} (the start of the labels, default \T{cl:}), \opt{style}{\meta{name}} (default \T{none}), \opt{language}{\meta{name}} (default: all languages) and the three switches \opt{links}{}, \opt{highlight}{} (default \T{false}) and \opt{boundary}{} of Section~\ref{sec:options}. Names of languages are compared in lowercase and without the dialect.
+\item[\api{CodeLinkStyle}\marg{name}\marg{code}] defines a style. Its code runs inside of the group that typesets the link, for example |\bfseries\color{red}|. The style \T{none} does nothing, so by default a link changes neither color nor font.
+\end{description}
+The groups of this document:
+\begin{code}
+\CodeLinkStyle{def}{\bfseries}
+\CodeLinkStyle{api}{\color{clcmd}}
+\CodeLinkGroup{api}{prefix=api:,style=api}
+\CodeLinkGroup{java}{prefix=java:,language=java}
+\CodeLinkGroup{py}{prefix=py:,language=python}
+\CodeLinkGroup{hs}{prefix=hs:,language=haskell}
+\end{code}
+
+\section{Languages}\label{sec:scopes}
+The strings do not have to be \LaTeX{} commands. Whatever a listing language knows as a name can be linked. The groups scope their strings to a language, so the same name may be defined in each language, and every listing links to the definition in its own language. We define a stack in Java, Python and Haskell. All three have a \T{push} and a \T{size}.
+
+\subsection{Java}
+The class \CodeLinkRef[group=java]{Stack} has the methods \CodeLinkRef[group=java]{push} and \CodeLinkRef[group=java]{size}. The anchors are written at the start of the example:
+\begin{wideexample}
+\CodeLinkAnchor[group=java]{Stack}\CodeLinkAnchor[group=java]{push}\CodeLinkAnchor[group=java]{size}
+\begin{lstlisting}[language=java]
+public class Stack {
+    private final Deque<Integer> items = new ArrayDeque<>();
+    public void push(int x) { items.addFirst(x); }
+    public int size() { return items.size(); }
+}
+\end{lstlisting}
+\end{wideexample}
+The \T{size} of \T{items} is linked as well, because it is the same name in the same language.
+
+\subsection{Python}
+The Python class has the same names, but its definitions are different targets:
+\begin{wideexample}
+\CodeLinkAnchor[group=py]{Stack}\CodeLinkAnchor[group=py]{push}\CodeLinkAnchor[group=py]{size}
+\begin{lstlisting}[language=python]
+class Stack:
+    def __init__(self): self.items = []
+    def push(self, x): self.items.append(x)
+    def size(self): return len(self.items)
+\end{lstlisting}
+\end{wideexample}
+Click through the Java and the Python listing. The \T{push} of one never jumps to the other.
+
+\subsection{Haskell}
+In Haskell, the functions are defined by their type signature. The text may talk about all three languages at once, because \cmd{CodeLinkRef} and |\lstinline| know the language as well. \lstinline[language=java]|stack.push(1)|, \lstinline[language=python]|stack.push(1)| and \lstinline[language=haskell]|push 1 stack| link to three places.
+\begin{wideexample}
+\CodeLinkAnchor[group=hs]{Stack}\CodeLinkAnchor[group=hs]{push}\CodeLinkAnchor[group=hs]{size}
+\begin{lstlisting}[language=haskell]
+newtype Stack a = Stack [a]
+
+push :: a -> Stack a -> Stack a
+push x (Stack xs) = Stack (x : xs)
+
+size :: Stack a -> Int
+size (Stack xs) = length xs
+\end{lstlisting}
+\end{wideexample}
+
+\subsection{A reference with an index}
+\api{CodeLinkAnchorHook}\marg{code} runs at every anchor, with the string as |#1| and the label as |#2|. The definitions of an API reference can fill the index with it:
+\begin{wideexample}
+\CodeLinkAnchorHook{\index{#1@\texttt{#1} (Python)\string|hyperpage}}
+\CodeLinkAnchor[group=py]{Counter}\CodeLinkAnchor[group=py]{update}\CodeLinkAnchor[group=py]{elements}
+
+\noindent\textbf{\CodeLinkRef[group=py]{Counter}} counts hashable objects. It knows \CodeLinkRef[group=py]{update} (add counts) and \CodeLinkRef[group=py]{elements} (every item as often as it was counted):
+\begin{lstlisting}[language=python]
+from collections import Counter
+
+words = Counter("a b a c b a".split())
+words.update(["c", "c"])
+print(sorted(words.elements()))   # a, a, a, b, b, c, c, c
+\end{lstlisting}
+\CodeLinkAnchorHook{}
+\end{wideexample}
+\T{Counter}, \T{update} and \T{elements} are now in the index of this document.
+
+\section{What is matched}\label{sec:tokens}
+A word is a name made of letters, or a command (a backslash and letters). Words are matched as a whole, so \T{drop} is not linked inside of \T{dropped}. Everything else is handed to the listings backend as a rule (Section~\ref{sec:backends}).
+
+\paragraph{A word.} It is linked where it stands alone:
+\begin{example}
+\CodeLinkAnchor[group=java]{Greeting}
+\begin{lstlisting}[language=java]
+Greeting a; GreetingCard b;
+\end{lstlisting}
+\end{example}
+
+\paragraph{A command.} The key \opt{command}{} adds the backslash. A command is a word as well, so |\textbfx| is no |\textbf|:
+\begin{example}
+\CodeLinkAnchor[group=tex,command]{textbf}
+\begin{lstlisting}[language={[LaTeX]TeX}]
+\textbf{bold} and \textbfx
+\end{lstlisting}
+\end{example}
+
+\paragraph{A name with an underscore.} It is no word, so it is matched as a rule. A rule would also fire at the start of a longer name. The key \opt{boundary}{\T{true}} (the default) prevents this:
+\begin{example}
+\CodeLinkAnchor[group=py]{max_size}
+\begin{lstlisting}[language=python]
+max_size = 3; max_size_x = 4
+\end{lstlisting}
+\end{example}
+
+\paragraph{Without the boundary.} With \opt{boundary}{\T{false}}, the rule fires at the start of the longer name as well. This costs less time, because no additional rules are made:
+\begin{example}
+\CodeLinkAnchor[group=py,boundary=false]{min_size}
+\begin{lstlisting}[language=python]
+min_size = 3; min_size_x = 4
+\end{lstlisting}
+\end{example}
+
+\paragraph{A name with digits.} Digits are numbers to \pkg{xlistings}, so \T{utf8} is a rule as well:
+\begin{example}
+\CodeLinkAnchor[group=py]{utf8}
+\begin{lstlisting}[language=python]
+open(path, encoding="utf8")
+\end{lstlisting}
+\end{example}
+
+\paragraph{Dots and primes.} Qualified names and names with a prime are rules:
+\begin{example}
+\CodeLinkAnchor[group=hs]{Data.Map}
+\CodeLinkAnchor[group=hs]{foldr'}
+\begin{lstlisting}[language=haskell]
+import qualified Data.Map as M
+total = foldr' (+) 0 (M.elems m)
+\end{lstlisting}
+\end{example}
+
+\paragraph{Operators.} Symbols are rules as well:
+\begin{example}
+\CodeLinkAnchor[group=hs]{<$>}
+\begin{lstlisting}[language=haskell]
+names = show <$> ids
+\end{lstlisting}
+\end{example}
+
+\paragraph{Several words.}\onlist{} A string may contain spaces. Pygments works on single tokens, so \pkg{minted} never links such a string (Section~\ref{sec:minted}):
+\begin{example}
+\CodeLinkAnchor[group=java]{new Stack}
+\begin{lstlisting}[language=java]
+var s = new Stack(); // new Stack
+\end{lstlisting}
+\end{example}
+
+\section{Looks of the links}\label{sec:looks}
+A link is typeset by \api{CodeLinkFormat}\marg{label}\marg{style}\marg{text}. The style of the group is applied first, and the default format then makes the text a link. The package option \opt{underline}{} (default: off) draws a slight line below every link. The line is thin and light, and it lies at a fixed distance below the baseline, no matter how deep the word is. The links of a line share it:
+\begin{example}
+\CodeLinkAnchor[group=py]{quartz}
+\CodeLinkAnchor[group=py]{gypsy}
+\CodeLinkAnchor[group=py]{ill}
+{\Large\CodeLinkRef[group=py]{ill}
+\CodeLinkRef[group=py]{gypsy}
+\CodeLinkRef[group=py]{quartz}}
+\end{example}
+The keys \opt{underline-offset}{\meta{length}} (default \qty{1.2}{pt}), \opt{underline-thickness}{\meta{length}} (\qty{.3}{pt}) and \opt{underline-color}{\meta{color}} (\T{black!15}) change the line. The color is an \pkg{xcolor} expression. An empty color uses the color of the text, and without \pkg{xcolor} the line has that color as well. In running text the line has the color \opt{underline-text-color}{\meta{color}} (\T{black!8}).
+\begin{code}
+\CodeLinkSetup{underline-offset=2pt, underline-thickness=.6pt, underline-color=Indigo!35}
+\end{code}
+
+\subsection{Syntax highlighting}\label{sec:highlight}
+By default a link changes neither color nor font in a listing. The listing keeps its syntax highlighting, and the link adds the hyperlink and the underline. The style of a group applies in the text, for example in \cmd{CodeLinkRef}. With \opt{highlight}{\T{true}} it applies in listings as well, and a color in it replaces the color of the highlighting for the linked words. Here, \T{class} is registered in a group with a red style and \opt{highlight}{\T{true}}:
+\begin{wideexample}
+\CodeLinkStyle{red}{\color{red}}
+\CodeLinkGroup{hlred}{prefix=hlred:,language=java,style=red,highlight=true}
+\CodeLinkAnchor[group=hlred]{class}
+\begin{lstlisting}[language=java]
+public class Stack {}
+\end{lstlisting}
+\end{wideexample}
+The same style without the key keeps the color of the highlighting. The keyword \T{public} below is linked, and its color is still the color of the keywords:
+\begin{wideexample}
+\CodeLinkGroup{hlkeep}{prefix=hlkeep:,language=java,style=red}
+\CodeLinkAnchor[group=hlkeep]{public}
+\begin{lstlisting}[language=java]
+public class Stack {}
+\end{lstlisting}
+\end{wideexample}
+
+\subsection{No links}
+A group with \opt{links}{\T{false}} registers nothing, so its strings stay plain text. The key works for a single string as well:
+\begin{wideexample}
+\CodeLinkGroup{quiet}{prefix=quiet:,links=false}
+\CodeLinkAnchor[group=quiet]{Queue}
+\begin{lstlisting}[language=java]
+Queue q = new Queue();   // not linked
+\end{lstlisting}
+\end{wideexample}
+The listings key \opt{codelink}{\T{false}}\onlist{} switches the links of one listing off, even for registered strings:
+\begin{wideexample}
+\begin{lstlisting}[language=java,codelink=false]
+Stack s = new Stack();   // not linked, the listing has codelink=false
+\end{lstlisting}
+\end{wideexample}
+Without the key, the same listing is linked:
+\begin{wideexample}
+\begin{lstlisting}[language=java]
+Stack s = new Stack();   // linked
+\end{lstlisting}
+\end{wideexample}
+
+\subsection{Formats}
+Redefine \cmd{CodeLinkFormat} to change what a link looks like. The format below adds the page of the target. You then get only what you wrote, without the underline:
+\begin{wideexample}
+\CodeLinkAnchor[group=py]{looks}
+\begingroup
+\RenewDocumentCommand\CodeLinkFormat{mmm}{\hyperref[#1]{#3}\textsuperscript{\scriptsize\pageref*{#1}}}
+A format with the page: \CodeLinkRef[group=py]{looks}
+\endgroup
+\end{wideexample}
+
+\section{Backends and link providers}\label{sec:backends}
+\subsection{listings and xlistings}
+Words are checked when \pkg{listings} outputs an identifier, which costs next to nothing for any number of strings. All other strings are given to \pkg{listings} as \T{literate} rules. They follow the setting \T{literate*} (no links in comments and strings if starred), they apply inside of |\lstinline|, and they may contain spaces. The longest string wins. A rule matches characters, so without a boundary it also fires inside of a longer word. \pkg{xlistings} needs no special treatment.
+
+\subsection{minted}\label{sec:minted}
+Pygments splits the code into tokens, and \T{code-link} links a token if it is exactly equal to a registered string. Words work as in \pkg{listings}. Strings of several tokens are never linked, because no single token equals them. \cmd{CodeLinkBlock} works across tokens: a token is not linked if the text before it ends with a block, so the \T{out} of \T{System.out} stays plain. The keys \opt{display}{\meta{text}} and \opt{boundary}{} have no effect. \pkg{minted} version~3 and \T{-shell-escape} are needed.
+\begin{code}
+\usepackage{minted}
+\usepackage[underline]{code-link}
+...
+\CodeLinkAnchor[group=java]{Greeter}
+\CodeLinkAnchor[group=java]{out}
+\CodeLinkBlock[group=java]{System.out}
+\begin{minted}{java}
+System.out.println(new Greeter(out));
+\end{minted}
+\end{code}
+The result is below. \T{Greeter} and the last \T{out} are links:
+\begin{tcolorbox}[clbox]
+\footnotesize
+\begin{minted}{java}
+System.out.println(new Greeter(out));
+\end{minted}
+\end{tcolorbox}
+
+\subsection{Link providers}\label{sec:provider}
+A link is made by \api{CodeLinkLinkCommand}\marg{code}. In the code, |#1| is the label and |#2| the text. The default is \extcmd{hyperref}{hyperref}\T{[\#1]\{\#2\}}, so \pkg{hyperref} and every package that provides \extcmd{hyperref}{hyperref} work as they are. For other reference packages, or none, write the link yourself:
+\begin{wideexample}
+\CodeLinkAnchor[group=py]{target}
+\begingroup
+\CodeLinkLinkCommand{#2\textsuperscript{[\pageref{#1}]}}
+A page reference as the link: \CodeLinkRef[group=py]{target}
+\endgroup
+\end{wideexample}
+
+\section{Package options}
+\api{CodeLinkSetup}\marg{keys} takes the options of the package as well:
+\begin{description}
+\item[\option{backend}{\T{auto\textbar listings\textbar minted\textbar none}}{auto}] the backend to extend. By default it is whatever is loaded.
+\item[\option{hyper}{\T{auto\textbar true\textbar false}}{auto}] use links. \T{auto} means yes if \extcmd{hyperref}{hyperref} exists or a link command was set.
+\item[\option{underline}{}{off}] draw a line below the links.
+\item[\option{underline-offset}{\meta{length}}{\qty{1.2}{pt}}] the distance of the line from the baseline.
+\item[\option{underline-thickness}{\meta{length}}{\qty{.3}{pt}}] the stroke of the line.
+\item[\option{underline-color}{\meta{color}}{black!15}] the color of the line.
+\item[\option{underline-text-color}{\meta{color}}{black!8}] the color of the line below links in the text. It is lighter than in listings.
+\item[\option{underline-text}{\T{true\textbar false}}{true}] \T{false}: links in the text have no line, only listings do.
+\item[\option{debug}{}{off}] print what the package found.
+\end{description}
+
+\section{Benchmark}\label{sec:bench}
+\T{bench/run.sh} measures the cases of \T{bench/cases.txt} with the timer of pdf\TeX{}. Every case runs twice, as the strings are read from the \T{.aux} file, and five times over; the tables show the average. A listing has \num{10} tokens per line, half of them registered.
+\begin{description}
+\item[\textbf{Plain}, \textbf{Linked}] one listing without and with links; \textbf{Extra} is the difference, paid per listing.
+\item[\textbf{Register}] all \cmd{CodeLinkAnchor} calls, paid once per run.
+\item[\textbf{Assemble}] reading the strings and building the rules, paid once per run.
+\item[\textbf{Overhead}] Register, Assemble and Extra together, and in parentheses their share of \textbf{Run}.
+\item[\textbf{Run}] the wall time of the whole pdf\LaTeX{} run of the benchmark document, process start included. A document that needed a further run would pay this time again, \qty{100}{\percent}.
+\end{description}
+With \num{1000} strings, a run costs \qty{\cbwordFixed}{\milli\second} more and each listing \qty{\cbwordExtra}{\milli\second} more for words (\qty{\cbcommandFixed}{\milli\second} and \qty{\cbcommandExtra}{\milli\second} for commands, \qty{\cbmintedFixed}{\milli\second} and \qty{\cbmintedExtra}{\milli\second} with \pkg{minted}). That is \qty{\cbwordPct}{\percent} of a run with \pkg{listings} and \qty{\cbmintedPct}{\percent} with \pkg{minted}, whose runs are longer.
+\IfFileExists{bench-results-listings.tex}
+   {\begin{center}\footnotesize\textbf{listings}\\[2pt]\input{bench-results-listings.tex}\end{center}}
+   {\textit{Run \T{sh bench/run.sh} to fill in the tables.}}
+\IfFileExists{bench-results-xlistings.tex}
+   {\begin{center}\footnotesize\textbf{xlistings}\\[2pt]\input{bench-results-xlistings.tex}\end{center}}
+   {}
+\IfFileExists{bench-results-minted.tex}
+   {\begin{center}\footnotesize\textbf{minted}, with cached Pygments output\\[2pt]\input{bench-results-minted.tex}\end{center}}
+   {}
+The cost of a listing grows with its links, not with the number of strings, because words are looked up once per identifier. Rules are different. \pkg{listings} tries them one after another at every occurrence of their first character, so their cost grows with their number. If you have many strings, prefer words.
+
+\section{Limitations}
+Strings are written to the main \T{.aux} file. With pdf\TeX{}, keep them ASCII, and use Lua\TeX{} or Xe\TeX{} for Unicode. The preamble may register strings. Strings registered inside of |\include|d files are available as soon as the main file was run once. Words with digits are rules for \pkg{xlistings}.
+
+\printindex[\jobname]
+\end{document}

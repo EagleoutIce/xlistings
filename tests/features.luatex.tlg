@@ -1,0 +1,193 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line ....
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line ....
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line ....
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line ....
+[PASS] langoverride
+[PASS] style-access
+[PASS] style-get
+[PASS] recolored
+[PASS] inline-framed
+[PASS] environment
+[PASS] environment-nonum
+[PASS] environment-plain
+[PASS] minted
+[PASS] minted-langoverride
+[PASS] blacklisted-line-numbers
+[PASS] badge
+[PASS] autogobble
+[PASS] void
+[PASS] void-environment
+(xlstsample.java)
+[PASS] input
+[1
+]
+[PASS] literate-ldots
+[PASS] literate-spacing
+[PASS] literate-math
+[PASS] literate-added
+[PASS] lstfs
+[PASS] lstfs-star
+[PASS] numfs
+[PASS] lengths
+[PASS] prebreak
+[PASS] styles
+Overfull \hbox (92.71999pt too wide) in paragraph at lines ...
+[] 
+\hbox(6.23+2.28)x345.0, direction TLT
+.\localpar
+..\localinterlinepenalty=0
+..\localbrokenpenalty=0
+..\localleftbox=null
+..\localrightbox=null
+.\hbox(6.23+2.28)x437.71999, direction TLT
+..\TU/lmtt/m/n/10 b
+..\TU/lmtt/m/n/10 a
+..\TU/lmtt/m/n/10 s
+..\TU/lmtt/m/n/10 i
+..\TU/lmtt/m/n/10 c
+..\glue(\spaceskip) 5.25
+..\pdfcolorstack 0 push {0.69412 0.18825 0.39609 rg 0.69412 0.18825 0.39609 RG}
+..\TU/lmtt/m/n/10 k
+..\TU/lmtt/m/n/10 e
+..\TU/lmtt/m/n/10 y
+..\TU/lmtt/m/n/10 w
+..\TU/lmtt/m/n/10 o
+..\TU/lmtt/m/n/10 r
+..\TU/lmtt/m/n/10 d
+..\TU/lmtt/m/n/10 A
+..\glue(\spaceskip) 5.25
+..\pdfcolorstack 0 pop
+..\pdfcolorstack 0 push {0.75687 0.34511 0.4902 rg 0.75687 0.34511 0.4902 RG}
+..\TU/lmtt/m/n/10 k
+..\TU/lmtt/m/n/10 e
+..\TU/lmtt/m/n/10 y
+..\TU/lmtt/m/n/10 w
+..\TU/lmtt/m/n/10 o
+..\TU/lmtt/m/n/10 r
+..\TU/lmtt/m/n/10 d
+..\TU/lmtt/m/n/10 B
+..\glue(\spaceskip) 5.25
+..\pdfcolorstack 0 pop
+..\pdfcolorstack 0 push {0.56078 0.12549 0.3098 rg 0.56078 0.12549 0.3098 RG}
+..\TU/lmtt/m/n/10 k
+..\TU/lmtt/m/n/10 e
+..\TU/lmtt/m/n/10 y
+..\TU/lmtt/m/n/10 w
+..\TU/lmtt/m/n/10 o
+..\TU/lmtt/m/n/10 r
+..\TU/lmtt/m/n/10 d
+..\TU/lmtt/m/n/10 C
+..\glue(\spaceskip) 5.25
+..\pdfcolorstack 0 pop
+..\TU/lmtt/m/it/10 k
+..\TU/lmtt/m/it/10 e
+..\TU/lmtt/m/it/10 y
+..\TU/lmtt/m/it/10 w
+..\TU/lmtt/m/it/10 o
+..\TU/lmtt/m/it/10 r
+..\TU/lmtt/m/it/10 d
+..\TU/lmtt/m/it/10 D
+..\glue(\spaceskip) 5.25
+..\pdfcolorstack 0 push {1 0.5 0 rg 1 0.5 0 RG}
+..\TU/lmtt/m/n/10 n
+..\TU/lmtt/m/n/10 u
+..\TU/lmtt/m/n/10 m
+..\TU/lmtt/m/n/10 b
+..\TU/lmtt/m/n/10 e
+..\TU/lmtt/m/n/10 r
+..\TU/lmtt/m/n/10 s
+..\glue(\spaceskip) 5.25
+..\pdfcolorstack 0 pop
+..\pdfcolorstack 0 push {0.59608 0.63528 0.70197 rg 0.59608 0.63528 0.70197 RG}
+..\TU/lmss/m/n/5 l
+..\TU/lmss/m/n/5 i
+..\TU/lmss/m/n/5 n
+..\TU/lmss/m/n/5 e
+..\TU/lmss/m/n/5 n
+..\TU/lmss/m/n/5 u
+..\TU/lmss/m/n/5 m
+..\discretionary (penalty 50)
+...< \TU/lmss/m/n/5 -
+..\TU/lmss/m/n/5 b
+..\kern0.15 (font)
+..\TU/lmss/m/n/5 e
+..\TU/lmss/m/n/5 r
+..\TU/lmss/m/n/5 s
+..\glue(\spaceskip) 1.77 plus 0.885 minus 0.59
+..\pdfcolorstack 0 pop
+..\pdfcolorstack 0 push {0.67844 0.36078 0.08235 rg 0.67844 0.36078 0.08235 RG}
+..\TU/lmtt/m/n/10 l
+..\TU/lmtt/m/n/10 i
+..\TU/lmtt/m/n/10 t
+..\TU/lmtt/m/n/10 e
+..\TU/lmtt/m/n/10 r
+..\TU/lmtt/m/n/10 a
+..\TU/lmtt/m/n/10 l
+..\TU/lmtt/m/n/10 s
+..\glue(\spaceskip) 5.25
+..\pdfcolorstack 0 pop
+..\pdfcolorstack 0 push {0.43922 0.47842 0.55685 rg 0.43922 0.47842 0.55685 RG}
+..\TU/lmtt/m/n/10 c
+..\TU/lmtt/m/n/10 o
+..\TU/lmtt/m/n/10 m
+..\TU/lmtt/m/n/10 m
+..\TU/lmtt/m/n/10 e
+..\TU/lmtt/m/n/10 n
+..\TU/lmtt/m/n/10 t
+..\TU/lmtt/m/n/10 s
+..\glue(\spaceskip) 5.25
+..\pdfcolorstack 0 pop
+..\pdfcolorstack 0 push {0.14511 0.51373 0.26276 rg 0.14511 0.51373 0.26276 RG}
+..\TU/lmtt/m/it/10 h
+..\TU/lmtt/m/it/10 i
+..\TU/lmtt/m/it/10 g
+..\TU/lmtt/m/it/10 h
+..\TU/lmtt/m/it/10 l
+..\TU/lmtt/m/it/10 i
+..\TU/lmtt/m/it/10 g
+..\TU/lmtt/m/it/10 h
+..\TU/lmtt/m/it/10 t
+..\glue(\spaceskip) 5.25
+..\pdfcolorstack 0 pop
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0
+[PASS] lstnonum
+[PASS] lstplain
+[PASS] indexed-R
+[PASS] minted-mapped
+[2]
+[PASS] blacklist-ghost
+[PASS] blacklist-present
+[PASS] style-plain
+[PASS] style-plain-number
+[PASS] badge-on
+[PASS] badge-off
+[PASS] disabled-radix
+[PASS] generic-inline
+[PASS] generic-inline-framed
+[PASS] generic-inline-keys
+[PASS] generic-inline-digits
+(xlstsample.java)
+[PASS] generic-input
+(xlistings-sql.cfg) (../lstlang1.sty
+File: lstlang1.sty ....-..-.. 1.11b listings language file
+)
+[PASS] minted-autoload
+Package xlistings Warning: No definition found for the language 'doesnotexist', neither 'xlistings-doesnotexist.cfg' nor 'doesnotexist.cfg' in the current directory or in the search path on input line ....
+[PASS] missing-language
+[3]
+[PASS] langoverride-star
+[PASS] badge-twice
+[PASS] badge-consumed
+[PASS] style-unknown
+[PASS] style-known
+[PASS] accents
+===== xlistings tests: 48 passed, 0 failed =====
+[4]
