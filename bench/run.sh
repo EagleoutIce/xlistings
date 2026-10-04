@@ -20,6 +20,15 @@ extra_mem_bot=${extra_mem_bot:-40000000}
 export pool_size max_strings hash_extra extra_mem_top extra_mem_bot
 export TEXINPUTS="./:"
 
+# BusyBox date ignores %N
+now() {
+   t=$(date +%s%N)
+   case $t in
+      *[!0-9]* | ?????????? ) perl -MTime::HiRes=time -e 'printf "%.0f\n", time * 1e9' ;;
+      *) echo "$t" ;;
+   esac
+}
+
 : > bench/summary.tmp
 
 for backend in $backends; do
@@ -41,7 +50,7 @@ for backend in $backends; do
          r=$((r + 1))
          rm -f bench/measure.aux bench/bench-plain.tex
          for pass in 1 2; do
-            start=$(date +%s%N)
+            start=$(now)
             if ! pdflatex -interaction=nonstopmode -halt-on-error -shell-escape \
                -output-directory=bench -jobname=measure \
                "\\def\\cbbackend{$backend}\\def\\cbpass{$pass}\\def\\cbruns{$runs}\\def\\cbonly{$i}\\def\\cbcases{bench/cases.run}\\input{bench/measure.tex}" \
@@ -52,7 +61,7 @@ for backend in $backends; do
                exit 1
             fi
             # the wall time of the whole linked run, process start included, in tenths of a ms
-            run=$(( ($(date +%s%N) - start) / 100000 ))
+            run=$(( ($(now) - start) / 100000 ))
          done
          echo "$i|$(cat bench/bench-stat.txt)|$run" >> "$raw"
       done
@@ -95,12 +104,12 @@ summary=bench/bench-summary.tex
    for kind in word command; do
       awk -F'|' -v kind="$kind" '
          $2 == kind && $1 != "minted" { n++; e += $3; f += $4; r += $5 }
-         END { if (n) printf "\\def\\cb%sExtra{%.0f}\n\\def\\cb%sFixed{%.0f}\n\\def\\cb%sRun{%.0f}\n\\def\\cb%sPct{%.0f}\n", kind, e / n, kind, f / n, kind, r / n, kind, 100 * (e + f) / r }
+         END { if (n) printf "\\def\\cb%sExtra{%.0f}\n\\def\\cb%sFixed{%.0f}\n\\def\\cb%sRun{%.0f}\n\\def\\cb%sPct{%.0f}\n", kind, e / n, kind, f / n, kind, r / n, kind, (r > 0 ? 100 * (e + f) / r : 0) }
       ' bench/summary.tmp
    done
    awk -F'|' '
       $1 == "minted" { n++; e += $3; f += $4; r += $5 }
-      END { if (n) printf "\\def\\cbmintedExtra{%.0f}\n\\def\\cbmintedFixed{%.0f}\n\\def\\cbmintedRun{%.0f}\n\\def\\cbmintedPct{%.0f}\n", e / n, f / n, r / n, 100 * (e + f) / r }
+      END { if (n) printf "\\def\\cbmintedExtra{%.0f}\n\\def\\cbmintedFixed{%.0f}\n\\def\\cbmintedRun{%.0f}\n\\def\\cbmintedPct{%.0f}\n", e / n, f / n, r / n, (r > 0 ? 100 * (e + f) / r : 0) }
    ' bench/summary.tmp
 } > "$summary"
 echo "wrote $summary"

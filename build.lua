@@ -5,7 +5,7 @@ module = "xlistings"
 sourcefiles  = {"xlistings.sty", "code-link.sty", "langs/xlistings-*.cfg"}
 installfiles = {"xlistings.sty", "code-link.sty", "xlistings-*.cfg"} -- globbed in the unpack dir, hence flat
 tdsroot      = "latex"
-packtdszip   = false -- the CTAN archive holds the flat files only, no TDS zip
+packtdszip   = false
 docfiles     = {"xlistings-doc.tex", "code-link-doc.tex", "xlistings.ist"}
 -- the manual of code-link uses minted, which needs -shell-escape and Pygments
 typesetfiles = {"xlistings-doc.tex", "code-link-doc.tex"}
