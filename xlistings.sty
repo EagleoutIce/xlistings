@@ -241,6 +241,9 @@
 \def\xlstSetFrameRule#1{\setlength{\xlst@length@lst@famerule}{#1}}
 \def\xlstPreBreak#1{\def\xlst@lst@prebreak{#1}}
 \def\xlstInlinePreBreak#1{\def\xlst@lst@inline@prebreak{#1}}
+% keys appended to every inline listing after its style, so that they win
+\def\xlst@inline@keys{}
+\def\xlstInlineKeys#1{\def\xlst@inline@keys{#1}}
 
 \def\@@xlst@numinpar@length{2em}
 \if@xlst@numinpar\xlstSetLeftMargin{\@@xlst@numinpar@length}\fi
@@ -374,13 +377,28 @@
 % Basic and internal highlighting definitions
 % please note, that they will apply under every condition!
 \newif\if@lst@within@inline@
+% Inline code opens with a \thinspace to separate it from preceding text. At the
+% start of a paragraph there is no such text, so the space is dropped there.
+% \xlst@inline@lead@prepare decides this outside of any box drawn around the code.
+\def\xlst@inline@lead{\thinspace}
+\def\xlst@inline@lead@prepare{%
+  \ifvmode\leavevmode\let\xlst@inline@lead\relax
+  \else\ifnum\lastnodetype<\z@\let\xlst@inline@lead\relax\fi\fi}
+% A wrapper such as \href puts a whatsit before the space, which then survives a
+% line break. \xlstInlineLead{<material>} emits the space before the wrapper,
+% where a line break discards it, and suppresses it for the inline code inside.
+\newcommand\xlstInlineLead[1]{{\xlst@inline@lead@prepare\xlst@inline@lead
+  \let\xlst@inline@lead\relax\let\xlst@inline@lead@prepare\relax#1}}
+% #1 keys, #2 code; appends the keys of \xlstInlineKeys
+\def\xlst@inline@lstinline#1#2{\expandafter\xlst@inline@lstinline@\expandafter{\xlst@inline@keys}{#1}{#2}}
+\def\xlst@inline@lstinline@#1#2#3{\lstinline[#2,#1]`#3`}
 \newcommand*\xlst@dlst@default[2][]{%
-\begingroup\fboxsep=\z@\fcolorbox{xlst@colors@border}{xlst@colors@background}{%
-  \if@xlst@inlinesize\@lst@within@inline@true\fi\thinspace\strut\lstinline[prebreak=\xlst@lst@inline@prebreak,#1,keepspaces=true,breakatwhitespace,]`#2`\thinspace
+\begingroup\xlst@inline@lead@prepare\fboxsep=\z@\fcolorbox{xlst@colors@border}{xlst@colors@background}{%
+  \if@xlst@inlinesize\@lst@within@inline@true\fi\xlst@inline@lead\strut\xlst@inline@lstinline{prebreak=\xlst@lst@inline@prebreak,#1,keepspaces=true,breakatwhitespace}{#2}\thinspace
 }\endgroup}
 
 \newcommand*\xlst@dlst@blank[2][]{%
-\begingroup\thinspace\if@xlst@inlinesize\@lst@within@inline@true\fi\lstinline[prebreak=\xlst@lst@inline@prebreak,#1,keepspaces=true,breakatwhitespace]`#2`\endgroup}
+\begingroup\xlst@inline@lead@prepare\xlst@inline@lead\if@xlst@inlinesize\@lst@within@inline@true\fi\xlst@inline@lstinline{prebreak=\xlst@lst@inline@prebreak,#1,keepspaces=true,breakatwhitespace}{#2}\endgroup}
 
 \newcommand*\xlst@dlst@input[2][]{\begingroup\if@xlst@inlinesize\@lst@within@inline@true\fi\lstinputlisting[#1]{#2}\endgroup}
 

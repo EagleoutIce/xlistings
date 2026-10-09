@@ -503,6 +503,14 @@ Commands that contain an \T{@} in their name are internal and not part of the in
     Material shown at the end of a line that was broken in a listing; \T{\textbackslash xlstInlinePreBreak} does the same for inline code.
 \end{command}
 
+\begin{command}{xlstInlineKeys}{\{<keys>\}}
+    Keys appended to every inline listing after its style, so that they win over it, for example \T{breaklines=false,prebreak=\{\}} to keep inline code from breaking.
+\end{command}
+
+\begin{command}{xlstInlineLead}{\{<material>\}}
+    Inline code opens with a thin space, which is dropped at the start of a paragraph. When a wrapper such as \T{\textbackslash href} encloses the inline code, wrap it in \T{\textbackslash xlstInlineLead} so that the space sits outside the wrapper and vanishes at a line break as well.
+\end{command}
+
 \begin{command}{xlstSetInputDefaults}{\{<keys>\}}
     Default keys for the \T{\textbackslash i<lang>} and \T{\textbackslash xlsti} commands; \T{\textbackslash xlstRemoveInputBackground} removes frame and background of included files.
 \end{command}
