@@ -3,13 +3,13 @@
    \toprule
    \textbf{Case} & \textbf{Strings} & \textbf{Tokens} & \textbf{Plain} & \textbf{Linked} & \textbf{Extra} & \textbf{Register} & \textbf{Assemble} & \textbf{Overhead} & \textbf{Run} \\
    \midrule
-   no strings & 0 & 500 & \qty{7.2}{\milli\second} & \qty{7.4}{\milli\second} & \qty{0.2}{\milli\second} & \qty{0.0}{\milli\second} & \qty{0.0}{\milli\second} & \qty{0.2}{\milli\second} (\qty{0}{\percent}) & \qty{292.3}{\milli\second} \\
-   10 words & 10 & 500 & \qty{6.9}{\milli\second} & \qty{12.3}{\milli\second} & \qty{5.4}{\milli\second} & \qty{1.2}{\milli\second} & \qty{0.5}{\milli\second} & \qty{7.0}{\milli\second} (\qty{2}{\percent}) & \qty{327.8}{\milli\second} \\
-   100 words & 100 & 500 & \qty{6.7}{\milli\second} & \qty{15.3}{\milli\second} & \qty{8.6}{\milli\second} & \qty{8.9}{\milli\second} & \qty{5.3}{\milli\second} & \qty{22.9}{\milli\second} (\qty{7}{\percent}) & \qty{345.0}{\milli\second} \\
-   1000 words & 1000 & 500 & \qty{6.1}{\milli\second} & \qty{14.4}{\milli\second} & \qty{8.3}{\milli\second} & \qty{88.4}{\milli\second} & \qty{45.1}{\milli\second} & \qty{141.8}{\milli\second} (\qty{19}{\percent}) & \qty{742.9}{\milli\second} \\
-   1000 words, long listing & 1000 & 2500 & \qty{24.2}{\milli\second} & \qty{58.7}{\milli\second} & \qty{34.6}{\milli\second} & \qty{89.8}{\milli\second} & \qty{49.5}{\milli\second} & \qty{173.9}{\milli\second} (\qty{18}{\percent}) & \qty{948.6}{\milli\second} \\
-   10 commands & 10 & 500 & \qty{14.8}{\milli\second} & \qty{28.6}{\milli\second} & \qty{13.8}{\milli\second} & \qty{2.4}{\milli\second} & \qty{0.8}{\milli\second} & \qty{17.1}{\milli\second} (\qty{4}{\percent}) & \qty{463.0}{\milli\second} \\
-   100 commands & 100 & 500 & \qty{9.0}{\milli\second} & \qty{18.7}{\milli\second} & \qty{9.7}{\milli\second} & \qty{10.8}{\milli\second} & \qty{4.7}{\milli\second} & \qty{25.2}{\milli\second} (\qty{7}{\percent}) & \qty{335.8}{\milli\second} \\
-   1000 commands & 1000 & 500 & \qty{8.8}{\milli\second} & \qty{23.1}{\milli\second} & \qty{14.3}{\milli\second} & \qty{104.6}{\milli\second} & \qty{50.7}{\milli\second} & \qty{169.6}{\milli\second} (\qty{21}{\percent}) & \qty{819.2}{\milli\second} \\
+   no strings & 0 & 500 & \qty{11.3}{\milli\second} & \qty{11.3}{\milli\second} & \qty{0.0}{\milli\second} & \qty{0.0}{\milli\second} & \qty{0.0}{\milli\second} & \qty{0.0}{\milli\second} (\qty{0}{\percent}) & \qty{302.3}{\milli\second} \\
+   10 words & 10 & 500 & \qty{11.3}{\milli\second} & \qty{20.9}{\milli\second} & \qty{9.6}{\milli\second} & \qty{2.4}{\milli\second} & \qty{0.7}{\milli\second} & \qty{12.7}{\milli\second} (\qty{4}{\percent}) & \qty{344.5}{\milli\second} \\
+   100 words & 100 & 500 & \qty{11.2}{\milli\second} & \qty{21.1}{\milli\second} & \qty{9.9}{\milli\second} & \qty{20.4}{\milli\second} & \qty{6.3}{\milli\second} & \qty{36.6}{\milli\second} (\qty{10}{\percent}) & \qty{381.9}{\milli\second} \\
+   1000 words & 1000 & 500 & \qty{11.4}{\milli\second} & \qty{26.2}{\milli\second} & \qty{14.7}{\milli\second} & \qty{212.9}{\milli\second} & \qty{63.5}{\milli\second} & \qty{291.1}{\milli\second} (\qty{27}{\percent}) & \qty{1072.9}{\milli\second} \\
+   1000 words, long listing & 1000 & 2500 & \qty{46.5}{\milli\second} & \qty{96.6}{\milli\second} & \qty{50.0}{\milli\second} & \qty{197.1}{\milli\second} & \qty{62.1}{\milli\second} & \qty{309.3}{\milli\second} (\qty{23}{\percent}) & \qty{1324.7}{\milli\second} \\
+   10 commands & 10 & 500 & \qty{15.2}{\milli\second} & \qty{30.1}{\milli\second} & \qty{14.8}{\milli\second} & \qty{2.8}{\milli\second} & \qty{0.7}{\milli\second} & \qty{18.3}{\milli\second} (\qty{5}{\percent}) & \qty{380.8}{\milli\second} \\
+   100 commands & 100 & 500 & \qty{15.2}{\milli\second} & \qty{31.0}{\milli\second} & \qty{15.8}{\milli\second} & \qty{24.9}{\milli\second} & \qty{6.5}{\milli\second} & \qty{47.3}{\milli\second} (\qty{11}{\percent}) & \qty{428.0}{\milli\second} \\
+   1000 commands & 1000 & 500 & \qty{15.2}{\milli\second} & \qty{34.9}{\milli\second} & \qty{19.7}{\milli\second} & \qty{241.5}{\milli\second} & \qty{64.0}{\milli\second} & \qty{325.2}{\milli\second} (\qty{28}{\percent}) & \qty{1171.9}{\milli\second} \\
    \bottomrule
 \end{tabular}
