@@ -283,6 +283,15 @@
 
 \def\xlst@nc{\ifxlst@lst@lastwas@charkeep@\else\xlst@lst@lastwas@character@false\fi}
 
+% A digit that follows a letter belongs to the identifier (as in paste0), so it is
+% appended to the current token instead of ending it. Otherwise, the identifier
+% would be output without the digit, and keywords or links would not match it.
+\newif\ifxlst@lst@inword@
+% #1 the matched text, #2 its length
+\def\xlst@lst@ifinword#1#2{\xlst@lst@inword@false
+  \ifxlst@lst@lastwas@character@\ifnum#2=\@ne
+    \in@{#1}{0123456789}\ifin@\xlst@lst@inword@true\fi
+  \fi\fi}
 % modify lst-literate routine to apply to the mechanism
 \def\lst@Literate#1#2#3{%
 \ifx\relax#2\@empty\else
@@ -292,10 +301,15 @@
   \lst@ifmode\let\lst@next\lst@CArgEmpty\fi
   \fi\ifx\lst@next\@empty
     \ifx\lst@OutputBox\@gobble\else
+    \xlst@lst@ifinword{#1}{#3}%
+    \ifxlst@lst@inword@
+    \lst@Append{#1}%
+    \else
     \lst@XPrintToken \let\lst@scanmode\lst@scan@m
     \lst@token{#2}\lst@length#3\relax
     \lst@XPrintToken
     \lst@whitespacefalse\xlst@nc
+    \fi
     \fi
     \let\lst@next\lst@CArgEmptyGobble
   \fi\lst@next}%

@@ -19,6 +19,9 @@
 \TestInline{identifier}{kwB,num,}{\bjava{int x1 = 2;}}
 \TestInline{identifier-only}{kwB,}{\bjava{int data1 = fun2(a);}}
 \TestInline{identifier-hex}{kwB,num,}{\bjava{int x0xFF = 1;}}
+% a digit after a letter stays in the identifier, for keywords and links alike
+\TestInline{identifier-keyword}{kwA,num,}{\bjava[morekeywords={int32}]{int32 x = 2;}}
+\TestInline{identifier-no-prefix}{num,}{\bjava{int1 = 2;}}
 
 \TestInline{hex}{kwB,npx,num,num,}{\bjava{int i = 0x1A;}}
 \TestInline{hex-upper}{kwB,npx,num,num,}{\bjava{int i = 0X1a;}}
