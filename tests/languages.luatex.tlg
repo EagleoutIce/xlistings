@@ -26,9 +26,10 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 [PASS] json
 [PASS] xml
 [PASS] latex
-[PASS] markdown-heading
+[PASS] latex-hyphen-command
 [1
 ]
+[PASS] markdown-heading
 [PASS] regex
 [PASS] rubberduck
 [PASS] sirl
@@ -171,10 +172,10 @@ Overfull \hbox (111.2321pt too wide) in paragraph at lines ...
 [PASS] suffix-typescript
 [PASS] suffix-R
 [PASS] suffix-prose
-[PASS] exponent-everywhere
 [2]
+[PASS] exponent-everywhere
 [PASS] yaml-key-dash
 [PASS] markdown-inline
 [PASS] javascript-template
-===== xlistings tests: 37 passed, 0 failed =====
+===== xlistings tests: 38 passed, 0 failed =====
 [3]

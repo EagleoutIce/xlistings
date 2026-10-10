@@ -28,6 +28,30 @@
 \CodeLinkGroup{lit}{prefix=lit:,language=xlstdoclit}
 % the minted environment is defined by xlistings: it links to fakeminted
 \CodeLinkRegister[group=opt,label=opt:fakeminted]{minted}
+% variants without an entry of their own link to their sibling
+\CodeLinkRegister[group=cmd,command,label=cmd:xlstc]{xlstb}
+\CodeLinkRegister[group=cmd,command,label=cmd:xlstc]{xlsti}
+\CodeLinkRegister[group=cmd,command,label=cmd:xlstGetStyle]{xlstGet}
+% the placeholders \c<lang>, \b<lang>, \i<lang> of the inline commands
+\CodeLinkRegister[group=cmd,command,label=use:inline]{c}
+\CodeLinkRegister[group=cmd,command,label=use:inline]{b}
+\CodeLinkRegister[group=cmd,command,label=use:input]{i}
+\CodeLinkRegister[group=cmd,command,label=cmd:LoadLanguages]{LoadLanguage}
+\CodeLinkRegister[group=cmd,command,label=cmd:xlstLanguageSearchPath]{xlstLanguageFilePrefix}
+\CodeLinkRegister[group=cmd,command,label=cmd:xlstDefineStyles]{xlstSetStyle}
+\CodeLinkRegister[group=cmd,command,label=cmd:xlstGetStyle]{xlstStyles}
+\CodeLinkRegister[group=cmd,command,label=cmd:xlstSetLeftMargin]{xlstSetRightMargin}
+\CodeLinkRegister[group=cmd,command,label=cmd:xlstSetLeftMargin]{xlstSetNumSep}
+\CodeLinkRegister[group=cmd,command,label=cmd:xlstSetLeftMargin]{xlstSetFrameRule}
+\CodeLinkRegister[group=cmd,command,label=cmd:lstfs]{xlstNumFs}
+\CodeLinkRegister[group=cmd,command,label=cmd:xlstPreBreak]{xlstInlinePreBreak}
+\CodeLinkRegister[group=cmd,command,label=cmd:xlstSetInputDefaults]{xlstRemoveInputBackground}
+\CodeLinkRegister[group=cmd,command,label=cmd:xlstblacklistlinenumbers]{xlstblacklistisghost}
+\CodeLinkRegister[group=cmd,command,label=cmd:xlstblacklistlinenumbers]{xlstblacklistispresent}
+\CodeLinkRegister[group=cmd,command,label=cmd:xlstdisablenumhl]{xlstenablenumhl}
+\CodeLinkRegister[group=cmd,command,label=cmd:xlstmintedwithlangbadge]{xlstmintedwithoutlangbadge}
+\CodeLinkRegister[group=cmd,command,label=cmd:xlstmintedwithlangbadge]{BadgeNextListing}
+\CodeLinkRegister[group=cmd,command,label=cmd:xlstmintedwithlangbadge]{xlstlangbadgestyle}
 \newcommand\litref[1]{\CodeLinkRef[group=lit]{#1}}
 % the commands and environments every language gets link to their description in the usage section
 \makeatletter
@@ -48,13 +72,15 @@
 \setkomafont{subtitle}{\normalfont\small}
 \DeclareTOCStyleEntry[beforeskip=1pt,indent=0pt,numwidth=1.4em]{tocline}{section}
 
-\xlstlangoverride{latex}{morekeywords=[5]{\\xlstsetstyle,\\xlstlangoverride,\\LoadLanguages,\\xlstblacklistlinenumbers,\\lstcolorlet,\\xlstDefineStyles,\\xlstlangbadgestyle,\\BadgeNextListing,\\xlstmintedwithlangbadge,\\xlstmintedwithoutlangbadge}}
+\xlstlangoverride{latex}{morekeywords=[5]{\\xlstsetstyle,\\xlstlangoverride,\\LoadLanguages,\\xlstblacklistlinenumbers,\\lstcolorlet,\\xlstDefineStyles,\\xlstlangbadgestyle,\\BadgeNextListing,\\xlstmintedwithlangbadge,\\xlstmintedwithoutlangbadge,\\sisetup,\\xlsthlwarning,\\xlsthlerror,\\xlsthlinfo,\\xlsthlbox,\\xlsthlboxd}}
 
 \let\T\texttt
 \emergencystretch=3em
 \newcommand\enquote[1]{\textquotedblleft#1\textquotedblright}
 \def\argref#1#2{\CodeLinkRef[group=opt]{#1}}
 \def\cmdref#1{\CodeLinkRef[group=cmd,command]{#1}}
+% \c<lang> and friends: listings cannot link a command followed by <
+\newcommand\langcmd[2]{\cmdref{#1}\T{<lang>#2}}
 
 \title{\T{xlistings}}
 \subtitle{\url{https://github.com/EagleoutIce/xlistings}}
@@ -76,7 +102,7 @@
 
 \section{Introduction}
 
-\noindent\textit{The links in this manual are made with \T{code-link} (\cref{sec:code-link}).}
+\noindent\textit{The links in this manual are made with \T{code-link} (see \cref{sec:code-link}).}
 
 This package extends the \href{https://ctan.org/pkg/listings}{listings} package with an easier front-end for code blocks of selected languages, number and segment highlighting, and non-selectable line numbers.\footnote{Whether a number is selectable depends on the viewer; images would be needed to prevent it.} It is not compatible with the \href{https://ctan.org/pkg/minted}{minted} package, but provides a replacement for its interface. Compared to \T{listings}, it adds:
 
@@ -93,11 +119,11 @@ System.out.println("Hello, World!");
     \item Highlighting of code segments, also across lines, with delimiters such as \T{|warn|}, \T{|err|}, and \T{|info|}: \bjava{|warn|int x = 0;|warn|}
     \item Support for umlauts and UTF-8 encoding (with the \href{https://ctan.org/pkg/listingsutf8}{listingsutf8} package)
     \item Provides \T{autogobble} to remove leading spaces (with the \href{https://ctan.org/pkg/lstautogobble}{lstautogobble} package)
-    \item Comfort key \blatex{add to literate} to add elements to the literate list
+    \item Comfort key \argref{add to literate}{add to literate} to add elements to the literate list
     \item \blatex{\\LoadLanguages\{<lang>\}} to load a language or multiple languages on demand
     \item Opinionated language overwrites (see the \T{langs/} folder)
     \item Opinionated default literates such as \litref{:ldots:}~(\bjava{:ldots:}), \litref{:lan:}~(\bjava{:lan:}), and \litref{:to:}~(\bjava{:to:}), see \cref{sec:literates}
-    \item \blatex{\\BadgeNextListing\{<lang>\}} to show a language tag at the start of the next listing (paragraph). \blatex{\\xlstmintedwithlangbadge} and \blatex{\\xlstmintedwithoutlangbadge} switch it on and off for all \argref{fakeminted}{fakeminted} environments.\footnote{Redefine \T{\textbackslash xlstlangbadgestyle} to restyle the badges; \T{accsupp} keeps them unselectable.}
+    \item \blatex{\\BadgeNextListing\{<lang>\}} to show a language tag at the start of the next listing (paragraph). \blatex{\\xlstmintedwithlangbadge} and \blatex{\\xlstmintedwithoutlangbadge} switch it on and off for all \argref{fakeminted}{fakeminted} environments.\footnote{Redefine \cmdref{xlstlangbadgestyle} to restyle the badges; \T{accsupp} keeps them unselectable.}
 \end{itemize}
 
 \xlstmintedwithlangbadge
@@ -151,6 +177,7 @@ All of these packages are part of common \LaTeX{} distributions.
 \newcommand\lit[2]{\CodeLinkAnchor[group=lit]{#1}\T{#2}\index{#1@{\ttfamily\protect\xlstGetStyle{numbers}#2}\space(literate)|hyperpage}}
 \newcommand\lits[1]{\lit{#1}{#1}}
 \newenvironment{argument}[2][]{\medskip\par\noindent\CodeLinkAnchor[group=opt]{#2}\T{\xlstGetStyle{keywordA}#2}\hfill\graytext{\small\textit{#1package option}}\index{#2@{\ttfamily\protect\xlstGetStyle{keywordA}#2}\space(option)|hyperpage}\\*\noindent\ignorespaces}{}
+\newenvironment{lstkey}[1]{\medskip\par\noindent\CodeLinkAnchor[group=opt]{#1}\T{\xlstGetStyle{keywordA}#1}\hfill\graytext{\small\textit{listings key}}\index{#1@{\ttfamily\protect\xlstGetStyle{keywordA}#1}\space(listings key)|hyperpage}\\*\noindent\ignorespaces}{}
 
 
 \newenvironment{command}[2]{\medskip\par\noindent\CodeLinkAnchor[group=cmd,command]{#1}\index{#1@{\ttfamily\protect\xlstGetStyle{command}\textbackslash#1}|hyperpage}\T{\xlstGetStyle{command}\textbackslash#1}\,\graytext{\T{#2}}\\*\noindent\ignorespaces}{}
@@ -215,7 +242,7 @@ All of these packages are part of common \LaTeX{} distributions.
     highlighted number, so \bjava{data1} and \bjava{x0xFF} stay untouched.
 
     Which letters may end a number depends on the language and is configured
-    with the listings key \T{number suffixes}, which defaults to \T{eE}:
+    with the listings key \argref{number suffixes}{number suffixes}, which defaults to \T{eE}:
     \T{10L} is a long in Java, \T{3j} a complex number in Python, \T{10n} a
     BigInt in TypeScript, and in prose \T{3d} is a \enquote{d} behind a
     three. A language switches the letters off completely with
@@ -245,17 +272,15 @@ This uses the opinionated language definitions in the \T{langs/} folder and prov
 ...
 \end{java}
 \end{minted}
-    \item\phantomsection\label{use:inline} As \blatex{\\c<lang>\{<code>\}} and \blatex{\\b<lang>\{<code>\}} commands, e.g., \clatex{\\cjava\{int i\}} and \blatex{\\bjava\{int i\}}.
-    \item\phantomsection\label{use:input} As \blatex{\\i<lang>\{<file>\}} command to include a file.
+    \item\phantomsection\label{use:inline} As \langcmd{c}{\{<code>\}} and \langcmd{b}{\{<code>\}} commands, e.g., \clatex{\\cjava\{int i\}} and \blatex{\\bjava\{int i\}}.
+    \item\phantomsection\label{use:input} As \langcmd{i}{\{<file>\}} command to include a file.
     \item As \blatex{\\xlstc\{<lang>\}\{<code>\}}, \blatex{\\xlstb\{<lang>\}\{<code>\}},
       and \blatex{\\xlsti\{<lang>\}\{<file>\}}, which take the language as an
-      argument. This is the only way to reach a language whose name cannot be
-      part of a command name, as \blatex{\\bx86\{<code>\}} would be read as
-      \blatex{\\bx} followed by \enquote{86}.
+      argument. This is useful to reach languages such as \T{x86} which contain numbers. 
     \item As \blatex{\\begin\{minted\}\{<lang>\}} environment.
 \end{itemize}
 
-All inline commands (\blatex{\\c<lang>}, \blatex{\\b<lang>}, \blatex{\\i<lang>}) have an advantage in that they can be used as arguments to other macros, \textit{but} you have to escape things like backslashes or curly braces with an additional backslash.
+All inline commands (\langcmd{c}{}, \langcmd{b}{}, \langcmd{i}{}) have an advantage in that they can be used as arguments to other macros, \textit{but} you have to escape things like backslashes or curly braces with an additional backslash.
 
 If you want to register special keywords or any other configuration for an existing, and loaded, language, you can use \cmdref{xlstlangoverride}:
 
@@ -275,7 +300,28 @@ As you can see, the sample above skips a given line number, which we achieve by 
 The effects of all of these commands are local, so you can use them in a group (e.g., with \blatex{\\begingroup} and \blatex{\\endgroup} or an opening and closing brace) to limit their effect.
 
 Additionally, if you look at the source of this documentation, the source of the example above is actually indented. We remove the leading spaces with the new \T{autogobble} option (provided by the \href{https://ctan.org/pkg/lstautogobble}{lstautogobble} package).
-If you want to add new literates for whatever reason, you can use the new listings key \T{add to literate}:
+
+In the \T{latex} language, a hyphen is part of a word, so \T{round-precision} can be a keyword.
+A command right after a hyphen is still highlighted on its own (\argref{xlstcsbreak}{xlstcsbreak}):
+
+\begin{minted}{latex}
+\xlstlangoverride{latex}{morekeywords=[3]{round-precision}}
+\end{minted}
+
+\begingroup
+\xlstlangoverride{latex}{morekeywords=[3]{round-precision}}
+\begin{minted}{latex}
+\sisetup{round-precision=2}\vspace{-\baselineskip}
+\end{minted}
+\endgroup
+
+The keys \blatex{alsoletter} and \blatex{alsoother} replace the characters of the language instead of adding to them, so repeat them when you change them. For \T{latex}, these are:
+
+\begin{minted}{latex}
+alsoletter={\\\#@*-}, alsoother={!,"_^}
+\end{minted}
+
+If you want to add new literates for whatever reason, you can use the new listings key \argref{add to literate}{add to literate}:
 
 \begin{minted}{latex}
 \lstset{
@@ -310,7 +356,7 @@ If you want to have complete control over the styling, you may use \cmdref{xlstD
 
 \begin{minted}{latex}
 \xlstDefineStyles{%
-    {comments: \color{green}\scshape},%
+    {comments: \color{green}\bfseries},%
 }
 \end{minted}
 
@@ -389,7 +435,7 @@ The following literates belong to a single language:
 \end{tabular}
 \end{center}
 
-Further ones can be added with \T{add to literate}, as shown in \cref{sec:usage}.
+Further ones can be added with \argref{add to literate}{add to literate}, as shown in \cref{sec:usage}.
 
 \section{Writing a Language}\label{sec:writing-language}
 
@@ -417,7 +463,7 @@ Keep the following in mind when you write such a file:
           \cmdref{xlstlangoverride}.
     \item Use only the public macros of this package. Language files are read
           when \T{@} is not a letter, so \T{\textbackslash xlst@\ldots} macros
-          are not available; \T{\textbackslash xlstGet} and \cmdref{xlstGetStyle} are.
+          are not available; \cmdref{xlstGet} and \cmdref{xlstGetStyle} are.
     \item All languages share one column model (\blatex{columns=flexible}),
           set by the listing style. Override it only if the language
           needs something else.
@@ -448,11 +494,11 @@ Commands that contain an \T{@} in their name are internal and not part of the in
 \subsection*{Loading and registering languages}
 
 \begin{command}{LoadLanguages}{\{<lang>,\ldots\}}
-    Loads the definitions of the given, comma-separated languages (\T{\textbackslash LoadLanguage} is an alias). For each language, the file \T{xlistings-<lang>.cfg} is searched first in the current directory and then in \T{\textbackslash xlstLanguageSearchPath}; the unprefixed \T{<lang>.cfg} is accepted as a fallback, so private definitions keep working. A language is loaded at most once, so definitions may require each other. If no definition is found, a warning is issued.
+    Loads the definitions of the given, comma-separated languages (\cmdref{LoadLanguage} is an alias). For each language, the file \T{xlistings-<lang>.cfg} is searched first in the current directory and then in \cmdref{xlstLanguageSearchPath}; the unprefixed \T{<lang>.cfg} is accepted as a fallback, so private definitions keep working. A language is loaded at most once, so definitions may require each other. If no definition is found, a warning is issued.
 \end{command}
 
 \begin{command}{xlstLanguageSearchPath}{}
-    Comma-separated list of directories searched by \cmdref{LoadLanguages}; it defaults to \T{\{langs/\}}. The file name prefix (default \T{xlistings-}) is stored in \T{\textbackslash xlstLanguageFilePrefix}.
+    Comma-separated list of directories searched by \cmdref{LoadLanguages}; it defaults to \T{\{langs/\}}. The file name prefix (default \T{xlistings-}) is stored in \cmdref{xlstLanguageFilePrefix}.
 \end{command}
 
 \begin{command}{RegisterLanguage}{[<aliases>]\{<name>\}\{<lst-language>\}}
@@ -478,21 +524,21 @@ Commands that contain an \T{@} in their name are internal and not part of the in
 \end{command}
 
 \begin{command}{xlstDefineStyles}{\{\{<class>: <code>\},\ldots\}}
-    Redefines the formatting of the given classes (\T{basic}, \T{keywordA}--\T{keywordD}, \T{numbers}, \T{linenumbers}, \T{literals}, \T{comments}, \T{highlight}, \ldots). \T{\textbackslash xlstSetStyle\{<class>\}\{<code>\}} redefines a single one.
+    Redefines the formatting of the given classes (\T{basic}, \T{keywordA}--\T{keywordD}, \T{numbers}, \T{linenumbers}, \T{literals}, \T{comments}, \T{highlight}, \ldots). \cmdref{xlstSetStyle}\T{\{<class>\}\{<code>\}} redefines a single one.
 \end{command}
 
 \begin{command}{xlstGetStyle}{\{<class>\}}
-    Switches to the formatting of a class; \T{\textbackslash xlstGet\{<class>\}\{<text>\}} typesets \T{<text>} in it within a group. \T{\textbackslash xlstStyles} shows all styles at once.
+    Switches to the formatting of a class; \cmdref{xlstGet}\T{\{<class>\}\{<text>\}} typesets \T{<text>} in it within a group. \cmdref{xlstStyles} shows all styles at once.
 \end{command}
 
 \subsection*{Layout}
 
 \begin{command}{xlstSetLeftMargin}{\{<length>\}}
-    Sets the left margin of listings. \T{\textbackslash xlstSetRightMargin}, \T{\textbackslash xlstSetNumSep} (distance of the line numbers), and \T{\textbackslash xlstSetFrameRule} (frame width) work alike.
+    Sets the left margin of listings. \cmdref{xlstSetRightMargin}, \cmdref{xlstSetNumSep} (distance of the line numbers), and \cmdref{xlstSetFrameRule} (frame width) work alike.
 \end{command}
 
 \begin{command}{lstfs}{[*][<linespread>]\{<size>\}}
-    Sets the font size (in pt) and line spread of listings; the starred form takes the size of the surrounding text. \T{\textbackslash xlstNumFs\{<size command>\}} sets the font size of line numbers only.
+    Sets the font size (in pt) and line spread of listings; the starred form takes the size of the surrounding text. \cmdref{xlstNumFs}\T{\{<size command>\}} sets the font size of line numbers only.
 \end{command}
 
 \begin{command}{xlstguard}{\{<lines>\}}
@@ -500,7 +546,7 @@ Commands that contain an \T{@} in their name are internal and not part of the in
 \end{command}
 
 \begin{command}{xlstPreBreak}{\{<code>\}}
-    Material shown at the end of a line that was broken in a listing; \T{\textbackslash xlstInlinePreBreak} does the same for inline code.
+    Material shown at the end of a line that was broken in a listing; \cmdref{xlstInlinePreBreak} does the same for inline code.
 \end{command}
 
 \begin{command}{xlstInlineKeys}{\{<keys>\}}
@@ -512,18 +558,36 @@ Commands that contain an \T{@} in their name are internal and not part of the in
 \end{command}
 
 \begin{command}{xlstSetInputDefaults}{\{<keys>\}}
-    Default keys for the \T{\textbackslash i<lang>} and \T{\textbackslash xlsti} commands; \T{\textbackslash xlstRemoveInputBackground} removes frame and background of included files.
+    Default keys for the \langcmd{i}{} and \cmdref{xlsti} commands; \cmdref{xlstRemoveInputBackground} removes frame and background of included files.
 \end{command}
 
 \subsection*{Line numbers and numbers}
 
 \begin{command}{xlstblacklistlinenumbers}{[*]\{<numbers>\}}
-    Hides the given, comma-separated line numbers. By default (\T{\textbackslash xlstblacklistisghost}), hidden lines do not count, so later numbers close the gap. With the starred form, or after \T{\textbackslash xlstblacklistispresent}, later lines keep their number.
+    Hides the given, comma-separated line numbers. By default (\cmdref{xlstblacklistisghost}), hidden lines do not count, so later numbers close the gap. With the starred form, or after \cmdref{xlstblacklistispresent}, later lines keep their number.
 \end{command}
 
 \begin{command}{xlstdisablenumhl}{}
-    Turns the highlighting of numbers off, \T{\textbackslash xlstenablenumhl} turns it back on (see \argref{hlnumbers}{hlnumbers}).
+    Turns the highlighting of numbers off, \cmdref{xlstenablenumhl} turns it back on (see \argref{hlnumbers}{hlnumbers}).
 \end{command}
+
+\subsection*{Listings keys}
+
+\begin{lstkey}{add to literate}
+    Appends to the \T{literate} list instead of replacing it, as shown in \cref{sec:usage}.
+\end{lstkey}
+
+\begin{lstkey}{number suffixes}
+    Letters that may follow a number and still belong to it (default \T{eE}), if \argref{extendednums}{extendednums} is active.
+\end{lstkey}
+
+\begin{lstkey}{language addons}
+    Applies the keys given to \cmdref{xlstlangoverride} for the language. The environments and inline commands set it for you.
+\end{lstkey}
+
+\begin{lstkey}{xlstcsbreak}
+    Starts a new word at each backslash (except within \T{\textbackslash\textbackslash}), so \T{-\textbackslash baselineskip} highlights the command although the hyphen is a letter. Set by the \T{latex} language.
+\end{lstkey}
 
 \subsection*{Code environments for \T{minted}}
 
@@ -536,12 +600,12 @@ Commands that contain an \T{@} in their name are internal and not part of the in
 \end{command}
 
 \begin{command}{xlstmintedwithlangbadge}{}
-    Shows a language badge in all \T{minted} environments. \T{\textbackslash xlstmintedwithoutlangbadge} turns it off again.
-    With \argref{fakeminted}{fakeminted}, \T{\textbackslash BadgeNextListing\{<lang>\}} adds a badge to the next listing only, and \T{\textbackslash xlstlangbadgestyle\{<lang>\}} is the macro that styles it.
+    Shows a language badge in all \T{minted} environments. \cmdref{xlstmintedwithoutlangbadge} turns it off again.
+    With \argref{fakeminted}{fakeminted}, \cmdref{BadgeNextListing}\T{\{<lang>\}} adds a badge to the next listing only, and \cmdref{xlstlangbadgestyle}\T{\{<lang>\}} is the macro that styles it.
 \end{command}
 
 \begin{command}{xlstc}{[<keys>]\{<lang>\}\{<code>\}}
-    The language-generic form of \T{\textbackslash c<lang>}; \T{\textbackslash xlstb} and \T{\textbackslash xlsti} are the forms of \T{\textbackslash b<lang>} and \T{\textbackslash i<lang>}.
+    The language-generic form of \langcmd{c}{}; \cmdref{xlstb} and \cmdref{xlsti} are the forms of \langcmd{b}{} and \langcmd{i}{}.
 \end{command}
 
 \section{Origin}

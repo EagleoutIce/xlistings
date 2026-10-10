@@ -31,6 +31,7 @@
 \TestInline{xml}{kwA,cmt,cmt,cmt,cmt,cmt,kwA,kwA,lit,lit,lit,kwA,kwA,}
   {\bxml{<!-- c --><a b="1"/>}}
 \TestInline{latex}{cmd,cmt,cmt,cmt,}{\blatex{\\section\{a\} \% c}}
+\TestInline{latex-hyphen-command}{cmd,cmd,}{\blatex{\\vspace\{-\\baselineskip\}}}
 \TestInline{markdown-heading}{num,num,num,}{\bmarkdown{\# Title}}
 \TestInline{regex}{kwA,kwB,kwB,kwB,lit,lit,lit,lit,lit,kwA,}{\bregex{^a+b*c?[d-e]\\.\$}}
 \TestInline{rubberduck}{kwB,kwA,kwB,cmt,cmt,cmt,}{\brubberduck{Duck d = new Duck(); \# c}}

@@ -1,0 +1,32 @@
+% Word boundaries of the LaTeX language: every word listings outputs is
+% recorded as [<word>] (a backslash spelled as <bs>), between the styles.
+\input{regression-test}
+\documentclass{article}
+\usepackage{xlistings}
+\LoadLanguages{latex}
+\usepackage{xlisttest}
+\makeatletter
+\def\xlsttest@um#1{\if\@backslashchar\noexpand#1<bs>\else#1\fi}
+\lst@AddToHook{Output}{\begingroup\let\lst@UM\xlsttest@um
+  \edef\xlsttest@word{\the\lst@token}\xdef\xlsttest@word{\xlsttest@word}\endgroup
+  \edef\xlsttest@word{[\detokenize\expandafter{\xlsttest@word}]}%
+  \expandafter\TestRecord\expandafter{\xlsttest@word}}
+\makeatother
+\begin{document}
+\WarmUp{\blatex{x}}
+\START
+\section*{LaTeX words}
+
+\TestInline{hyphen-joins}{[<bs>sisetup],[round-precision],num,}
+  {\blatex{\\sisetup\{round-precision=2\}}}
+\TestInline{comma-splits}{[<bs>usepackage],cmd,[amsmath],[siunitx],}
+  {\blatex{\\usepackage\{amsmath,siunitx\}}}
+\TestInline{hyphen-before-command}{[<bs>vspace],cmd,[-],[<bs>baselineskip],cmd,}
+  {\blatex{\\vspace\{-\\baselineskip\}}}
+\TestInline{word-before-command}{[a],[<bs><bs>b],}{\blatex{a\\\\b}}
+\TestInline{double-backslash}{[<bs><bs>],cmd,}{\blatex{\\\\}}
+\TestInline{star-joins}{[<bs>begin],cmd,[align*],kwC,}{\blatex{\\begin\{align*\}}}
+\TestInline{hyphen-in-label}{[<bs>label],cmd,[sec],[a-b],}{\blatex{\\label\{sec:a-b\}}}
+
+\END
+\end{document}
