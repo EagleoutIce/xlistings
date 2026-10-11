@@ -405,7 +405,18 @@
   \let\xlst@inline@lead\relax\let\xlst@inline@lead@prepare\relax#1}}
 % #1 keys, #2 code; appends the keys of \xlstInlineKeys
 \def\xlst@inline@lstinline#1#2{\expandafter\xlst@inline@lstinline@\expandafter{\xlst@inline@keys}{#1}{#2}}
-\def\xlst@inline@lstinline@#1#2#3{\lstinline[#2,#1]`#3`}
+% the delimiter of \lstinline is the first of these characters that the code
+% does not contain, so a backtick (R's `names<-`) does not end the code early
+\def\xlst@inline@lstinline@#1#2#3{\edef\xlst@inline@src{\detokenize{#3}}%
+  \xlst@inline@delim`|!"\@nil%
+  \begingroup\edef\x{\endgroup\noexpand\lstinline[\unexpanded{#2,#1}]%
+    \xlst@inline@d\unexpanded{#3}\xlst@inline@d}\x}
+\def\xlst@inline@delim#1{\ifx\@nil#1\let\xlst@inline@d\xlst@inline@d@last\else
+  \edef\xlst@inline@d{\string#1}\edef\xlst@inline@tmp{\noexpand\in@{\xlst@inline@d}{\xlst@inline@src}}%
+  \xlst@inline@tmp\ifin@\expandafter\expandafter\expandafter\xlst@inline@delim
+  \else\expandafter\expandafter\expandafter\xlst@inline@delim@stop\fi\fi}
+\def\xlst@inline@delim@stop#1\@nil{}
+\edef\xlst@inline@d@last{\string`}
 \newcommand*\xlst@dlst@default[2][]{%
 \begingroup\xlst@inline@lead@prepare\fboxsep=\z@\fcolorbox{xlst@colors@border}{xlst@colors@background}{%
   \if@xlst@inlinesize\@lst@within@inline@true\fi\xlst@inline@lead\strut\xlst@inline@lstinline{prebreak=\xlst@lst@inline@prebreak,#1,keepspaces=true,breakatwhitespace}{#2}\thinspace
