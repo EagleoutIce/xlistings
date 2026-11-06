@@ -65,6 +65,68 @@ int c;
 \gdef\xlsttest@trace{}
 \ifdim\dimen@=\z@\TestRecord{three-lines}\else\TestRecord{lines-lost}\fi
 \xlsttest@check{hl-multiline}{three-lines,}
+\def\xlsttest@hlwidth#1{\begingroup
+  \def\endxlst@listings@underline@env{\end{lrbox}\xdef#1{\the\wd\xlst@hl@box}\endgroup}}
+\def\xlsttest@samewd#1#2{\ifdim#1=#2\TestRecord{same-width}\else\TestRecord{indent-inside}\fi}
+\setbox\xlsttest@box\vbox{\hsize=\linewidth\xlsttest@hlwidth\xlsttest@plainwd\begin{ts*}
+|info|this.x();|info|
+\end{ts*}\endgroup}
+\setbox\xlsttest@box\vbox{\hsize=\linewidth\xlsttest@hlwidth\xlsttest@indentwd\begin{ts*}
+a();
+		|info|this.x();|info|
+\end{ts*}\endgroup}
+\setbox\xlsttest@box\vbox{\hsize=\linewidth\xlsttest@hlwidth\xlsttest@contwd\begin{ts*}
+|info|a();
+		this.x();|info|
+\end{ts*}\endgroup}
+\setbox\xlsttest@box\vbox{\hsize=\linewidth\xlsttest@hlwidth\xlsttest@midwd\begin{ts*}
+a();   |info|this.x();|info|
+\end{ts*}\endgroup}
+\setbox\xlsttest@box\vbox{\hsize=\linewidth\xlsttest@hlwidth\xlsttest@plainwarnwd\begin{ts*}
+|warn|x|warn|
+\end{ts*}\endgroup}
+\setbox\xlsttest@box\vbox{\hsize=\linewidth\xlsttest@hlwidth\xlsttest@warnwd\begin{ts*}
+a();
+    |warn|x|warn|
+\end{ts*}\endgroup}
+\setbox\xlsttest@box\vbox{\hsize=\linewidth\xlsttest@hlwidth\xlsttest@plainerrwd\begin{ts*}
+|err|: x
+\end{ts*}\endgroup}
+\setbox\xlsttest@box\vbox{\hsize=\linewidth\xlsttest@hlwidth\xlsttest@errwd\begin{ts*}
+a();
+    |err|: x
+\end{ts*}\endgroup}
+\setbox\xlsttest@box\vbox{\hsize=\linewidth\xlsttest@hlwidth\xlsttest@plainbashwd\begin{bash*}
+&warn&ls&warn&
+\end{bash*}\endgroup}
+\setbox\xlsttest@box\vbox{\hsize=\linewidth\xlsttest@hlwidth\xlsttest@bashwd\begin{bash*}
+ls
+    &warn&ls&warn&
+\end{bash*}\endgroup}
+\gdef\xlsttest@escwd{0pt}
+\setbox\xlsttest@box\vbox{\hsize=\linewidth\xlsttest@hlwidth\xlsttest@escwd\begin{ts*}
+|info|a();
+  !*x*!this.x();|info|
+\end{ts*}\endgroup}
+\setbox\xlsttest@box\vbox{\hsize=\linewidth\xlsttest@hlwidth\xlsttest@plainawd\begin{ts*}
+|info|a();|info|
+\end{ts*}\endgroup}
+\setbox\xlsttest@box\vbox{\hsize=\linewidth\xlsttest@hlwidth\xlsttest@escendwd\begin{ts*}
+|info|a();
+  !*x*!|info|
+\end{ts*}\endgroup}
+\gdef\xlsttest@trace{}
+\xlsttest@samewd\xlsttest@plainwd\xlsttest@indentwd
+\xlsttest@samewd\xlsttest@plainwd\xlsttest@contwd
+\xlsttest@samewd\xlsttest@plainwd\xlsttest@midwd
+\xlsttest@samewd\xlsttest@plainwarnwd\xlsttest@warnwd
+\xlsttest@samewd\xlsttest@plainerrwd\xlsttest@errwd
+\xlsttest@samewd\xlsttest@plainbashwd\xlsttest@bashwd
+\xlsttest@check{hl-indent}{same-width,same-width,same-width,same-width,same-width,same-width,}
+\gdef\xlsttest@trace{}
+\xlsttest@samewd\xlsttest@plainwd\xlsttest@escwd
+\xlsttest@samewd\xlsttest@plainawd\xlsttest@escendwd
+\xlsttest@check{hl-escape}{same-width,same-width,}
 \makeatother
 
 \TestSummary

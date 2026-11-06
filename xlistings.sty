@@ -748,23 +748,32 @@ keepspaces      = false}
 \fi
 
 % A box cannot hold a line break, but a highlight may span several lines. So the
-% box is closed at the end of every line and opened again at the start of the
-% next one. Closing the group of the box runs \xlst@highlights@endenv, which
-% normally also closes the group of the listings mode (the final \egroup); at
-% the end of a line that group has to stay open, as the highlight continues.
+% box is closed at the end of every line and opened again with the first output
+% of the next one. Closing the group of the box runs \xlst@highlights@endenv,
+% which normally also closes the group of the listings mode (the final \egroup);
+% at the end of a line that group has to stay open, as the highlight continues.
 \def\xlst@hl@endenv@full{\expandafter\end\expandafter{\xlst@hl@env}\global\xlst@hl@openfalse\egroup}
 \def\xlst@hl@endenv@eol{\expandafter\end\expandafter{\xlst@hl@env}}
 \let\xlst@highlights@endenv\xlst@hl@endenv@full
-% #1 environment, #2 its optional argument; the pending line break must be
-% emitted before the box is opened, else it is lost
-\def\@xlstLstHLwith#1#2{\lst@TrackNewLines\gdef\xlst@hl@env{#1}\gdef\xlst@hl@opts{#2}%
+\def\xlst@hl@flushlostspace{\begingroup\let\lst@currstyle\relax\lst@OutputLostSpace\endgroup}
+% #1 environment, #2 its optional argument
+\def\@xlstLstHLwith#1#2{\gdef\xlst@hl@env{#1}\gdef\xlst@hl@opts{#2}\global\xlst@hl@reopentrue}
+% the pending line break must be emitted before the box is opened, else it is lost
+\def\xlst@hl@begin#1#2{\lst@TrackNewLines\xlst@hl@flushlostspace
   \global\let\xlst@highlights@endenv\xlst@hl@endenv@full\global\xlst@hl@opentrue
   \begin{#1}[#2]\bgroup\aftergroup\xlst@highlights@endenv}
 \lst@AddToHook{EOL}{\ifxlst@hl@open
   \global\xlst@hl@reopentrue\global\xlst@hl@openfalse
   \global\let\xlst@highlights@endenv\xlst@hl@endenv@eol\egroup\fi}
-\lst@AddToHook{InitVarsBOL}{\ifxlst@hl@reopen\global\xlst@hl@reopenfalse
-  \expandafter\expandafter\expandafter\@xlstLstHLwith\expandafter\expandafter\expandafter{\expandafter\xlst@hl@env\expandafter}\expandafter{\xlst@hl@opts}\fi}
+\def\xlst@hl@reopen{\ifxlst@hl@reopen\global\xlst@hl@reopenfalse
+  \expandafter\expandafter\expandafter\xlst@hl@begin\expandafter\expandafter\expandafter{\expandafter\xlst@hl@env\expandafter}\expandafter{\xlst@hl@opts}\fi}
+\lst@AddToHook{Output}{\xlst@hl@reopen}
+\lst@AddToHook{OutputOther}{\xlst@hl@reopen}
+\def\lst@EnterMode#1#2{\xlst@hl@reopen
+  \bgroup \lst@mode=#1\relax
+  \lst@lAddTo\lst@entermodes{\lst@EnterMode{#1}{#2}}%
+  #2\lst@FontAdjust}
+\lst@AddToHook{EndGroup}{\global\xlst@hl@reopenfalse}
 \lst@AddToHook{InitVars}{\global\xlst@hl@openfalse\global\xlst@hl@reopenfalse}
 
 \def\xlsthlbox#1{\@xlstLstHLwith{xlst@listings@underline@env}{#1}}

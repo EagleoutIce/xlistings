@@ -43,5 +43,7 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 [PASS] box-error
 [PASS] box-info
 [PASS] hl-multiline
-===== xlistings tests: 33 passed, 0 failed =====
+[PASS] hl-indent
+[PASS] hl-escape
+===== xlistings tests: 35 passed, 0 failed =====
 [2]
