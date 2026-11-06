@@ -486,6 +486,34 @@ styles (they fall back to a plain color if the \argref{highlights}{highlights}
 option is not active), as are \blatex{\\xlsthlbox\{<color>\}} and
 \blatex{\\xlsthlboxd\{<tikz keys>\}}.
 
+A segment may span several lines and may start anywhere on a line. The
+indentation in front of it stays outside the highlight, on its first line as
+well as on every further one:
+
+\begin{minted}{latex}
+\begin{ts}
+class Point {
+    |info|x = 0;|info|
+    move(dx: number) {
+        |warn|this.x = this.x
+            + dx;|warn|
+        |err|return y;|err|
+    }
+}
+\end{ts}
+\end{minted}
+
+\begin{minted}{ts}
+class Point {
+    |info|x = 0;|info|
+    move(dx: number) {
+        |warn|this.x = this.x
+            + dx;|warn|
+        |err|return y;|err|
+    }
+}
+\end{minted}
+
 \section{Full Reference}\label{sec:full-reference}
 
 All commands below act locally, so wrap them in a group to limit their effect.

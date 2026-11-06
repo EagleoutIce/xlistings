@@ -128,7 +128,7 @@ target_list.upload.func = upload
 -- afterwards CTAN keeps the package where it put it
 uploadconfig = {
   pkg               = "xlistings",
-  version           = "1.0.0", -- 'l3build upload 1.0.0' overrides this
+  version           = "1.1.0", -- 'l3build upload <version>' overrides this
   author            = "Florian Sihler",
   uploader          = "Florian Sihler",
   email             = "florian.sihler@uni-ulm.de",
@@ -140,8 +140,13 @@ uploadconfig = {
   support           = "https://github.com/EagleoutIce/xlistings/issues",
   home              = "https://github.com/EagleoutIce/xlistings",
   topic             = {"listing"},
-  update            = false, -- first upload: a new package, not an update
+  update            = true,
   announcement_file = "ctan-announce.txt",
+  note              = [[
+This update adds code-link to the bundle, which has a manual of its own.
+Could you please list code-link-doc.pdf as a second documentation entry next
+to xlistings-doc.pdf on the package page? Please also write the name of the
+package in lower case there: the page currently shows "Xlistings".]],
   description       = [[
 The xlistings package extends listings with an easier front-end for code
 blocks: language-sensitive highlighting of numbers (including hexadecimal

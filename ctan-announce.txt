@@ -1,21 +1,21 @@
-xlistings v1.0.0
+xlistings v1.1.0
 
-xlistings is an opinionated extension to the listings package. It provides a
-simpler front-end for code blocks, language-sensitive highlighting of numbers
-(hexadecimal literals, exponents, and type suffixes such as 10L in Java or 3j
-in Python), a drop-in replacement for the minted environment, per-language
-wrapper macros and environments, non-selectable line numbers based on accsupp,
-language badges, and definitions for a set of common languages that are loaded
-on demand.
+This release adds code-link to the bundle. code-link collects definitions
+while a document is typeset and links every occurrence of them in listings,
+xlistings and minted code. It works without xlistings as well and has a
+manual of its own, code-link-doc.pdf.
 
-This is the first release on CTAN.
-
-Language definitions are installed as xlistings-<language>.cfg. Both
-\LoadLanguages{<language>} and private, unprefixed <language>.cfg files
-continue to work unchanged.
-
-The bundle also contains code-link, which collects definitions while typesetting
-and links every occurrence of them in listings, xlistings and minted code.
+Changes to xlistings:
+- the indentation in front of a highlighted segment (|warn|, |err|, |info|,
+  ...) stays outside the highlight, also on further lines of a segment that
+  spans several lines and next to escapes
+- a digit after a letter stays part of the identifier (int32) instead of
+  being highlighted as a number
+- the thin space that opens inline code is dropped at the start of a
+  paragraph; new \xlstInlineLead and \xlstInlineKeys
+- the LaTeX language has better word boundaries (round-precision is one
+  word) and the new key xlstcsbreak
+- inline listings are more robust against escapes
 
 The package is licensed under the LaTeX Project Public License 1.3c.
 
