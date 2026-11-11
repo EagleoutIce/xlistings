@@ -42,7 +42,7 @@
 \setlength\emergencystretch{3em}
 \usepackage[headsepline]{scrlayer-scrpage}
 \clearpairofpagestyles
-\ihead{\texttt{xlistings} \textbar{} \texttt{code-link}}
+\ihead{\texttt{code-link}}
 \ohead{\hypersetup{urlcolor=.}\clrepo}
 \cfoot*{\pagemark}
 \setkomafont{pageheadfoot}{\normalfont\small\color{gray}}
@@ -107,7 +107,7 @@
 
 \newcommand\clrepo{\href{https://github.com/EagleoutIce/xlistings}{\T{github.com/EagleoutIce/xlistings}}}
 \title{\T{code-link}}
-\subtitle{\small part of \pkg{xlistings}, \clrepo}
+\subtitle{\small \clrepo}
 \author{Florian Sihler\thanks{Released under the \href{https://www.latex-project.org/lppl.txt}{LaTeX Project Public License}, version 1.3c or later.}}
 \makeatletter
 \long\def\cl@parsever#1 v#2 #3\relax{\def\cldocdate{#1}\def\cldocversion{v#2}}
@@ -145,7 +145,7 @@ The badges \badge{listings} and \badge[Teal]{xlistings} mark keys that only thes
 \setcounter{tocdepth}{1}
 \tableofcontents
 
-\noindent\T{code-link} is part of the \pkg{xlistings} bundle and is shipped and tested with it, because the two are most useful combined. It does not need \pkg{xlistings} and works with \pkg{listings} or \pkg{minted} alone. The manual of \pkg{xlistings} is a \href{https://github.com/EagleoutIce/xlistings/blob/gh-pages/build/xlistings-doc.pdf}{document of its own}. The package was extracted from \href{https://github.com/EagleoutIce/tikzpingus}{\T{tikzpingus}}.
+\noindent\T{code-link} is a package of its own, developed in the same repository as \pkg{xlistings} because the two are most useful combined. It does not need \pkg{xlistings} and works with \pkg{listings} or \pkg{minted} alone. The manual of \pkg{xlistings} is a \href{https://github.com/EagleoutIce/xlistings/blob/gh-pages/build/xlistings-doc.pdf}{document of its own}. The package was extracted from \href{https://github.com/EagleoutIce/tikzpingus}{\T{tikzpingus}}.
 
 \section{Quick start}
 Load a listings backend, \pkg{hyperref} and the package. Mark the place where something is defined with \cmd{CodeLinkAnchor}, and every listing and every \cmd{CodeLinkRef} that contains the string links there.

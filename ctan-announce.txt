@@ -1,21 +1,7 @@
-xlistings v1.1.0
+xlistings v1.1.1
 
-This release adds code-link to the bundle. code-link collects definitions
-while a document is typeset and links every occurrence of them in listings,
-xlistings and minted code. It works without xlistings as well and has a
-manual of its own, code-link-doc.pdf.
-
-Changes to xlistings:
-- the indentation in front of a highlighted segment (|warn|, |err|, |info|,
-  ...) stays outside the highlight, also on further lines of a segment that
-  spans several lines and next to escapes
-- a digit after a letter stays part of the identifier (int32) instead of
-  being highlighted as a number
-- the thin space that opens inline code is dropped at the start of a
-  paragraph; new \xlstInlineLead and \xlstInlineKeys
-- the LaTeX language has better word boundaries (round-precision is one
-  word) and the new key xlstcsbreak
-- inline listings are more robust against escapes
+code-link, which xlistings v1.1.0 shipped, is now a package of its own on
+CTAN. This release removes it from xlistings and has no other changes.
 
 The package is licensed under the LaTeX Project Public License 1.3c.
 

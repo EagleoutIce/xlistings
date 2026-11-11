@@ -1,0 +1,10 @@
+code-link v1.1.0
+
+code-link collects definitions while a document is typeset and links every
+occurrence of them in listings, xlistings and minted code. It was shipped
+inside xlistings v1.1.0 and is now a package of its own.
+
+The package is licensed under the LaTeX Project Public License 1.3c.
+
+Sources, issue tracker, and documentation:
+https://github.com/EagleoutIce/xlistings

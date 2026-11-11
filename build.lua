@@ -1,32 +1,27 @@
--- l3build configuration for xlistings, which ships code-link as well
+-- l3build configuration for xlistings; code-link is a separate package with
+-- its own configuration in code-link/build.lua
 module = "xlistings"
+dofile("build-upload.lua")
 
 -- sources and documentation
-sourcefiles  = {"xlistings.sty", "code-link.sty", "langs/xlistings-*.cfg"}
-installfiles = {"xlistings.sty", "code-link.sty", "xlistings-*.cfg"} -- globbed in the unpack dir, hence flat
+sourcefiles  = {"xlistings.sty", "langs/xlistings-*.cfg"}
+installfiles = {"xlistings.sty", "xlistings-*.cfg"} -- globbed in the unpack dir, hence flat
 tdsroot      = "latex"
 packtdszip   = false
-docfiles     = {"xlistings-doc.tex", "code-link-doc.tex", "xlistings.ist"}
--- the manual of code-link uses minted, which needs -shell-escape and Pygments
-typesetfiles = {"xlistings-doc.tex", "code-link-doc.tex"}
+docfiles     = {"xlistings-doc.tex", "xlistings.ist"}
+typesetfiles = {"xlistings-doc.tex"}
 typesetopts  = "-shell-escape -interaction=nonstopmode"
--- the manual of code-link shows the tables of bench/run.sh
-supportdir       = "bench"
-typesetsuppfiles = {"bench-summary.tex", "bench-results-*.tex"}
+-- xlistings.sty does not load code-link, only the manual uses it
+typesetdeps  = {"code-link"}
 indexstyle   = "xlistings.ist"
 textfiles    = {"README.md", "LICENSE"}
 
 -- version bookkeeping: 'l3build tag <version>' rewrites the package
 -- identification; the documentation reads version and date from the package
-tagfiles = {"xlistings.sty", "code-link.sty"}
+tagfiles = {"xlistings.sty"}
 
 function update_tag(file, content, tagname, tagdate)
-  if file == "code-link.sty" then
-    return string.gsub(content,
-      "\\ProvidesExplPackage{code%-link}{%d%d%d%d/%d%d/%d%d}{v%S+}",
-      "\\ProvidesExplPackage{code-link}{" .. string.gsub(tagdate, "%-", "/")
-        .. "}{v" .. tagname .. "}", 1)
-  elseif string.match(file, "%.sty$") then
+  if string.match(file, "%.sty$") then
     return string.gsub(content,
       "\\ProvidesPackage{xlistings}%[%d%d%d%d/%d%d/%d%d v%S+",
       "\\ProvidesPackage{xlistings}[" .. string.gsub(tagdate, "%-", "/")
@@ -42,9 +37,7 @@ checkengines = {"pdftex", "xetex", "luatex"}
 stdengine    = "pdftex"
 checkformat  = "latex"
 
--- xlistings and code-link are tested by the same 'l3build check', one configuration
--- each (tests/config-*.lua); the minted tests of code-link need -shell-escape and Pygments
-checkconfigs = {"tests/config-xlistings", "tests/config-code-link", "tests/config-code-link-minted"}
+checkconfigs = {"tests/config-xlistings"}
 
 -- A leaked color is invisible to the style traces of the .lvt files, so the pdf
 -- checks keep the color every piece of text is drawn in and nothing else.
@@ -89,51 +82,18 @@ function rewrite_pdf(source, result, engine, errlevels)
   output:close()
 end
 
--- l3build's own '--dry-run' is not offline: it only skips the second POST, the
--- archive is still sent to CTAN's validate endpoint (and '--debug' posts it to
--- httpbin.org). The 'curl_debug' switch that would suppress this is a local
--- captured before build.lua is read, so it cannot be set from here. Instead we
--- wrap 'upload': under '--dry-run' we build the very same curl request, which
--- runs all of l3build's field validation and writes the .curlopt file, and
--- print it rather than send it. A plain 'l3build upload' is left untouched.
--- Note that redefining the global 'upload' is not enough: 'l3build-stdmain'
--- captures the function into 'target_list' before build.lua is read, so the
--- entry in that table has to be replaced as well.
-local l3build_upload = target_list.upload.func
-function upload(tagnames)
-  if not options["dry-run"] then
-    return l3build_upload(tagnames)
-  end
-  local uploadfile = ctanzip .. ".zip"
-  if not fileexists(uploadfile) then
-    error("Missing zip file '" .. uploadfile .. "'. \z
-      Maybe you forgot to run 'l3build ctan' first?")
-  end
-  -- the same fields 'upload()' fills in before it validates
-  uploadconfig.announcement = options["message"] or uploadconfig.announcement
-    or file_contents(uploadconfig.announcement_file)
-  uploadconfig.note = uploadconfig.note or file_contents(uploadconfig.note_file)
-  uploadconfig.email = options["email"] or uploadconfig.email
-  uploadconfig.version = (tagnames or {})[1] or uploadconfig.version
-  print("Dry run: validating locally, nothing is sent to CTAN.")
-  local request = construct_ctan_post(uploadfile)
-  print("Would have posted:")
-  print(request .. "https://ctan.org/submit/validate")
-  print("Dry run finished, no request was sent.")
-  return 0
-end
-target_list.upload.func = upload
-
 -- metadata for 'l3build upload'; ctanPath only applies to the first upload,
 -- afterwards CTAN keeps the package where it put it
 uploadconfig = {
   pkg               = "xlistings",
-  version           = "1.1.0", -- 'l3build upload <version>' overrides this
+  -- 'l3build upload <version>' overrides this
+  version           = package_version("xlistings.sty",
+                        "\\ProvidesPackage{xlistings}%[%d%d%d%d/%d%d/%d%d v(%S+)"),
   author            = "Florian Sihler",
   uploader          = "Florian Sihler",
   email             = "florian.sihler@uni-ulm.de",
   license           = "lppl1.3c",
-  summary           = "Opinionated extensions to the listings package, and links in listings",
+  summary           = "Opinionated extensions to the listings package",
   ctanPath          = "/macros/latex/contrib/xlistings",
   repository        = "https://github.com/EagleoutIce/xlistings",
   bugtracker        = "https://github.com/EagleoutIce/xlistings/issues",
@@ -142,11 +102,7 @@ uploadconfig = {
   topic             = {"listing"},
   update            = true,
   announcement_file = "ctan-announce.txt",
-  note              = [[
-This update adds code-link to the bundle, which has a manual of its own.
-Could you please list code-link-doc.pdf as a second documentation entry next
-to xlistings-doc.pdf on the package page? Please also write the name of the
-package in lower case there: the page currently shows "Xlistings".]],
+  note_file         = "ctan-note.txt",
   description       = [[
 The xlistings package extends listings with an easier front-end for code
 blocks: language-sensitive highlighting of numbers (including hexadecimal
@@ -155,7 +111,6 @@ per-language wrapper macros and environments, non-selectable line numbers
 based on accsupp, language badges, and opinionated definitions for a set of
 common languages that are loaded on demand.
 
-The bundle also contains code-link, which collects definitions while a
-document is typeset and links every occurrence of them in listings, xlistings
-and minted blocks. It works without xlistings as well.]],
+The separate package code-link links the code in xlistings blocks to where it
+is defined or documented.]],
 }
