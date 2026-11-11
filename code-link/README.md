@@ -22,6 +22,11 @@ benchmark of its cost is in `bench/` of the [repository](https://github.com/Eagl
 Originally, the functionality was tightly intertwined and written by Florian Sihler for the [tikzpingus][] documentation, the extraction was assisted by [Claude](https://claude.ai/code).
 `l3build check` runs the tests, the tests of the [minted][] backend need `-shell-escape` and Pygments.
 
+## Author and maintainer
+
+Florian Sihler, <florian.sihler@uni-ulm.de>. Please report bugs and requests at the
+[issue tracker](https://github.com/EagleoutIce/xlistings/issues).
+
 [listings]: https://ctan.org/pkg/listings
 [minted]: https://ctan.org/pkg/minted
 [tikzpingus]: https://github.com/eagleoutice/tikzpingus

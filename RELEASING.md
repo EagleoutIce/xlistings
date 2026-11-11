@@ -12,4 +12,4 @@ sh both.sh upload --dry-run  # validate locally, nothing is sent
 sh both.sh upload         # each package with the version it declares
 ```
 
-Update `ctan-announce.txt` and `ctan-note.txt` (the note to the CTAN team) of a package before uploading it. Name git tags `xlistings-v1.2.0` and `code-link-v1.2.0`. The first upload of `code-link` needs `update = false` in `code-link/build.lua`, set it to `true` once CTAN has accepted the package.
+Update `ctan-announce.txt` of a package before uploading it. `ctan-note.txt` is an optional note to the CTAN team, keep it empty if there is nothing to tell them. Name git tags `xlistings-v1.2.0` and `code-link-v1.2.0`.

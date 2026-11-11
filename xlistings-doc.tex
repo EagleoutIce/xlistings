@@ -118,7 +118,7 @@ System.out.println("Hello, World!");
     \item Support for blacklisting line numbers with \cmdref{xlstblacklistlinenumbers}
     \item Highlighting of code segments, also across lines, with delimiters such as \T{|warn|}, \T{|err|}, and \T{|info|}: \bjava{|warn|int x = 0;|warn|}
     \item Support for umlauts and UTF-8 encoding (with the \href{https://ctan.org/pkg/listingsutf8}{listingsutf8} package)
-    \item Provides \T{autogobble} to remove leading spaces (with the \href{https://ctan.org/pkg/lstautogobble}{lstautogobble} package)
+    \item Provides \T{autogobble} to remove leading spaces (with the \href{https://ctan.org/pkg/lstaddons}{lstautogobble} package)
     \item Comfort key \argref{add to literate}{add to literate} to add elements to the literate list
     \item \blatex{\\LoadLanguages\{<lang>\}} to load a language or multiple languages on demand
     \item Opinionated language overwrites (see the \T{langs/} folder)
@@ -299,7 +299,7 @@ If you want to register special keywords or any other configuration for an exist
 As you can see, the sample above skips a given line number, which we achieve by using the following command: \blatex{\\xlstblacklistlinenumbers\{4\}}.
 The effects of all of these commands are local, so you can use them in a group (e.g., with \blatex{\\begingroup} and \blatex{\\endgroup} or an opening and closing brace) to limit their effect.
 
-Additionally, if you look at the source of this documentation, the source of the example above is actually indented. We remove the leading spaces with the new \T{autogobble} option (provided by the \href{https://ctan.org/pkg/lstautogobble}{lstautogobble} package).
+Additionally, if you look at the source of this documentation, the source of the example above is actually indented. We remove the leading spaces with the new \T{autogobble} option (provided by the \href{https://ctan.org/pkg/lstaddons}{lstautogobble} package).
 
 In the \T{latex} language, a hyphen is part of a word, so \T{round-precision} can be a keyword.
 A command right after a hyphen is still highlighted on its own (\argref{xlstcsbreak}{xlstcsbreak}):

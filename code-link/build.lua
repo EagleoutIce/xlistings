@@ -62,8 +62,7 @@ uploadconfig = {
   support           = "https://github.com/EagleoutIce/xlistings/issues",
   home              = "https://github.com/EagleoutIce/xlistings",
   topic             = {"listing", "hyper"},
-  -- a new package on CTAN: set to true once the first upload was accepted
-  update            = false,
+  update            = true,
   announcement_file = "ctan-announce.txt",
   note_file         = "ctan-note.txt",
   description       = [[

@@ -1,3 +1,0 @@
-Sorry for the trouble with code-link in v1.1.0. As requested by Karl Berry,
-code-link is now a separate package and removed from xlistings. Please drop
-code-link-doc.pdf from the package page.

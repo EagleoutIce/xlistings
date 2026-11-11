@@ -18,7 +18,7 @@ The following describes a list of improvements over the [listings][] package:
 - Support for ([accsupp](https://ctan.org/pkg/accsupp) based) non-selectable line numbers and characters
 - Support for blacklisting line numbers with `\xlstblacklistlinenumbers`
 - Support for umlauts and UTF-8 encoding (with the [listingsutf8](https://ctan.org/pkg/listingsutf8) package)
-- Provides `autogobble` to remove leading spaces (with the [lstautogobble](https://ctan.org/pkg/lstautogobble) package)
+- Provides `autogobble` to remove leading spaces (with the `lstautogobble` package of the [lstaddons](https://ctan.org/pkg/lstaddons) bundle)
 - Comfort key `add to literate` to add elements to the literate list
 - `\LoadLanguages{<lang>}` to load a language or multiple languages on demand
 - Opinionated language overwrites (see the [langs/](https://github.com/EagleoutIce/xlistings/tree/main/langs) folder)
@@ -33,6 +33,11 @@ segment is invisible to such a trace, so `tests/colorbleed.pvt` additionally
 compares the pdf, reduced to the colour every piece of text is drawn in.
 
 The manual is [xlistings-doc](https://github.com/EagleoutIce/xlistings/blob/gh-pages/build/xlistings-doc.pdf). How this repository releases its packages is described in [RELEASING.md](https://github.com/EagleoutIce/xlistings/blob/main/RELEASING.md).
+
+## Author and maintainer
+
+Florian Sihler, <florian.sihler@uni-ulm.de>. Please report bugs and requests at the
+[issue tracker](https://github.com/EagleoutIce/xlistings/issues).
 
 ## Related packages
 
