@@ -78,7 +78,7 @@
   { \str_map_function:nN {#1} \__codelink_enc_char:N }
 \cs_new:Npn \__codelink_enc_char:N #1
   { \exp_not:N \codelink@c { \int_eval:n { `#1 } } }
-\cs_generate_variant:Nn \__codelink_enc:n { V }
+\cs_generate_variant:Nn \__codelink_enc:n { V, e }
 \cs_new_protected:cpn { codelink@c } #1 { \char_generate:nn {#1} { 12 } }
 
 % Character renderers. listings replace the matched characters by what we give
@@ -388,6 +388,14 @@
                       { \__codelink_enc:V \l__codelink_scope_str }
                       {#1}
                       { \l__codelink_bd_tl }
+                    % a label of its own, for \CodeLinkLabel
+                    \bool_lazy_and:nnT
+                      { \str_if_eq_p:nn {#1} { link } } { ! \l__codelink_autolabel_bool }
+                      {
+                        \exp_not:N \codelink@lbl
+                          { \__codelink_enc:e { \l__codelink_prefix_tl \__codelink_sanitize:V \l__codelink_str } }
+                          { \__codelink_enc:V \l__codelink_label_tl }
+                      }
                   }
                 \bool_if:NTF \g__codelink_document_bool
                   { \__codelink_write:V \l_tmpa_tl }
@@ -496,13 +504,19 @@
   }
 \cs_generate_variant:Nn \__codelink_disp:n { V }
 % the label of a string, to be used in \ref and \pageref (starred: a command)
+% A string registered with a label of its own gives that one.
 \NewExpandableDocumentCommand \CodeLinkLabel { s O{default} m }
   {
-    \prop_if_in:NnTF \g__codelink_groups_prop { #2 / prefix }
-      { \prop_item:Nn \g__codelink_groups_prop { #2 / prefix } }
-      { \prop_item:Nn \c__codelink_defaults_prop { prefix } }
-    \__codelink_sanitize:e { \IfBooleanT {#1} { \c_backslash_str } \tl_to_str:n {#3} }
+    \__codelink_label:e
+      {
+        \prop_if_in:NnTF \g__codelink_groups_prop { #2 / prefix }
+          { \prop_item:Nn \g__codelink_groups_prop { #2 / prefix } }
+          { \prop_item:Nn \c__codelink_defaults_prop { prefix } }
+        \__codelink_sanitize:e { \IfBooleanT {#1} { \c_backslash_str } \tl_to_str:n {#3} }
+      }
   }
+\cs_new:Npn \__codelink_label:n #1 { \cs_if_exist_use:cF { g__codelink_al_ #1 } {#1} }
+\cs_generate_variant:Nn \__codelink_label:n { e }
 
 % Reading the .aux file: the entries wait until a listing needs them.
 % #1 string, #2 label, #3 display, #4 style, #5 language, #6 kind, #7 boundary
@@ -524,6 +538,16 @@
     \bool_gset_true:N \g__codelink_dirty_bool
   }
 \cs_set_eq:cN { codelink@in } \__codelink_in:nnnnnnn
+% #1 the label made from the string, #2 the label given (the first one counts)
+\cs_new_protected:Npn \__codelink_lbl_in:nn #1#2
+  {
+    \group_begin:
+      \cs_set:cpn { codelink@c } ##1 { \char_generate:nn {##1} { 12 } }
+      \cs_if_exist:cF { g__codelink_al_ #1 }
+        { \tl_gset:cx { g__codelink_al_ #1 } { #2 } }
+    \group_end:
+  }
+\cs_set_eq:cN { codelink@lbl } \__codelink_lbl_in:nn
 
 % Assembling: entries which have not been seen yet become rules. The first one
 % of a string (per kind and language) counts.
@@ -913,6 +937,7 @@
   {
     \bool_gset_true:N \g__codelink_document_bool
     \iow_now:Nx \@mainaux { \exp_not:N \providecommand \exp_not:N \codelink@in [7] { } }
+    \iow_now:Nx \@mainaux { \exp_not:N \providecommand \exp_not:N \codelink@lbl [2] { } }
     \seq_map_function:NN \g__codelink_pending_seq \__codelink_write:n
     \seq_gclear:N \g__codelink_pending_seq
     \bool_gset:Nn \g__codelink_hyper_bool

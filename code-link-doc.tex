@@ -184,7 +184,7 @@ System.out.println(out); // only the last out
 \end{lstlisting}
 \end{example}
 \item[\api{CodeLinkRef}\oarg{options}\marg{string}] typesets the string as a link in running text, in the font \api{CodeLinkTextFont} (default |\ttfamily|).
-\item[\api{CodeLinkLabel}\oarg{group}\marg{string}] expands to the label of a string, so |\ref{\CodeLinkLabel{foo}}| works. The star form is for commands. A label is the prefix of the group and the string, where special characters are replaced (|\| by \T{:bs:}, space by \T{-}):
+\item[\api{CodeLinkLabel}\oarg{group}\marg{string}] expands to the label of a string, so |\ref{\CodeLinkLabel{foo}}| works. The star form is for commands. A label is the prefix of the group and the string, where special characters are replaced (|\| by \T{:bs:}, space by \T{-}). A string registered with a \T{label} of its own gives that label, from the second run on:
 \begin{example}
 \CodeLinkAnchor[group=py]{answer}
 Page \pageref{\CodeLinkLabel[py]{answer}},
