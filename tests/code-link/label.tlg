@@ -1,0 +1,9 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+sec:own
+cl:bar
+k-own
+cmd-own
+cl:unknown
+\ref {sec:own}
+(label.aux)

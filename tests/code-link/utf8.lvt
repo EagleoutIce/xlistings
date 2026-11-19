@@ -1,0 +1,26 @@
+% A string with characters beyond ASCII: pdfTeX sees their bytes, which are
+% still shown as the characters and take one column each.
+\input{regression-test}
+\documentclass{article}
+\usepackage{listings}
+\usepackage{code-link}
+\lstset{basicstyle=\ttfamily,columns=fixed}
+% pdfTeX: listings needs the characters as literates, LuaTeX and XeTeX take
+% them from the (Unicode) font
+\ifx\Umathcode\undefined
+  \usepackage[T1]{fontenc}
+  \lstset{extendedchars=true,literate={ö}{{\"o}}1 {ß}{{\ss}}1}
+\fi
+\begin{document}
+\OMIT
+\lstinline|x|
+\TIMO
+\START
+\CodeLinkAnchor{größe}
+\setbox0\hbox{\lstinline|größe = 1|}
+\setbox2\hbox{\lstinline[codelink=false]|größe = 1|}
+\TYPE{--- same width in a listing: \ifdim\wd0=\wd2 yes\else no (\the\wd0, \the\wd2)\fi}
+\setbox0\hbox{\CodeLinkRef{größe}}
+\setbox2\hbox{\CodeLinkTextFont größe}
+\TYPE{--- same width in the text: \ifdim\wd0=\wd2 yes\else no (\the\wd0, \the\wd2)\fi}
+\end{document}

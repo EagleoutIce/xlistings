@@ -1,0 +1,42 @@
+% A linked rule (a string that is not a single word) takes as much room as
+% the same code without code-link: the space after it is kept, also in
+% \lstinline and with columns=fullflexible, and with fixed columns every
+% character takes its own column.
+\input{regression-test}
+\documentclass{article}
+\usepackage[T1]{fontenc}
+\usepackage{listings}
+\usepackage{code-link}
+\lstset{basicstyle=\ttfamily,language=Python}
+\newcommand\Same[2]{%
+  \setbox0\hbox{\lstinline[columns=#1]|#2|}%
+  \setbox2\hbox{\lstinline[columns=#1,codelink=false]|#2|}%
+  \TYPE{#1: \detokenize{#2}: \ifdim\wd0=\wd2 same\else differs (\the\wd0, \the\wd2)\fi}}
+\newcommand\SameBlock[1]{%
+  \setbox0\vbox{\hsize=10cm\begin{lstlisting}[columns=#1]
+my_var
+    my_var + a b
+  x my_var = 2
+\end{lstlisting}}%
+  \setbox2\vbox{\hsize=10cm\begin{lstlisting}[columns=#1,codelink=false]
+my_var
+    my_var + a b
+  x my_var = 2
+\end{lstlisting}}%
+  \setbox0\vbox{\unvbox0\setbox0\lastbox\global\setbox1\hbox{\unhbox0}}%
+  \setbox2\vbox{\unvbox2\setbox2\lastbox\global\setbox3\hbox{\unhbox2}}%
+  \TYPE{#1 block, last line: \ifdim\wd1=\wd3 same\else differs (\the\wd1, \the\wd3)\fi}}
+\begin{document}
+\OMIT
+\lstinline|x|
+\TIMO
+\START
+\CodeLinkAnchor{my_var}
+\CodeLinkAnchor{a b}
+\Same{fixed}{my_var = a b + my_var}
+\Same{flexible}{my_var = a b + my_var}
+\Same{fullflexible}{my_var = a b + my_var}
+\SameBlock{fixed}
+\SameBlock{flexible}
+\SameBlock{fullflexible}
+\end{document}

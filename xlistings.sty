@@ -556,8 +556,10 @@ draw command/.initial={xlst@dlst@input}}
 \newcommand*\RegisterLanguage[3][]{\begingroup\makeatletter
 \if@xlst@fakeminted
 \expandafter\gdef\csname xlst@@minted@#2\endcsname{#3}%
+\expandafter\gdef\csname xlst@@minted@n@#2\endcsname{#2}%
 \protected@edef\@tmp{#1}\ifx\@tmp\@empty\else
-\@for\@alias:=\@tmp\do{\expandafter\gdef\csname xlst@@minted@\@alias\endcsname{#3}}%
+\@for\@alias:=\@tmp\do{\expandafter\gdef\csname xlst@@minted@\@alias\endcsname{#3}%
+  \expandafter\gdef\csname xlst@@minted@n@\@alias\endcsname{#2}}%
 \fi\fi
 % Register the Environments
 \def\xlst@foreach@basic@env@iter##1,##2\@nil{%
@@ -647,6 +649,7 @@ keepspaces      = false}
 \def\xlstLanguageFilePrefix{xlistings-}
 
 \newif\if@xlst@lang@found@
+\newif\if@xlst@lang@quiet@ % the minted environment reports a missing language itself
 \def\xlst@LoadLanguage@try#1{% #1: file name without the '.cfg' extension
 \if@xlst@lang@found@\else
   \InputIfFileExists{#1.cfg}{%
@@ -666,20 +669,49 @@ keepspaces      = false}
 \xlst@LoadLanguage@try{\xlst@curlanginputfile}%
 \expandafter\xlst@LoadLanguage@searchPath@iter\xlstLanguageSearchPath,\@nil}
 
+% a name that is registered as an alias of a language whose file has another
+% name (\begin{minted}{lc} or \LoadLanguages{md}) loads that file
+% #1 alias, #2 file name (without prefix and '.cfg')
+\def\xlstLanguageFileAlias#1#2{\csdef{xlst@lang@file@#1}{#2}}
+\xlstLanguageFileAlias{lc}{lambda_calculus}
+\xlstLanguageFileAlias{lambdacalculus}{lambda_calculus}
+\xlstLanguageFileAlias{md}{markdown}
+\xlstLanguageFileAlias{typescript}{ts}
+\xlstLanguageFileAlias{IndexR}{R}
+% the names Pygments (and so minted) knows the shipped languages by
+\xlstLanguageFileAlias{r}{R}
+\xlstLanguageFileAlias{py}{python}
+\xlstLanguageFileAlias{py3}{python}
+\xlstLanguageFileAlias{python3}{python}
+\xlstLanguageFileAlias{js}{javascript}
+\xlstLanguageFileAlias{sh}{bash}
+\xlstLanguageFileAlias{shell}{bash}
+\xlstLanguageFileAlias{zsh}{bash}
+\xlstLanguageFileAlias{tex}{latex}
+\xlstLanguageFileAlias{hs}{haskell}
+\xlstLanguageFileAlias{c++}{cpp}
+\xlstLanguageFileAlias{cs}{csharp}
 % a language is loaded at most once, so languages may require each other
 \def\xlst@LoadLanguage@single#1\@nil{%
-\ifcsname xlst@lang@loaded@#1\endcsname
+\ifcsname xlst@lang@file@#1\endcsname
+  \expandafter\expandafter\expandafter\xlst@LoadLanguage@single@
+    \csname xlst@lang@file@#1\endcsname\@nil
+\else\xlst@LoadLanguage@single@#1\@nil\fi}
+% (without case: kpathsea finds 'xlistings-python.cfg' for 'Python' as well)
+\def\xlst@LoadLanguage@single@#1\@nil{%
+\lowercase{\def\xlst@lang@key{#1}}%
+\ifcsname xlst@lang@loaded@\xlst@lang@key\endcsname
   \xlst@debug{Language '#1' is already loaded}%
 \else
-  \csgdef{xlst@lang@loaded@#1}{}%
+  \csgdef{xlst@lang@loaded@\xlst@lang@key}{}%
   \def\xlst@curlanginputfile{#1}%
   \@xlst@lang@found@false
   \xlst@LoadLanguage@searchPath{}%
-  \if@xlst@lang@found@\else
+  \if@xlst@lang@found@\else\if@xlst@lang@quiet@\else
     \PackageWarning{xlistings}{No definition found for the language '#1',
       neither '\xlstLanguageFilePrefix#1.cfg' nor '#1.cfg' in the current
       directory or in the search path}%
-  \fi
+  \fi\fi
 \fi}
 \def\xlst@LoadLanguage@iter#1,#2\@nil{%
 \ifx!#1!\else\xlst@LoadLanguage@single#1\@nil
@@ -823,25 +855,61 @@ keepspaces      = false}
 % allows to map languages
 
 \def\xlst@minted@language@mapping#1{\@ifundefined{xlst@@minted@#1}{#1}{\csname xlst@@minted@#1\endcsname}}
+% a language that is not loaded yet is loaded on its first use. Like Pygments,
+% the name may be an alias of a language file (r, py, js, ...) and is
+% compared without case (Java). Definitions of a language file have to be
+% global, as the environment loads them within its group.
 \def\xlst@minted@ensure#1{%
 \@ifundefined{xlst@@minted@#1}{%
   \xlst@debug{Loading '#1' for the minted environment}%
-  % the environment already runs under the catcodes of a listing
-  \begingroup\catcode`\^^M=5\relax\endlinechar=13\relax\catcode`\ =10\relax
-  \makeatletter\xlst@LoadLanguage{#1}\endgroup
+  \xlst@minted@load{#1}%
+  \xlst@minted@fromfile{#1}{#1}%
+  \@ifundefined{xlst@@minted@#1}{%
+    \lowercase{\def\xlst@minted@lc{#1}}%
+    \edef\xlst@minted@given{#1}%
+    \ifx\xlst@minted@lc\xlst@minted@given\else
+      \@ifundefined{xlst@@minted@\xlst@minted@lc}{%
+        \expandafter\xlst@minted@load\expandafter{\xlst@minted@lc}}{}%
+      \expandafter\xlst@minted@fromfile\expandafter{\xlst@minted@lc}{#1}%
+      \@ifundefined{xlst@@minted@\xlst@minted@lc}{}{%
+        \expandafter\xlst@minted@alias\expandafter{\xlst@minted@lc}{#1}}%
+    \fi}{}%
   \@ifundefined{xlst@@minted@#1}{%
     \PackageError{xlistings}{The language '#1' is not available}%
       {Load it with \string\LoadLanguages{#1} or map an existing one onto it
        with \string\xlstmintedmap.}%
+    % the code is still typeset, without highlighting, and the error is not repeated
+    \expandafter\global\expandafter\let\csname xlst@@minted@#1\endcsname\xlst@@minted@void
   }{}%
 }{}}
+% the environment already runs under the catcodes of a listing
+\def\xlst@minted@load#1{%
+  \begingroup\catcode`\^^M=5\relax\endlinechar=13\relax\catcode`\ =10\relax
+  \makeatletter\@xlst@lang@quiet@true\xlst@LoadLanguage{#1}\endgroup}
+% #1 name that may be a file alias, #2 minted name: if #2 is still unknown, it
+% becomes the language the file registered under its own name
+\def\xlst@minted@fromfile#1#2{%
+  \@ifundefined{xlst@@minted@#2}{%
+    \ifcsname xlst@lang@file@#1\endcsname
+      \@ifundefined{xlst@@minted@\csname xlst@lang@file@#1\endcsname}{}{%
+        \expandafter\expandafter\expandafter\xlst@minted@alias
+          \expandafter\expandafter\expandafter{\csname xlst@lang@file@#1\endcsname}{#2}}%
+    \fi}{}}
+% #1 known minted name, #2 new one: the same language and the same name for
+% \xlstlangoverride
+\def\xlst@minted@alias#1#2{%
+  \expandafter\global\expandafter\let\csname xlst@@minted@#2\expandafter\endcsname
+    \csname xlst@@minted@#1\endcsname
+  \expandafter\xdef\csname xlst@@minted@n@#2\endcsname{\xlst@minted@name{#1}}}
+% the name a language is registered under (for \xlstlangoverride)
+\def\xlst@minted@name#1{\ifcsname xlst@@minted@n@#1\endcsname\csname xlst@@minted@n@#1\endcsname\else#1\fi}
 \def\xlstmintedmap#1#2{\expandafter\def\csname xlst@@minted@#1\endcsname{#2}}
 
 % TODO: auto load a language if a requested one is not loaded
 \def\xlstsetmintedstyle#1{\def\xlst@minted@style{#1}}
 \xlstsetmintedstyle{\xlst@style@default}
 
-\lstnewenvironment{minted}[2][]{\xlst@minted@ensure{#2}\protected@edef\@tmp{\pgfkeysvalueof{/xlst@lst@family/\xlst@minted@style/listing style}}\protected@edef\@temp{\xlst@minted@language@mapping{#2}}\expandafter\expandafter\expandafter\xlst@minted@setup\expandafter\expandafter\expandafter{\expandafter\@tmp\expandafter}\expandafter{\@temp}{#2}{#1}%
+\lstnewenvironment{minted}[2][]{\xlst@minted@ensure{#2}\protected@edef\@tmp{\pgfkeysvalueof{/xlst@lst@family/\xlst@minted@style/listing style}}\protected@edef\@temp{\xlst@minted@language@mapping{#2}}\edef\@temp@name{\xlst@minted@name{#2}}\expandafter\expandafter\expandafter\xlst@minted@setup\expandafter\expandafter\expandafter{\expandafter\@tmp\expandafter}\expandafter{\@temp}{\@temp@name}{#1}%
 \if@xlistings@mintedlangbadge\xlst@shownextcodelang{#2}\fi
 }{}
 \fi

@@ -1,0 +1,19 @@
+% \CodeLinkLabel gives the label a string was registered with
+\input{regression-test}
+\documentclass{article}
+\usepackage{listings}
+\usepackage{code-link}
+\CodeLinkGroup{k}{prefix=k:}
+\begin{document}
+\START
+\CodeLinkAnchor[label=sec:own]{foo}
+\CodeLinkAnchor{bar}
+\CodeLinkAnchor[group=k,label=k-own]{key}
+\CodeLinkAnchor[command,label=cmd-own]{node}
+\TYPE{\CodeLinkLabel{foo}}
+\TYPE{\CodeLinkLabel{bar}}
+\TYPE{\CodeLinkLabel[k]{key}}
+\TYPE{\CodeLinkLabel*{node}}
+\TYPE{\CodeLinkLabel{unknown}}
+\TYPE{\ref{\CodeLinkLabel{foo}}}
+\end{document}
