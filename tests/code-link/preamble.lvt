@@ -1,0 +1,21 @@
+% The key codelink of listings already works in the preamble, also when
+% code-link is loaded before listings.
+\input{regression-test}
+\documentclass{article}
+\usepackage[T1]{fontenc}
+\usepackage{code-link}
+\usepackage{listings}
+\lstset{codelink=false}
+\lstdefinestyle{linked}{codelink=true}
+\RenewDocumentCommand\CodeLinkFormat{mmm}{\TYPE{LINK #1 [#2]}#3}
+\begin{document}
+\OMIT
+\lstinline|x|
+\TIMO
+\START
+\CodeLinkAnchor{foo}
+\TYPE{--- off by the preamble}
+\lstinline|foo|
+\TYPE{--- on by a style}
+\lstinline[style=linked]|foo|
+\end{document}

@@ -1,0 +1,145 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line ....
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line ....
+fixed: my_var = a b + my_var: same
+flexible: my_var = a b + my_var: same
+fullflexible: my_var = a b + my_var: same
+! Argument of \lst@next has an extra }.
+<inserted text> 
+                \par 
+l. ...\SameBlock{fixed}
+I've run across a `}' that doesn't seem to match anything.
+For example, `\def\a#1{...}' and `\a}' would produce
+this error. If you simply proceed now, the `\par' that
+I've just inserted will cause me to report a runaway
+argument that might be the root of the problem. But if
+your `}' was spurious, just type `2' and it will go away.
+Runaway argument?
+! Paragraph ended before \lst@next was complete.
+<to be read again> 
+                   \par 
+l. ...\SameBlock{fixed}
+I suspect you've forgotten a `}', causing me to apply this
+control sequence to too much text. How can we recover?
+My plan is to forget the whole thing and hope for the best.
+! Argument of \lst@next has an extra }.
+<inserted text> 
+                \par 
+l. ...\SameBlock{fixed}
+I've run across a `}' that doesn't seem to match anything.
+For example, `\def\a#1{...}' and `\a}' would produce
+this error. If you simply proceed now, the `\par' that
+I've just inserted will cause me to report a runaway
+argument that might be the root of the problem. But if
+your `}' was spurious, just type `2' and it will go away.
+Runaway argument?
+! Paragraph ended before \lst@next was complete.
+<to be read again> 
+                   \par 
+l. ...\SameBlock{fixed}
+I suspect you've forgotten a `}', causing me to apply this
+control sequence to too much text. How can we recover?
+My plan is to forget the whole thing and hope for the best.
+! Incompatible list can't be unboxed.
+<to be read again> 
+                   \setbox 
+l. ...\SameBlock{fixed}
+Sorry, Pandora. (You sneaky devil.)
+I refuse to unbox an \hbox in vertical mode or vice versa.
+And I can't open any boxes in math mode.
+! Incompatible list can't be unboxed.
+<to be read again> 
+                   \setbox 
+l. ...\SameBlock{fixed}
+Sorry, Pandora. (You sneaky devil.)
+I refuse to unbox an \hbox in vertical mode or vice versa.
+And I can't open any boxes in math mode.
+fixed block, last line: same
+! Argument of \lst@next has an extra }.
+<inserted text> 
+                \par 
+l. ...\SameBlock{flexible}
+I've run across a `}' that doesn't seem to match anything.
+For example, `\def\a#1{...}' and `\a}' would produce
+this error. If you simply proceed now, the `\par' that
+I've just inserted will cause me to report a runaway
+argument that might be the root of the problem. But if
+your `}' was spurious, just type `2' and it will go away.
+Runaway argument?
+! Paragraph ended before \lst@next was complete.
+<to be read again> 
+                   \par 
+l. ...\SameBlock{flexible}
+I suspect you've forgotten a `}', causing me to apply this
+control sequence to too much text. How can we recover?
+My plan is to forget the whole thing and hope for the best.
+! Argument of \lst@next has an extra }.
+<inserted text> 
+                \par 
+l. ...\SameBlock{flexible}
+I've run across a `}' that doesn't seem to match anything.
+For example, `\def\a#1{...}' and `\a}' would produce
+this error. If you simply proceed now, the `\par' that
+I've just inserted will cause me to report a runaway
+argument that might be the root of the problem. But if
+your `}' was spurious, just type `2' and it will go away.
+Runaway argument?
+! Paragraph ended before \lst@next was complete.
+<to be read again> 
+                   \par 
+l. ...\SameBlock{flexible}
+I suspect you've forgotten a `}', causing me to apply this
+control sequence to too much text. How can we recover?
+My plan is to forget the whole thing and hope for the best.
+flexible block, last line: same
+! Argument of \lst@next has an extra }.
+<inserted text> 
+                \par 
+l. ...\SameBlock{fullflexible}
+I've run across a `}' that doesn't seem to match anything.
+For example, `\def\a#1{...}' and `\a}' would produce
+this error. If you simply proceed now, the `\par' that
+I've just inserted will cause me to report a runaway
+argument that might be the root of the problem. But if
+your `}' was spurious, just type `2' and it will go away.
+Runaway argument?
+! Paragraph ended before \lst@next was complete.
+<to be read again> 
+                   \par 
+l. ...\SameBlock{fullflexible}
+I suspect you've forgotten a `}', causing me to apply this
+control sequence to too much text. How can we recover?
+My plan is to forget the whole thing and hope for the best.
+! Argument of \lst@next has an extra }.
+<inserted text> 
+                \par 
+l. ...\SameBlock{fullflexible}
+I've run across a `}' that doesn't seem to match anything.
+For example, `\def\a#1{...}' and `\a}' would produce
+this error. If you simply proceed now, the `\par' that
+I've just inserted will cause me to report a runaway
+argument that might be the root of the problem. But if
+your `}' was spurious, just type `2' and it will go away.
+Runaway argument?
+! Paragraph ended before \lst@next was complete.
+<to be read again> 
+                   \par 
+l. ...\SameBlock{fullflexible}
+I suspect you've forgotten a `}', causing me to apply this
+control sequence to too much text. How can we recover?
+My plan is to forget the whole thing and hope for the best.
+fullflexible block, last line: same
+! LaTeX Error: \begin{lstlisting} on input line ... ended by \end{document}.
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+l. ...\end{document}
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+(spacing.aux)
+Bad grouping: 25!
+Bad conditionals: 12!
