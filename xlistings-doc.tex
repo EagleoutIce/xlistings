@@ -72,7 +72,7 @@
 \setkomafont{subtitle}{\normalfont\small}
 \DeclareTOCStyleEntry[beforeskip=1pt,indent=0pt,numwidth=1.4em]{tocline}{section}
 
-\xlstlangoverride{latex}{morekeywords=[5]{\\xlstsetstyle,\\xlstlangoverride,\\LoadLanguages,\\xlstblacklistlinenumbers,\\lstcolorlet,\\xlstDefineStyles,\\xlstlangbadgestyle,\\BadgeNextListing,\\xlstmintedwithlangbadge,\\xlstmintedwithoutlangbadge,\\sisetup,\\xlsthlwarning,\\xlsthlerror,\\xlsthlinfo,\\xlsthlbox,\\xlsthlboxd}}
+\xlstlangoverride{latex}{morekeywords=[5]{\\xlstsetstyle,\\xlstlangoverride,\\LoadLanguages,\\xlstblacklistlinenumbers,\\lstcolorlet,\\xlstDefineStyles,\\xlstlangbadgestyle,\\BadgeNextListing,\\xlstmintedwithlangbadge,\\xlstmintedwithoutlangbadge,\\sisetup,\\xlsthlwarning,\\xlsthlerror,\\xlsthlinfo,\\xlsthlbox,\\xlsthlboxd,\\xglobal,\\xlstLanguageFileAlias}}
 
 \let\T\texttt
 \emergencystretch=3em
@@ -222,7 +222,11 @@ All of these packages are part of common \LaTeX{} distributions.
     A language that is not loaded yet is loaded on demand, so
     \blatex{\\begin\{minted\}\{<lang>\}} works without a preceding
     \cmdref{LoadLanguages}; if no definition can be found, you get an error
-    naming the language. On by default; \T{fakeminted=false} disables it.
+    naming the language and the code is typeset without highlighting. As with
+    Pygments, the name of the language is compared without case
+    (\T{Java}), and the usual short names of the shipped languages work as
+    well (\T{py}, \T{js}, \T{sh}, \T{tex}, \T{hs}, \T{r}, \T{c++}, \T{cs}).
+    On by default; \T{fakeminted=false} disables it.
 \end{argument}
 
 \begin{argument}{extendednums}
@@ -461,6 +465,12 @@ Keep the following in mind when you write such a file:
           register (\T{rubberduck}) is the one used for the environments, the
           inline commands, the \T{minted} environment, and
           \cmdref{xlstlangoverride}.
+    \item Define everything a language needs (styles, helper macros, colors)
+          globally, with \blatex{\\gdef} or \blatex{\\xglobal\\colorlet}:
+          the \T{minted} environment loads a language within its group, and
+          \cmdref{LoadLanguages} may be used within a group as well.
+          \blatex{\\lstdefinelanguage} and \cmdref{RegisterLanguage} are
+          already global.
     \item Use only the public macros of this package. Language files are read
           when \T{@} is not a letter, so \T{\textbackslash xlst@\ldots} macros
           are not available; \cmdref{xlstGet} and \cmdref{xlstGetStyle} are.
@@ -522,7 +532,11 @@ Commands that contain an \T{@} in their name are internal and not part of the in
 \subsection*{Loading and registering languages}
 
 \begin{command}{LoadLanguages}{\{<lang>,\ldots\}}
-    Loads the definitions of the given, comma-separated languages (\cmdref{LoadLanguage} is an alias). For each language, the file \T{xlistings-<lang>.cfg} is searched first in the current directory and then in \cmdref{xlstLanguageSearchPath}; the unprefixed \T{<lang>.cfg} is accepted as a fallback, so private definitions keep working. A language is loaded at most once, so definitions may require each other. If no definition is found, a warning is issued.
+    Loads the definitions of the given, comma-separated languages (\cmdref{LoadLanguage} is an alias). For each language, the file \T{xlistings-<lang>.cfg} is searched first in the current directory and then in \cmdref{xlstLanguageSearchPath}; the unprefixed \T{<lang>.cfg} is accepted as a fallback, so private definitions keep working. A language is loaded at most once, so definitions may require each other. If no definition is found, a warning is issued. A name registered with \cmdref{xlstLanguageFileAlias} loads the file of its language.
+\end{command}
+
+\begin{command}{xlstLanguageFileAlias}{\{<name>\}\{<file>\}}
+    Makes \cmdref{LoadLanguages} and the \argref{fakeminted}{fakeminted} environment load \T{xlistings-<file>.cfg} for \T{<name>}. The shipped languages define, for example, \T{lc} for \T{lambda\_calculus}, \T{md} for \T{markdown}, \T{typescript} for \T{ts}, and \T{py} for \T{python}.
 \end{command}
 
 \begin{command}{xlstLanguageSearchPath}{}

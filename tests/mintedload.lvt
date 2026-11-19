@@ -1,0 +1,76 @@
+% Languages that the minted environment loads on their first use (issue #15):
+% their macros survive the group of the environment, aliases and names in
+% another case load the right file, and an unknown language is a single error.
+\input{regression-test}
+\documentclass{article}
+\usepackage{xlistings}
+\xlstlangoverride{python}{morekeywords={Bar}}
+\usepackage{xlisttest}
+\begin{document}
+\START
+\section*{Languages loaded by the minted environment}
+
+% \xlstjavaannotations and \xlstjavaprintf of xlistings-java.cfg
+\StartTest{java}{cmt,kwB,lit,lit,kwB,lit,}
+\begin{minted}{java}
+@Override
+String s = "%d";
+\end{minted}
+\EndTest
+% the second environment uses the language again, after the first group ended
+\StartTest{java-again}{cmt,kwB,lit,lit,kwB,lit,}
+\begin{minted}{java}
+@Override
+String s = "%d";
+\end{minted}
+\EndTest
+\TestInline{java-inline}{cmt,}{\bjava{@Override}}
+% \xlstyamlvalue of xlistings-yaml.cfg
+\StartTest{yaml}{kwA,}
+\begin{minted}{yaml}
+key: value
+\end{minted}
+\EndTest
+% \lsttacsubstyle of xlistings-tac.cfg
+\StartTest{tac}{}
+\begin{minted}{tac}
+t:_1: = a
+\end{minted}
+\EndTest
+% the csbreak macros of xlistings-latex.cfg
+\StartTest{latex}{cmd,}
+\begin{minted}{latex}
+\textbf{a}
+\end{minted}
+\EndTest
+% aliases of a file with another name
+\StartTest{lc}{}
+\begin{minted}{lc}
+(\x.x)
+\end{minted}
+\EndTest
+\StartTest{IndexR}{}
+\begin{minted}{IndexR}
+x_1
+\end{minted}
+\EndTest
+% names Pygments knows, and the overrides of the registered name
+\StartTest{py}{kwA,kwA,}
+\begin{minted}{py}
+def f(): Bar
+\end{minted}
+\EndTest
+\StartTest{Python}{kwA,kwA,}
+\begin{minted}{Python}
+def f(): Bar
+\end{minted}
+\EndTest
+\StartTest{r}{num,}
+\begin{minted}{r}
+x <- 1
+\end{minted}
+\EndTest
+\TestRuns{loaded-once}{\LoadLanguages{python,PYTHON}}
+\TestSummary
+\END
+\end{document}
