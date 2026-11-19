@@ -29,29 +29,29 @@
 % the minted environment is defined by xlistings: it links to fakeminted
 \CodeLinkRegister[group=opt,label=opt:fakeminted]{minted}
 % variants without an entry of their own link to their sibling
-\CodeLinkRegister[group=cmd,command,label=cmd:xlstc]{xlstb}
-\CodeLinkRegister[group=cmd,command,label=cmd:xlstc]{xlsti}
-\CodeLinkRegister[group=cmd,command,label=cmd:xlstGetStyle]{xlstGet}
+\CodeLinkRegister[group=cmd,command,label=cmd::bs:xlstc]{xlstb}
+\CodeLinkRegister[group=cmd,command,label=cmd::bs:xlstc]{xlsti}
+\CodeLinkRegister[group=cmd,command,label=cmd::bs:xlstGetStyle]{xlstGet}
 % the placeholders \c<lang>, \b<lang>, \i<lang> of the inline commands
 \CodeLinkRegister[group=cmd,command,label=use:inline]{c}
 \CodeLinkRegister[group=cmd,command,label=use:inline]{b}
 \CodeLinkRegister[group=cmd,command,label=use:input]{i}
-\CodeLinkRegister[group=cmd,command,label=cmd:LoadLanguages]{LoadLanguage}
-\CodeLinkRegister[group=cmd,command,label=cmd:xlstLanguageSearchPath]{xlstLanguageFilePrefix}
-\CodeLinkRegister[group=cmd,command,label=cmd:xlstDefineStyles]{xlstSetStyle}
-\CodeLinkRegister[group=cmd,command,label=cmd:xlstGetStyle]{xlstStyles}
-\CodeLinkRegister[group=cmd,command,label=cmd:xlstSetLeftMargin]{xlstSetRightMargin}
-\CodeLinkRegister[group=cmd,command,label=cmd:xlstSetLeftMargin]{xlstSetNumSep}
-\CodeLinkRegister[group=cmd,command,label=cmd:xlstSetLeftMargin]{xlstSetFrameRule}
-\CodeLinkRegister[group=cmd,command,label=cmd:lstfs]{xlstNumFs}
-\CodeLinkRegister[group=cmd,command,label=cmd:xlstPreBreak]{xlstInlinePreBreak}
-\CodeLinkRegister[group=cmd,command,label=cmd:xlstSetInputDefaults]{xlstRemoveInputBackground}
-\CodeLinkRegister[group=cmd,command,label=cmd:xlstblacklistlinenumbers]{xlstblacklistisghost}
-\CodeLinkRegister[group=cmd,command,label=cmd:xlstblacklistlinenumbers]{xlstblacklistispresent}
-\CodeLinkRegister[group=cmd,command,label=cmd:xlstdisablenumhl]{xlstenablenumhl}
-\CodeLinkRegister[group=cmd,command,label=cmd:xlstmintedwithlangbadge]{xlstmintedwithoutlangbadge}
-\CodeLinkRegister[group=cmd,command,label=cmd:xlstmintedwithlangbadge]{BadgeNextListing}
-\CodeLinkRegister[group=cmd,command,label=cmd:xlstmintedwithlangbadge]{xlstlangbadgestyle}
+\CodeLinkRegister[group=cmd,command,label=cmd::bs:LoadLanguages]{LoadLanguage}
+\CodeLinkRegister[group=cmd,command,label=cmd::bs:xlstLanguageSearchPath]{xlstLanguageFilePrefix}
+\CodeLinkRegister[group=cmd,command,label=cmd::bs:xlstDefineStyles]{xlstSetStyle}
+\CodeLinkRegister[group=cmd,command,label=cmd::bs:xlstGetStyle]{xlstStyles}
+\CodeLinkRegister[group=cmd,command,label=cmd::bs:xlstSetLeftMargin]{xlstSetRightMargin}
+\CodeLinkRegister[group=cmd,command,label=cmd::bs:xlstSetLeftMargin]{xlstSetNumSep}
+\CodeLinkRegister[group=cmd,command,label=cmd::bs:xlstSetLeftMargin]{xlstSetFrameRule}
+\CodeLinkRegister[group=cmd,command,label=cmd::bs:lstfs]{xlstNumFs}
+\CodeLinkRegister[group=cmd,command,label=cmd::bs:xlstPreBreak]{xlstInlinePreBreak}
+\CodeLinkRegister[group=cmd,command,label=cmd::bs:xlstSetInputDefaults]{xlstRemoveInputBackground}
+\CodeLinkRegister[group=cmd,command,label=cmd::bs:xlstblacklistlinenumbers]{xlstblacklistisghost}
+\CodeLinkRegister[group=cmd,command,label=cmd::bs:xlstblacklistlinenumbers]{xlstblacklistispresent}
+\CodeLinkRegister[group=cmd,command,label=cmd::bs:xlstdisablenumhl]{xlstenablenumhl}
+\CodeLinkRegister[group=cmd,command,label=cmd::bs:xlstmintedwithlangbadge]{xlstmintedwithoutlangbadge}
+\CodeLinkRegister[group=cmd,command,label=cmd::bs:xlstmintedwithlangbadge]{BadgeNextListing}
+\CodeLinkRegister[group=cmd,command,label=cmd::bs:xlstmintedwithlangbadge]{xlstlangbadgestyle}
 \newcommand\litref[1]{\CodeLinkRef[group=lit]{#1}}
 % the commands and environments every language gets link to their description in the usage section
 \makeatletter
