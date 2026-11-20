@@ -1,10 +1,7 @@
-code-link v1.1.0
+code-link v1.1.1
 
-code-link collects definitions while a document is typeset and links every
-occurrence of them in listings, xlistings and minted code. It was shipped
-inside xlistings v1.1.0 and is now a package of its own.
+Bug fixes: \CodeLinkLabel respects labels given at registration,
+\lstset{codelink=false} works in the preamble, UTF-8 links under pdfTeX, and
+spaces after links in listings are no longer lost.
 
-The package is licensed under the LaTeX Project Public License 1.3c.
-
-Sources, issue tracker, and documentation:
 https://github.com/EagleoutIce/xlistings

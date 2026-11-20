@@ -1,9 +1,9 @@
-xlistings v1.1.1
+xlistings v1.2.0
 
-code-link, which xlistings v1.1.0 shipped, is now a package of its own on
-CTAN. This release removes it from xlistings and has no other changes.
+- Languages loaded on demand by a minted environment keep their macros and
+  colours after it (#15).
+- minted accepts language names without case and the usual Pygments short
+  names (py, js, sh, tex, ...); new \xlstLanguageFileAlias adds more.
+- An unknown language gives one error, its code is still typeset unhighlighted.
 
-The package is licensed under the LaTeX Project Public License 1.3c.
-
-Sources, issue tracker, and documentation:
 https://github.com/EagleoutIce/xlistings
