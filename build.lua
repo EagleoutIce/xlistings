@@ -98,7 +98,6 @@ uploadconfig = {
   repository        = "https://github.com/EagleoutIce/xlistings",
   bugtracker        = "https://github.com/EagleoutIce/xlistings/issues",
   support           = "https://github.com/EagleoutIce/xlistings/issues",
-  home              = "https://github.com/EagleoutIce/xlistings",
   topic             = {"listing"},
   update            = true,
   announcement_file = "ctan-announce.txt",
